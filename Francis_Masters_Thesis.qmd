@@ -130,6 +130,7 @@ library(patchwork)
 library(rempsyc)
 library(png)
 library(grid)
+library(jpeg)
 set_here() #sets the working directory
 conflicts_prefer(dplyr::filter, .quiet = TRUE)
 conflicts_prefer(flextable::separate_header, .quiet = TRUE)
@@ -246,7 +247,7 @@ Although classical conditioning procedures are common in the planarian literatur
 
 ### Cocaine as a positive reinforcer for Planaria
 
-Investigators have used many different stimuli, both aversive and appetitive, in their behavioural studies. The literature review carried out here identified 53 behavioral experiments. The breakdown of stimuli used within these experiments can be found in @tbl-studycharacteristics below. A range of substances have been used in planaria experiments. The reason investigators have used substances range from toxicology to assessing addiction like behaviours such as withdrawal. Cocaine was the most frequently used substance in the reviewed literature. This was followed by nicotine and sucrose. Cocaine is an ideal candidate drug for behavioural studies given it acts on dopamine receptors which are abundant in planaria, it can be administered with ease and at low cost, it produces clearly observable effects on locomotion and atypical behaviours when used at high doses.
+Investigators have used many different stimuli, both aversive and appetitive, in their behavioural studies. The literature review carried out here identified 53 behavioral experiments. The breakdown of stimuli and procedures used within these experiments can be found in @tbl-studycharacteristics below. A range of substances have been used in planaria experiments. The reason investigators have used substances range from toxicology to assessing addiction like behaviours such as withdrawal. Cocaine was the most frequently used substance in the reviewed literature. This was followed by nicotine and sucrose. Cocaine is an ideal candidate drug for behavioural studies given it acts on dopamine receptors which are abundant in planaria, it can be administered with ease and at low cost, it produces clearly observable effects on locomotion and atypical behaviours when used at high doses.
 
 Cocaine is a stimulant which exerts it agonistic effects by blocking reuptake of dopamine through the dopamine transporters. This results in more dopamine activity in the synapse and therefore more neural activity in downstream neurons, particularly in the meso-limbic pathway connecting the ventral tegmental area to the nucleus accumbens (Nestler, 2009). This drug effect is linked to the rush or high that users experience, and is common to most if not all drugs of abuse. Cocaine also acts on serotonergic and noradrenergic transmission by blocking their respective transporters. The noradrenergic effects are thought to stimulate the sympathetic nervous system by blocking reuptake of norepinephrine and an decreased sympathetic nerve discharge, resulting in effects such as increased blood pressure and heart rate (Jacobson et al., 1997; Freye, 2009; Nestler, 2009).
 
@@ -256,10 +257,13 @@ Understanding the molecular changes and circuit dynamics underlying the establis
 
 ```{r}
 #| label: tbl-studycharacteristics
-#| tbl-cap: Characteristics of papers identified during literature review
-#| apa-note: This is a note below the markdown table.
 
-tibble(
+library(tibble)
+library(knitr)
+library(kableExtra)
+
+# Create the table with category subtitles
+data <- tibble(
   Variable = c("Stimuli", "Shock", "Light", "Surface texture", "Other", 
                "Substance", "Cocaine", "Nicotine", "Alcohol", "Sucrose", 
                "Amphetamines", "Other", 
@@ -267,36 +271,26 @@ tibble(
                "Locomotion", "Withdrawal", "Other"),
   Papers = c(NA, 13, 28, 9, 10, NA, 11, 6, 3, 4, 2, 13, NA, 26, 11, 6, 4, 8),
   Proportion = c(NA, NA, NA, NA, NA, NA, "21%", "11%", "6%", "8%", "4%", "25%", NA, "49%", "21%", "11%", "8%", "15%")
-) %>%
-  knitr::kable(escape = FALSE) %>%
-  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+)
 
+# Convert 'Papers' column to character
+data$Papers <- as.character(data$Papers)
+
+# Add category rows
+data <- data %>%
+  add_row(Variable = "Stimuli", Papers = "", Proportion = "", .before = 1) %>%
+  add_row(Variable = "Substance", Papers = "", Proportion = "", .before = 7) %>%
+  add_row(Variable = "Paradigm", Papers = "", Proportion = "", .before = 13)
+
+# Render the table with equal column spacing
+data %>%
+  knitr::kable(format = "html", caption = "Characteristics of papers identified during literature review") %>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE, position = "center") %>%
+  kableExtra::column_spec(1, width = "20em") %>%
+  kableExtra::column_spec(2, width = "10em") %>%
+  kableExtra::column_spec(3, width = "10em") %>%
+  kableExtra::footnote(general = "Some papers used multiple stimuli, so variables may not sum to 100%")
 ```
-
-::: {#tbl-studycharacteristics apa-note="This is a note below the markdown table."}
-| Variable               | Papers | Proportion |
-|:-----------------------|-------:|-----------:|
-| **Stimuli**            |        |            |
-| Shock                  |     13 |            |
-| Light                  |     28 |            |
-| Surface texture        |      9 |            |
-| Other                  |     10 |            |
-| **Substance**          |        |            |
-| Cocaine                |     11 |        21% |
-| Nicotine               |      6 |        11% |
-| Alcohol                |      3 |         6% |
-| Sucrose                |      4 |         8% |
-| Amphetamines           |      2 |         4% |
-| Other                  |     13 |        25% |
-| **Paradigm**           |        |            |
-| Classical conditioning |     26 |        49% |
-| Operant conditioning   |     11 |        21% |
-| Locomotion             |      6 |        11% |
-| Withdrawal             |      4 |         8% |
-| Other                  |      8 |        15% |
-
-Table Caption of a Markdown Table
-:::
 
 ### Unresolved questions
 
@@ -328,7 +322,28 @@ Planaria were handled using two different techniques. For moving planaria into t
 
 ## Experiment 1
 
-Experiment 1 aimed to identify an appropriate dose of cocaine which is rewarding to planaria while not drastically altering their their locomotive behaviour. Cocaine has been frequently used as a rewarding compound to classically condition planaria and to investigate its toxicity (Amaning-Kwarteng et al., 2017; Raffa & Desai, 2005; Tallarida et al., 2014a; Hutchinson et al., 2015; Pallidini et al., 1996). Doses used for conditioning have ranged from 1μM (Hutchinson, Prados & Davidson, 2015) to 90μM (Raffa et al., 2005). Planaria species employed across such conditioning experiments vary, including *Dugesia Tigrina*, *Dugesia gonocephala* and *Dugesia dorotocephala*.. Some authors have observed that some specieis are more amenable to conditioning procedures (Samuel et al., 2021). Differences in the behaviour of planarian species have been observed more generally (@cochet-escartin2015; @debold1965). The speciies of planaria used for the current project is not identified. It may be a specieis indigenous to New Zealalnd. For this reason, it is important to identify a suitable dose of cocaine which modifies behaviour, but not to an extreme exten so as to impair performance in a y-maze.
+Experiment 1 aimed to identify an appropriate dose of cocaine which is rewarding to planaria while not drastically altering their their locomotive behaviour. Cocaine has been frequently used as a rewarding compound to classically condition planaria and to investigate its toxicity (Amaning-Kwarteng et al., 2017; Raffa & Desai, 2005; Tallarida et al., 2014a; Hutchinson et al., 2015; Pallidini et al., 1996). Doses used for conditioning have ranged from 1μM (Hutchinson, Prados & Davidson, 2015) to 90μM (Raffa et al., 2005). Planaria species employed across such conditioning experiments vary, including *Dugesia Tigrina*, *Dugesia gonocephala* and *Dugesia dorotocephala*.
+
+Investigators have observed that some specieis are more amenable to conditioning procedures than others (Samuel et al., 2021; Mueller & Levin, 2002). Differences in the behaviour and responses of planarian species have been observed in response to several types of stimuli (@cochet-escartin2015; @debold1965). That species differ in their behaviour is germane to this project, as the species used here had not been formally identified. It likely differs from those used previously, and may in fact be a species indigenous to New Zealand. For this reason, it is important to identify a suitable dose of cocaine for this species which modifies motility, but not enough to impair performance in a y-maze.
+
+25 planaria were used. five conditions were selected from common doses used in the planarian conditioning literature. This included 0, 1, 5, 10 and 20 μM (*n* = 5 per condition). Animals were run accross five session, with each session containing one subject from each condition. Subjects were collected from the breeding tank on the day of data collection. Within each session, subjects were randomly allocated to their condition using a random number generator (<https://stattrek.com/statistics/random-number-generator#table>).
+
+Recording sessions lasted 15 minutes. Prior to the first recording session, the relavent drug concentrations were achieved by mixing cocaine (dissolved in distilled water) with planarian water to reach a final solution of 8ml. Each solution was mixed and allowed to sit for several minutes to ensure diffusion of the drug. The order in which planaria were added to the dish was determined by the random number generated, with planaria being added one-by-one. The recording began once all five subjects were in their respective dishes. After completing a single trial, the planaria were not used for any subsequent experiments in this manuscript but were rehoused to serve as test subejcts in other projects.
+
+See @fig-Figure2 for an overview of the apparatus setup. Five petri dishese were positioned on a white acrylic sheet. Recording sessions took place under red light, with the light positioned approximately 36cm above the petri dishes. The dishes were aligned in a 2x3 grid, with a gap left in the top middle position which is where the light was focussed to minimise shadows in the petri dishes; this was important for subsequent tracking analysis. Each drug concentration was rotated across the 5 grid positions to control for any effects of lighting angle.
+
+### Results
+
+```{r}
+#| label: fig-Figure2
+#| fig-cap: "Dose response apparatus"
+#| include: true
+#| fig-width: 7
+#| fig-height: 3.4
+#Figure2
+Figure2 <- readJPEG("Figures/Figure2.jpg") 
+grid.raster(Figure2)
+```
 
 This is my introductory paragraph. The title will be placed above it automatically. *Do not start with an introductory heading* (e.g., "Introduction"). The title acts as your Level 1 heading for the introduction.
 
