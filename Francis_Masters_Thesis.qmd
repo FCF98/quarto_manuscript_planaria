@@ -131,6 +131,7 @@ library(rempsyc)
 library(png)
 library(grid)
 library(jpeg)
+library(ggplot2)
 set_here() #sets the working directory
 conflicts_prefer(dplyr::filter, .quiet = TRUE)
 conflicts_prefer(flextable::separate_header, .quiet = TRUE)
@@ -245,6 +246,8 @@ Rhodes and Vierick used classical conditioning to establish a conditioned negati
 
 Although classical conditioning procedures are common in the planarian literature, some experimenters have employed operant conditioning methods (Crawford & Skeen, 1967; Chicas-Mosier & Abramson, 2015; see Best 1967 for a review of early studies). A simple learning procedure known as the Van Oye maze is perhaps the most rigorous approach that clearly demonstrates reinforcement learning (van Oye, 1920; Wells, 1967; Nicolas, Abramson, & Levin, 2008). In the typical setup, planaria are housed in a beaker and a fishing line with food attached is placed near the surface of the water. Planaria can detect the presence of food through chemosensory receptors. Planaria must navigate up the wall, across the surface and down the line to reach the food. This is a low probability behaviour, but a small to moderate percentage of planaria will eventually do this given enough trials. The rod is lowered gradually across training trials, so that planaria will learn to descend to lower depths on the line to reach the food. Control planaria undergo similar methods but without the food reward attached. At test, food is not placed on the rod, but was instead dissolved in the water beforehand. The dissolved food was a cue that food was available. Trained planarians were subsequently found in much greater numbers on the suspended line compared to control subjects. Across five experiments performed by Wells, an average of \~17 trained subjects were found on the line compared to an average of \~3 experimental subjects (reviewed in Corning & Riccio, 1970). This procedure demonstrates clearly that planaria can be trained using reinforcement learning.
 
+Another operant conditioning study was conducted by Corning (1966) during the zenith of planarian fame. Corning wondered whether planaria can retain an operantly conditioned behaviour after bisection and regeneration. Using a T-maze apparatus, planaria were trained to select their less preferred side. Being returned to their home cage for 10 minutes was used as a positive reinforcer for the correct choice. Otherwise , they were taken to the start of the maze for another trial. Corning decided on 9/10 consecutive choices as the criterion for successful learning. After being dissected and left to regenerate for two to three weeks, the regenerates (heads and tails) were given a baseline preference test and were subsequently conditioned to criterion. Corning found that the baseline of trained regenerates differed significantly from the parent worm baseline, while regenerates from untrained planaria did not differ from the original subjects – suggesting a retention of learning. Beyond this, the regenerates of trained planaria could be conditioned to threshold faster than regenerates of untrained planaria.
+
 ### Cocaine as a positive reinforcer for Planaria
 
 Investigators have used many different stimuli, both aversive and appetitive, in their behavioural studies. The literature review carried out here identified 53 behavioral experiments. The breakdown of stimuli and procedures used within these experiments can be found in @tbl-studycharacteristics below. A range of substances have been used in planaria experiments. The reason investigators have used substances range from toxicology to assessing addiction like behaviours such as withdrawal. Cocaine was the most frequently used substance in the reviewed literature. This was followed by nicotine and sucrose. Cocaine is an ideal candidate drug for behavioural studies given it acts on dopamine receptors which are abundant in planaria, it can be administered with ease and at low cost, it produces clearly observable effects on locomotion and atypical behaviours when used at high doses.
@@ -332,8 +335,6 @@ Recording sessions lasted 15 minutes. Prior to the first recording session, the 
 
 See @fig-Figure2 for an overview of the apparatus setup. Five petri dishese were positioned on a white acrylic sheet. Recording sessions took place under red light, with the light positioned approximately 36cm above the petri dishes. The dishes were aligned in a 2x3 grid, with a gap left in the top middle position which is where the light was focussed to minimise shadows in the petri dishes; this was important for subsequent tracking analysis. Each drug concentration was rotated across the 5 grid positions to control for any effects of lighting angle.
 
-### Results
-
 ```{r}
 #| label: fig-Figure2
 #| fig-cap: "Dose response apparatus"
@@ -344,6 +345,52 @@ See @fig-Figure2 for an overview of the apparatus setup. Five petri dishese were
 Figure2 <- readJPEG("Figures/Figure2.jpg") 
 grid.raster(Figure2)
 ```
+
+### Results
+
+```{r}
+#| label: Dose Response Descriptives
+#| include: False
+
+library(papaja)
+library(rstatix)
+
+
+# Source the script
+source("Descriptives.R")
+
+# Load the ANOVA summary
+load("anova_summary.RData")
+
+# Print the ANOVA summary for APA-style reporting
+anova_summary
+
+anova_results <- anova_summary[[1]]  # Assuming there's only one model in the list
+
+# Extract F-value and p-value
+f_value <- anova_results["Condition", "F value"]
+p_value <- anova_results["Condition", "Pr(>F)"]
+
+# Print extracted values for APA-style reporting
+f_value
+p_value
+
+```
+
+
+```{r}
+#| label: Violin plot
+#| include: True
+
+source("Graphs.R")
+
+print(dose_response_violin)
+
+```
+
+
+The ANOVA results indicate that the effect of `Condition` on `Distance` is not statistically significant (F = `r f_value`, p = `r p_value`).
+
 
 This is my introductory paragraph. The title will be placed above it automatically. *Do not start with an introductory heading* (e.g., "Introduction"). The title acts as your Level 1 heading for the introduction.
 
