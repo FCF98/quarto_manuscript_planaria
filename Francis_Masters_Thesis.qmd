@@ -117,6 +117,9 @@ execute:
 #| label: global configuration and setup
 #| include: false
 
+#push updates using git push origin master
+
+
 #removes scientific notation (e.g. 10 x e^2)
 options(scipen = 999)
 
