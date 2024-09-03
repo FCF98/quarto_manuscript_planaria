@@ -57,19 +57,19 @@ language:
   title-block-role-introduction: "Author roles were classified using the Contributor Role Taxonomy (CRediT; https://credit.niso.org/) as follows:"
   references-meta-analysis: "References marked with an asterisk indicate studies included in the meta-analysis."
 
-#format:
-  #apaquarto-docx: default
-  #apaquarto-html: default
-  #apaquarto-typst: 
-    #keep-typ: true
-  
 format:
-  html:
-    css: styles.css
   apaquarto-docx: default
+  apaquarto-html: default
   apaquarto-typst: 
     keep-typ: true
-  apaquarto-pdf:
+  
+#format:
+#  html:
+ #   css: styles.css
+  #apaquarto-docx: default
+  #apaquarto-typst: 
+   # keep-typ: true
+  #apaquarto-pdf:
     # Can be jou (journal), man (manuscript), stu (student), or doc (document)
     documentmode: man
     fontsize: "12pt"
@@ -290,11 +290,8 @@ data <- data %>%
 
 # Render the table with equal column spacing
 data %>%
-  knitr::kable(format = "html", caption = "Characteristics of papers identified during literature review") %>%
-  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE, position = "center") %>%
-  kableExtra::column_spec(1, width = "20em") %>%
-  kableExtra::column_spec(2, width = "10em") %>%
-  kableExtra::column_spec(3, width = "10em") %>%
+  knitr::kable(format = "pandoc", caption = "Characteristics of papers identified during literature review") %>%
+  kableExtra::kable_styling(full_width = FALSE, position = "center") %>%
   kableExtra::footnote(general = "Some papers used multiple stimuli, so variables may not sum to 100%")
 ```
 
@@ -342,8 +339,8 @@ See @fig-Figure2 for an overview of the apparatus setup. Five petri dishese were
 #| label: fig-Figure2
 #| fig-cap: "Dose response apparatus"
 #| include: true
-#| fig-width: 7
-#| fig-height: 3.4
+#| fig-width: 12
+#| fig-height: 7
 #Figure2
 Figure2 <- readJPEG("Figures/Figure2.jpg") 
 grid.raster(Figure2)
@@ -370,20 +367,17 @@ anova_summary
 
 anova_results <- anova_summary[[1]]  # Assuming there's only one model in the list
 
-# Extract F-value and p-value
-f_value <- anova_results["Condition", "F value"]
-p_value <- anova_results["Condition", "Pr(>F)"]
-
-# Print extracted values for APA-style reporting
-f_value
-p_value
 
 ```
 
+An overview Prior to performing a one-way ANOVA, the assumptions of normality and homogeneity of variances were tested. Levene's test for homogeneity of variances suggests there were equal variances accross codntiions, F(`r df1_levene`, `r df2_levene`) = `r levene_f_value`, p = `r levene_p_value`. A Shapiro-Wilk test suggests the residuals of the data were normally distributed, w = `r shapiro_w_value`, p = `r shapiro_p_value`. Subsequently, a one-way ANOVA was performed to identify the effect of condition (dose) on planaria motility. The ANOVA results indicate that the effect of `Condition` on `Distance` is not statistically significant (F(`r df1`, `r df2`) = `r f_value`, p = `r p_value`). Despite high variability in the dataset (@fig-Violin_plot) , these results suggests any of the tested doses would be valid for conditioning. However, given the seeming reduction in motility for the 1μM group, and intermediate dose of 10μM was selected for subsequent conditioning experiments.
 
 ```{r}
-#| label: Violin plot
+#| label: fig-Violin_plot
 #| include: True
+#| fig-cap: "Plot of planarian motility by condition"
+#| fig-width: 12
+#| fig-height: 7
 
 source("Graphs.R")
 
@@ -392,8 +386,40 @@ print(dose_response_violin)
 ```
 
 
-The ANOVA results indicate that the effect of `Condition` on `Distance` is not statistically significant (F = `r f_value`, p = `r p_value`).
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+X
 
 This is my introductory paragraph. The title will be placed above it automatically. *Do not start with an introductory heading* (e.g., "Introduction"). The title acts as your Level 1 heading for the introduction.
 
