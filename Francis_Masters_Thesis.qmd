@@ -57,19 +57,19 @@ language:
   title-block-role-introduction: "Author roles were classified using the Contributor Role Taxonomy (CRediT; https://credit.niso.org/) as follows:"
   references-meta-analysis: "References marked with an asterisk indicate studies included in the meta-analysis."
 
-format:
-  apaquarto-docx: default
-  apaquarto-html: default
-  apaquarto-typst: 
-    keep-typ: true
-  
 #format:
-#  html:
- #   css: styles.css
   #apaquarto-docx: default
+  #apaquarto-html: default
   #apaquarto-typst: 
    # keep-typ: true
-  #apaquarto-pdf:
+  
+format:
+  html:
+    css: styles.css
+  apaquarto-docx: default
+  apaquarto-typst: 
+    keep-typ: true
+  apaquarto-pdf:
     # Can be jou (journal), man (manuscript), stu (student), or doc (document)
     documentmode: man
     fontsize: "12pt"
@@ -135,6 +135,7 @@ library(png)
 library(grid)
 library(jpeg)
 library(ggplot2)
+library(apa)
 set_here() #sets the working directory
 conflicts_prefer(dplyr::filter, .quiet = TRUE)
 conflicts_prefer(flextable::separate_header, .quiet = TRUE)
@@ -219,7 +220,7 @@ One of the most surprising findings from the study of learning and behaviour in 
 
 ### Planaria as a model organism
 
-Triclad flatworms, more colloquially known as planaria, are a broad group of invertebrates which have themselves become the centerpiece for a number of scientific investigations. Planaria can be found in salt-water, fresh-water and on land environments. Land dwelling planaria can span from several centimeters to half a meter (Esser, 1981), whereas freshwater planaria, most typical in behavioural research, reach just several millimeters in length (Vásquez-Doorman, Escobedo & Allende, 2022). Planarians are bilaterians, meaning that they display bilateral symmetry across their left and right sides (Sluys & Riutort, 2018).
+Triclad flatworms, more colloquially known as planaria, are a broad group of invertebrates which have become the centerpiece for a number of scientific investigations. Planaria are being used to investigate topics including regenerative biology (@karami2015), toxicology (@li2008), radioprotective materials ( @ermakov_planarians_2021 addiction [e.g., see @raffa2008], and the effect of zero gravity environments on physiology (@vistassepmission11team2018). Planaria can be found in salt-water, fresh-water and on land environments. Land dwelling planaria can span from several centimeters to half a meter (Esser, 1981), whereas freshwater planaria, most typical in behavioural research, reach just several millimeters in length (Vásquez-Doorman, Escobedo & Allende, 2022). Planarians are bilaterians, meaning that they display bilateral symmetry across their left and right sides (Sluys & Riutort, 2018).
 
 -   List many uses of planarians in research (e.g. for screening radioprotective substances - Ermakov et al 2021)
 
@@ -288,11 +289,21 @@ data <- data %>%
   add_row(Variable = "Substance", Papers = "", Proportion = "", .before = 7) %>%
   add_row(Variable = "Paradigm", Papers = "", Proportion = "", .before = 13)
 
-# Render the table with equal column spacing
-data %>%
-  knitr::kable(format = "pandoc", caption = "Characteristics of papers identified during literature review") %>%
-  kableExtra::kable_styling(full_width = FALSE, position = "center") %>%
-  kableExtra::footnote(general = "Some papers used multiple stimuli, so variables may not sum to 100%")
+# Render the table with equal column spacing - depending on html or doc generated
+if (knitr::is_html_output()) {
+  data %>%
+    knitr::kable(format = "html", caption = "Characteristics of papers identified during literature review") %>%
+    kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE, position = "center") %>%
+    kableExtra::column_spec(1, width = "20em") %>%
+    kableExtra::column_spec(2, width = "10em") %>%
+    kableExtra::column_spec(3, width = "10em") %>%
+    kableExtra::footnote(general = "Some papers used multiple stimuli, so variables may not sum to 100%")
+} else {
+  data %>%
+    knitr::kable(format = "pandoc", caption = "Characteristics of papers identified during literature review") %>%
+    kableExtra::kable_styling(full_width = FALSE, position = "center") %>%
+    kableExtra::footnote(general = "Some papers used multiple stimuli, so variables may not sum to 100%")
+}
 ```
 
 ### Unresolved questions
@@ -370,7 +381,9 @@ anova_results <- anova_summary[[1]]  # Assuming there's only one model in the li
 
 ```
 
-An overview Prior to performing a one-way ANOVA, the assumptions of normality and homogeneity of variances were tested. Levene's test for homogeneity of variances suggests there were equal variances accross codntiions, F(`r df1_levene`, `r df2_levene`) = `r levene_f_value`, p = `r levene_p_value`. A Shapiro-Wilk test suggests the residuals of the data were normally distributed, w = `r shapiro_w_value`, p = `r shapiro_p_value`. Subsequently, a one-way ANOVA was performed to identify the effect of condition (dose) on planaria motility. The ANOVA results indicate that the effect of `Condition` on `Distance` is not statistically significant (F(`r df1`, `r df2`) = `r f_value`, p = `r p_value`). Despite high variability in the dataset (@fig-Violin_plot) , these results suggests any of the tested doses would be valid for conditioning. However, given the seeming reduction in motility for the 1μM group, and intermediate dose of 10μM was selected for subsequent conditioning experiments.
+Prior to performing a one-way ANOVA, the assumptions of normality and homogeneity of variances were tested. Levene's test for homogeneity of variances suggests there were equal variances accross codntiions, F(`r df1_levene`, `r df2_levene`) = `r levene_f_value`, p = `r levene_p_value`. A Shapiro-Wilk test suggests the residuals of the data were normally distributed, w = `r shapiro_w_value`, p = `r shapiro_p_value`. Subsequently, a one-way ANOVA was performed to identify the effect of condition (dose) on planaria motility. The ANOVA results indicate that the effect of `Condition` on `Distance` is not statistically significant (F(`r df1`, `r df2`) = `r f_value`, p = `r p_value`). Despite high variability in the dataset (@fig-Violin_plot) , these results suggests any of the tested doses would be valid for conditioning. However, given the seeming reduction in motility for the 1μM group, and intermediate dose of 10μM was selected for subsequent conditioning experiments.
+
+The ANOVA results indicate that the effect of `Condition` on `Distance` is not statistically significant `r apa(dose_response_anova, effect = "Condition")`
 
 ```{r}
 #| label: fig-Violin_plot
@@ -384,40 +397,6 @@ source("Graphs.R")
 print(dose_response_violin)
 
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 X
 
