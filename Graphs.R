@@ -11,9 +11,15 @@ library(agridat)
 
 dose_response_data <- read.csv('Datasets/DoseResponseStatistics.csv')
 
+time_binned_dose_response_data <- read.csv('Datasets/dose_response_time_binned.csv')
+
+
 
 
 ######### ridgeplot of average distance across time for whole sample ############
+
+
+
 
 # Define the order of 'Minute' levels with highest values at the top
 
@@ -21,6 +27,8 @@ minute_order <- as.character(15:1)  # Adjust this to reverse the order, e.g., 15
 
 # Reorder the 'Minute' factor according to the specified order
 time_binned_dose_response_data$Minute <- factor(time_binned_dose_response_data$Minute, levels = minute_order)
+
+time_binned_dose_response_data$Distance <- as.numeric(time_binned_dose_response_data$Distance)
 
 # Compute the means for each 'Minute'
 time_binned_mean_data <- time_binned_dose_response_data %>%
@@ -38,13 +46,13 @@ ggplot(time_binned_dose_response_data, aes(x = Distance, y = Minute, fill = as.f
   scale_fill_viridis_d(guide = guide_legend(reverse = TRUE)) +  # Reverse legend order
   scale_color_viridis_d(guide = guide_legend(reverse = TRUE)) +  # Reverse legend order
   labs(x = "Distance Moved (cm)",
-       y = "Minute bin",
+       y = "Time interval (minutes)",
        fill = "Minute",
        color = "Minute") +
   theme_minimal() +
   theme(legend.position = "right",  # Position legend on the right
-        axis.title.y = element_text(margin = margin(r = 10)),  # Add space to the right of the y-axis label
-        axis.title.x = element_text(margin = margin(t = 10)))  # Add space above the x-axis label
+        axis.title.y = element_text(margin = margin(r = 10), size = 16),  # Add space to the right of the y-axis label
+        axis.title.x = element_text(margin = margin(t = 10), size = 16))  # Add space above the x-axis label
 
 
 # t-test to compare minute 1 to minute 15 
@@ -91,10 +99,9 @@ rainplot <- ggplot(dose_rainplot_data, aes(x = Condition, y = Distance, fill = C
         axis.title.x = element_text(margin = margin(t = 10))) +  # Add space above the x-axis label
   scale_y_continuous(breaks = seq(0, 180, by = 20), limits = c(0, 180), expand = c(0, 0)) +
   # Line below adds dot plots from {ggdist} package
-  stat_dots(side = "left", justification = 1.12, binwidth = 1.9) 
-# Line below adds half-violin from {ggdist} package
-# +
-#  stat_halfeye(adjust = .5, width = .6, justification = -.2, .width = 0, point_colour = NA)
+  stat_dots(side = "left", justification = 1.12, binwidth = 1.9)  
+# Line below adds half-violin from {ggdist} package 
+ # stat_halfeye(adjust = .5, width = .6, justification = -.2, .width = 0, point_colour = NA)
 
 print(rainplot)
 

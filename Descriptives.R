@@ -10,6 +10,8 @@ library(pwr)
 
 # Load necessary libraries
 library(dplyr)
+library(afex)
+library(apa)
 
 # Load the data
 dose_response_data <- read.csv('Datasets/DoseResponseStatistics.csv')
@@ -19,8 +21,10 @@ dose_response_data <- dose_response_data %>%
   mutate(Condition = as.factor(Condition))
 
 # Run ANOVA
-dose_response_anova <- aov(Distance ~ Condition, data = dose_response_data)
+anova_model <- lm(Distance ~ Condition, data = dose_response_data)
 
+dose_response_anova <- anova(anova_model)
+dose_response_anova
 # Save the summary of the ANOVA
 anova_summary <- summary(dose_response_anova)
 

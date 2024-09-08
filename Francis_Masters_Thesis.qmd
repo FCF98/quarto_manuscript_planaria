@@ -137,6 +137,10 @@ library(jpeg)
 library(ggplot2)
 library(apa)
 set_here() #sets the working directory
+
+
+ #specify folder path for images 
+
 conflicts_prefer(dplyr::filter, .quiet = TRUE)
 conflicts_prefer(flextable::separate_header, .quiet = TRUE)
 ```
@@ -340,7 +344,7 @@ Experiment 1 aimed to identify an appropriate dose of cocaine which is rewarding
 
 Investigators have observed that some specieis are more amenable to conditioning procedures than others (Samuel et al., 2021; Mueller & Levin, 2002). Differences in the behaviour and responses of planarian species have been observed in response to several types of stimuli (@cochet-escartin2015; @debold1965). That species differ in their behaviour is germane to this project, as the species used here had not been formally identified. It likely differs from those used previously, and may in fact be a species indigenous to New Zealand. For this reason, it is important to identify a suitable dose of cocaine for this species which modifies motility, but not enough to impair performance in a y-maze.
 
-25 planaria were used. five conditions were selected from common doses used in the planarian conditioning literature. This included 0, 1, 5, 10 and 20 μM (*n* = 5 per condition). Animals were run accross five session, with each session containing one subject from each condition. Subjects were collected from the breeding tank on the day of data collection. Within each session, subjects were randomly allocated to their condition using a random number generator (<https://stattrek.com/statistics/random-number-generator#table>).
+50 planaria were used. Five conditions were selected from doses commonly used in the planarian conditioning literature. This included 0, 1, 5, 10 and 20 μM (*n* = 10 per condition). Subjects were run accross ten session, with each session containing one subject from each condition. Subjects were collected from the breeding tank on the day of data collection. Within each session, subjects were randomly allocated to their condition using a random number generator (<https://stattrek.com/statistics/random-number-generator#table>).
 
 Recording sessions lasted 15 minutes. Prior to the first recording session, the relavent drug concentrations were achieved by mixing cocaine (dissolved in distilled water) with planarian water to reach a final solution of 8ml. Each solution was mixed and allowed to sit for several minutes to ensure diffusion of the drug. The order in which planaria were added to the dish was determined by the random number generated, with planaria being added one-by-one. The recording began once all five subjects were in their respective dishes. After completing a single trial, the planaria were not used for any subsequent experiments in this manuscript but were rehoused to serve as test subejcts in other projects.
 
@@ -363,27 +367,29 @@ grid.raster(Figure2)
 #| label: Dose Response Descriptives
 #| include: False
 
-library(papaja)
-library(rstatix)
+#library(papaja)
+#library(rstatix)
 
 
 # Source the script
-source("Descriptives.R")
+#source("Descriptives.R")
 
 # Load the ANOVA summary
-load("anova_summary.RData")
+#load("anova_summary.RData")
 
 # Print the ANOVA summary for APA-style reporting
-anova_summary
+#anova_summary
 
-anova_results <- anova_summary[[1]]  # Assuming there's only one model in the list
-
+#anova_results <- anova_summary[[1]]  # Assuming there's only one model in the list
 
 ```
-
+<!-- to try and get right
 Prior to performing a one-way ANOVA, the assumptions of normality and homogeneity of variances were tested. Levene's test for homogeneity of variances suggests there were equal variances accross codntiions, F(`r df1_levene`, `r df2_levene`) = `r levene_f_value`, p = `r levene_p_value`. A Shapiro-Wilk test suggests the residuals of the data were normally distributed, w = `r shapiro_w_value`, p = `r shapiro_p_value`. Subsequently, a one-way ANOVA was performed to identify the effect of condition (dose) on planaria motility. The ANOVA results indicate that the effect of `Condition` on `Distance` is not statistically significant (F(`r df1`, `r df2`) = `r f_value`, p = `r p_value`). Despite high variability in the dataset (@fig-Violin_plot) , these results suggests any of the tested doses would be valid for conditioning. However, given the seeming reduction in motility for the 1μM group, and intermediate dose of 10μM was selected for subsequent conditioning experiments.
 
+
 The ANOVA results indicate that the effect of `Condition` on `Distance` is not statistically significant `r apa(dose_response_anova, effect = "Condition")`
+-->
+
 
 ```{r}
 #| label: fig-Violin_plot
@@ -392,13 +398,21 @@ The ANOVA results indicate that the effect of `Condition` on `Distance` is not s
 #| fig-width: 12
 #| fig-height: 7
 
-source("Graphs.R")
+# source("Graphs.R")
 
-print(dose_response_violin)
+# print(dose_response_violin)
 
 ```
 
 X
+
+## Experiment 2
+
+Next we sought to determine whether planaria can learn and retain an operantly conditioned response.
+
+Two planaria were run concurrently in two separate Y-mazes. The maze was filled with 1.8ml of planaria water. The water was shaken so as to distribute evenly throughout the maze, with bubbles popped as needed. Six planaria were used per run, wherein they completed 4 trials each with an intertrial interval of appriximately 15 minutes. The six planaria were first moved into holding petri dishes, with the regular white room light on to encourage movement. At the start of a trial, two planaria were transferred to the start of the runway using a paintbrush, and shaken loose into the water. Once the planaria had entered the runway, the timer was started. Planaria were given tree minutes to enter one of the arms. Once a planarian had enterd an arm, the plug was inserted to block transfer of liquid between compartments (each arm contained 0.5ml with the plug inserted). The planaria was considered to have entered the arm when the plug could be safely inserted without catching the planaria.
+
+Upon entry, the timer was stopped, and the decision and time were recorded. For treatment subjects, if the active arm was selected, 43.5μL of cocaine was pipetted near the body. If the inactive arm was selected, an identical volume of planarian water was pipetted near the body. The timer was restarted, and three minutes were given for absorption. For control subjects, either arm resulted in plugging and then pipetting 43.5μL of planarian water into the arm. If a subject failed to enter an arm, the plug was inserted and 43.5μL of planarian water was pipetted near the subjects body while in the runway, with three minutes. At the end of a trial, planaria were gently removed and placed back into their holding petri dish.
 
 This is my introductory paragraph. The title will be placed above it automatically. *Do not start with an introductory heading* (e.g., "Introduction"). The title acts as your Level 1 heading for the introduction.
 
