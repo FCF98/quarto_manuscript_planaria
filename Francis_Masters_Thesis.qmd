@@ -136,6 +136,15 @@ library(grid)
 library(jpeg)
 library(ggplot2)
 library(apa)
+library(ghibli)
+library(ggdist)
+library(RColorBrewer)
+library(dplyr)
+library(ggpubr)
+library(tidyr)
+library(ggridges)
+library(viridis)
+library(agridat)
 set_here() #sets the working directory
 
 
@@ -175,7 +184,7 @@ Memories can also be seperated on the temporal dimension. Atkinson and Shiffrin 
 
 At first, it may not be clear what relevance these categorical and temporal distinctions have for experiments on lower organisms. Most people do not attribute rich experiential (episodic) memories to invertebrates. These distinctions may provide parameters for the phenomena of memory retention or savings through regeneration. Even if we find that some memories are able to be retained outside the CNS, these concepts may help us eventually derive the bounds of which memory types hold this property and which do not. It may be that procedural memories such as non-associative responses are stored outside of neural networks. But memories amenable to conscious experience may require neuronal storage. We do not yet know the bounds of non-neuronal memory storage. But we may eventually be able to use techniques that get at these different types of memory to find out.
 
-```{r}
+```{r, eval = FALSE}
 #| label: fig-Figure1
 #| fig-cap: "Theoretical Categories of Memory"
 #| include: true
@@ -224,7 +233,7 @@ One of the most surprising findings from the study of learning and behaviour in 
 
 ### Planaria as a model organism
 
-Triclad flatworms, more colloquially known as planaria, are a broad group of invertebrates which have become the centerpiece for a number of scientific investigations. Planaria are being used to investigate topics including regenerative biology (@karami2015), toxicology (@li2008), radioprotective materials ( @ermakov_planarians_2021 addiction [e.g., see @raffa2008], and the effect of zero gravity environments on physiology (@vistassepmission11team2018). Planaria can be found in salt-water, fresh-water and on land environments. Land dwelling planaria can span from several centimeters to half a meter (Esser, 1981), whereas freshwater planaria, most typical in behavioural research, reach just several millimeters in length (Vásquez-Doorman, Escobedo & Allende, 2022). Planarians are bilaterians, meaning that they display bilateral symmetry across their left and right sides (Sluys & Riutort, 2018).
+Triclad flatworms, more colloquially known as planaria, are a broad group of invertebrates which have become the centerpiece for a number of scientific investigations. Planaria are being used to investigate topics including regenerative biology (@karami2015), toxicology (@li2008; @hagstrom2019 ), radioprotective materials ( @ermakov_planarians_2021) addiction [see @raffa2008], and the effect of zero gravity environments on physiology (@vistassepmission11team2018). Planaria can be found in salt-water, fresh-water and on land environments. Land dwelling planaria can span from several centimeters to half a meter (Esser, 1981), whereas freshwater planaria, most typical in behavioural research, reach just several millimeters in length (Vásquez-Doorman, Escobedo & Allende, 2022). Planarians are bilaterians, meaning that they display bilateral symmetry across their left and right sides (Sluys & Riutort, 2018).
 
 -   List many uses of planarians in research (e.g. for screening radioprotective substances - Ermakov et al 2021)
 
@@ -266,7 +275,7 @@ Amaning-Kwarteng et al., (2017) explored the induction and extinction of a drug 
 
 Understanding the molecular changes and circuit dynamics underlying the establishment of addiction may illuminate a path towards chemical or behaviour therapies to change the brain and thus change behaviour. Currently, therapies focus on top down strategies. People are coached to recognise their thoughts and emotions related to drugs, and to manage them rather than simply act on them. However, if changes in the brains molecular contents and connections change as a result of learning during the acquisition of an addiction, bottom up therapies may assist in reverting these maladaptive neuroadaptations (Chodkiewicz, 2023).
 
-```{r}
+```{r, eval = FALSE}
 #| label: tbl-studycharacteristics
 
 library(tibble)
@@ -350,7 +359,7 @@ Recording sessions lasted 15 minutes. Prior to the first recording session, the 
 
 See @fig-Figure2 for an overview of the apparatus setup. Five petri dishese were positioned on a white acrylic sheet. Recording sessions took place under red light, with the light positioned approximately 36cm above the petri dishes. The dishes were aligned in a 2x3 grid, with a gap left in the top middle position which is where the light was focussed to minimise shadows in the petri dishes; this was important for subsequent tracking analysis. Each drug concentration was rotated across the 5 grid positions to control for any effects of lighting angle.
 
-```{r}
+```{r, eval = FALSE}
 #| label: fig-Figure2
 #| fig-cap: "Dose response apparatus"
 #| include: true
@@ -367,40 +376,49 @@ grid.raster(Figure2)
 #| label: Dose Response Descriptives
 #| include: False
 
-#library(papaja)
-#library(rstatix)
+library(papaja)
+library(rstatix)
+library(afex)
 
 
 # Source the script
-#source("Descriptives.R")
+source("Descriptives.R")
 
-# Load the ANOVA summary
-#load("anova_summary.RData")
 
-# Print the ANOVA summary for APA-style reporting
-#anova_summary
-
-#anova_results <- anova_summary[[1]]  # Assuming there's only one model in the list
 
 ```
-<!-- to try and get right
-Prior to performing a one-way ANOVA, the assumptions of normality and homogeneity of variances were tested. Levene's test for homogeneity of variances suggests there were equal variances accross codntiions, F(`r df1_levene`, `r df2_levene`) = `r levene_f_value`, p = `r levene_p_value`. A Shapiro-Wilk test suggests the residuals of the data were normally distributed, w = `r shapiro_w_value`, p = `r shapiro_p_value`. Subsequently, a one-way ANOVA was performed to identify the effect of condition (dose) on planaria motility. The ANOVA results indicate that the effect of `Condition` on `Distance` is not statistically significant (F(`r df1`, `r df2`) = `r f_value`, p = `r p_value`). Despite high variability in the dataset (@fig-Violin_plot) , these results suggests any of the tested doses would be valid for conditioning. However, given the seeming reduction in motility for the 1μM group, and intermediate dose of 10μM was selected for subsequent conditioning experiments.
 
+@fig-boxplot depicts the distance moved by planarians across the five doses tested. Prior to performing any statistics, the assumptions of normality and homogeneity of variances were tested. Levene's test for homogeneity of variances suggests there were equal variances across conditions (F = `r format(levene_dose_response$F, digits = 3)`, p = `r format(levene_dose_response$P, digits = 3)`). The Shapiro-Wilk test results indicate that the data were not normally distributed (W = `r format(shapiro_test_dose_response$statistic, digits = 3)`, p = `r format(shapiro_test_dose_response$p.value, digits = 3)`). Due to violation of the assumptions of ANOVA, a Kuskal test was performed. The results indicated that the effect of `Condition` on `Distance` is not statistically significant (χ2 (`r kruskal_test$parameter`) = `r format(kruskal_test$statistic, digits = 3)`, p = `r format(kruskal_test$p.value, digits = 3)`).
 
-The ANOVA results indicate that the effect of `Condition` on `Distance` is not statistically significant `r apa(dose_response_anova, effect = "Condition")`
--->
-
-
-```{r}
-#| label: fig-Violin_plot
+```{r, eval = TRUE}
+#| label: fig-boxplot
 #| include: True
 #| fig-cap: "Plot of planarian motility by condition"
 #| fig-width: 12
 #| fig-height: 7
 
-# source("Graphs.R")
+source("Plots/rainplot.R")
 
-# print(dose_response_violin)
+print(rainplot)
+
+```
+
+The results in @fig-boxplot convey the variability of planarian behaviour. All conditions had at least one subject which moved less than 30cm over the 15 minute recording, and all groups had at least two subjects that moved more than 140cm. Experimenter observations indicate that when placed in the recording dish, some planaria -- typically those visible at the bottom of @fig-boxplot -- would move initially, and then come to rest within a few minutes at a spot on the wall. They would remain here without meaningful movement for the remainder of the recording. Although no statistically significant difference was detected, there is a curious grouping of planaria in the 1μM condition below 60cm. Consistant with this, Hutchinson et al. (2015) observed a significant decrease in motility during exposure to 1μM of cocaine but not to 10μM when compared to a control group. No potential explanation was offered for this unusual dose-response effect. The most likely explanation may be a type 1 error.
+
+The dose-response results suggest that any of the proposed doses would be appropriate for conditioning, in that they should not significantly alter planarian behaviour. Because planaria will be exposed to multiple trials within a short time interval, any effects on behaviour may mask evidence of learning. But given this null dose-response result, the primary selection criteria will now shift toward a focus on how rewarding (and therefore reinforcing) the dose is. A range of cocaine doses have been used to successfully condition planaria in CPP paradigms. These procedures typically involve low doses such as 1μM (Hutchinson et al., 2015), 5μM (Amaning-Kwarteng et al., 2017) or 10μM (Hutchinson et al., 2015). But in the case of CPP, exposure time per trial is relatively long, on the order of 15-20 minutes. In the operant conditioning paradigm proposed in Experiment 2, exposure time will be 3 minutes. Similar levels of absorbtion given the time constraint may be achieved by a higher concentration of the compound.
+
+-   Discuss 10% average of missing frames
+
+```{r}
+#| label: fig-ridgeplot
+#| include: True
+#| fig-cap: "Plot of planarian motility across recording interval"
+#| fig-width: 12
+#| fig-height: 7
+
+source("Plots/ridgeplot.R")
+
+print(ridgeplot)
 
 ```
 
