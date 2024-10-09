@@ -4,11 +4,12 @@ library(dplyr)
 library(lme4)
 library(ggplot2)
 library(hrbrthemes)
+library(effectsize)
 
 data <- read_excel("Datasets/PipelineAnalysisTestData2.xlsx")
 
 
-#structuring data correctly
+#########structuring data correctly############
 
 data_long <- data %>%
   pivot_longer(
@@ -39,7 +40,13 @@ data_long <- data %>%
 # Subset the data for Baseline and Endpoint
 data_subset_BE <- subset(data_long, Time %in% c("Baseline", "Endpoint"))
 
+
+
+
+
+
 ###### model comparing baseline to endpoint using subsetted data #####
+
 m1 <- glmer(cbind(ActiveCount, InactiveCount) ~ Condition * Time + (1|Subject), 
             data = data_subset_BE, 
             family = "binomial")
@@ -48,6 +55,8 @@ summary(m1)
 
 car::Anova(m1, type = "III")
 
+
+###### For model 2 and 3, need to decide whether to test cocaine group (Treatment) only
 
 # Subset the data for Baseline and test
 data_subset_BT <- subset(data_long, Time %in% c("Baseline", "Test"))
@@ -58,6 +67,12 @@ m2 <- glmer(cbind(ActiveCount, InactiveCount) ~ Condition * Time + (1|Subject),
 
 summary(m2)
 
+# Model 2: Baseline vs Test (only for treatment group)
+data_subset_BT_treatment <- subset(data_subset_BT, Condition == "Treatment")
+m2 <- glmer(cbind(ActiveCount, InactiveCount) ~ Time + (1|Subject), 
+            data = data_subset_BT_treatment, 
+            family = "binomial")
+
 # Subset the data for Baseline and reinstatement
 data_subset_BR <- subset(data_long, Time %in% c("Baseline", "Reinstatement"))
 
@@ -66,6 +81,119 @@ m3 <- glmer(cbind(ActiveCount, InactiveCount) ~ Condition * Time + (1|Subject),
             family = "binomial")
 
 summary(m3)
+
+# Model 3: Baseline vs Reinstatement (only for treatment group)
+data_subset_BR_treatment <- subset(data_subset_BR, Condition == "Treatment")
+m3 <- glmer(cbind(ActiveCount, InactiveCount) ~ Time + (1|Subject), 
+            data = data_subset_BR_treatment, 
+            family = "binomial")
+
+
+
+
+###### caclulating effect sizes ########
+
+# Function to calculate Cohen's h
+
+cohens_h <- function(p1, p2) {
+  2 * (asin(sqrt(p1)) - asin(sqrt(p2)))
+}
+
+# 1. Cohen's h for treatment vs control at each time point
+
+cohens_h_time <- data_long %>%
+  group_by(Time, Condition) %>%
+  summarize(mean_proportion = mean(ActiveArmProportion), .groups = "drop") %>%
+  pivot_wider(names_from = Condition, values_from = mean_proportion) %>%
+  mutate(cohens_h = cohens_h(Treatment, Control))
+
+print("Cohen's h for Treatment vs Control at each time point:")
+print(cohens_h_time)
+
+
+# 2. Cohen's h for baseline vs endpoint within each condition
+cohens_h_condition <- data_long %>%
+  filter(Time %in% c("Baseline", "Endpoint")) %>%
+  group_by(Condition, Time) %>%
+  summarize(mean_proportion = mean(ActiveArmProportion), .groups = "drop") %>%
+  pivot_wider(names_from = Time, values_from = mean_proportion) %>%
+  mutate(cohens_h = cohens_h(Baseline, Endpoint))
+
+print("Cohen's h for Baseline vs Endpoint within each condition:")
+print(cohens_h_condition)
+
+# 3. Odds ratios from GLMM models
+# For m1 (Baseline vs Endpoint)
+or_m1 <- exp(fixef(m1))
+ci_m1 <- exp(confint(m1, method="Wald"))
+
+
+# For m2 (Baseline vs Test)
+or_m2 <- exp(fixef(m2))
+ci_m2 <- exp(confint(m2, method="Wald"))
+
+# For m3 (Baseline vs Reinstatement)
+or_m3 <- exp(fixef(m3))
+ci_m3 <- exp(confint(m3, method="Wald"))
+
+
+# Function to pretty print odds ratios and CIs
+print_or <- function(or, ci, model_name) {
+  cat(paste0("\nOdds Ratios for ", model_name, ":\n"))
+  for (i in 1:length(or)) {
+    cat(sprintf("%s: OR = %.2f, 95%% CI [%.2f, %.2f]\n", 
+                names(or)[i], or[i], ci[i,1], ci[i,2]))
+  }
+}
+
+
+
+print_or(or_m1, ci_m1, "Model 1 (Baseline vs Endpoint)")
+print_or(or_m2, ci_m2, "Model 2 (Baseline vs Test)")
+print_or(or_m3, ci_m3, "Model 3 (Baseline vs Reinstatement)")
+
+
+
+
+########### Correcting for multiple comparisons #########
+
+# Function to extract p-values from model summary
+extract_p_values <- function(model) {
+  summary_data <- summary(model)$coefficients
+  p_values <- summary_data[, "Pr(>|z|)"]
+  return(p_values[-1])  # Exclude intercept
+}
+
+# Extract p-values from all models
+p_values_m1 <- extract_p_values(m1)
+p_values_m2 <- extract_p_values(m2)
+p_values_m3 <- extract_p_values(m3)
+
+# Combine all p-values
+all_p_values <- c(p_values_m1, p_values_m2, p_values_m3)
+
+# Apply Bonferroni correction
+n_tests <- length(all_p_values)
+adjusted_p_values <- p.adjust(all_p_values, method = "holm")
+
+# Function to print results with adjusted p-values
+print_results <- function(model, adjusted_p, model_name) {
+  cat(paste0("\nResults for ", model_name, ":\n"))
+  summary_data <- summary(model)$coefficients
+  coefficients <- summary_data[, "Estimate"]
+  std_errors <- summary_data[, "Std. Error"]
+  
+  for (i in 2:nrow(summary_data)) {  # Start from 2 to skip intercept
+    cat(sprintf("%s: Estimate = %.4f, SE = %.4f, Adjusted p-value = %.4f\n",
+                rownames(summary_data)[i], coefficients[i], std_errors[i], 
+                adjusted_p[i-1]))
+  }
+}
+
+# Print results for each model
+print_results(m1, adjusted_p_values[1:3], "Model 1 (Baseline vs Endpoint)")
+print_results(m2, adjusted_p_values[4:6], "Model 2 (Baseline vs Test)")
+print_results(m3, adjusted_p_values[7:9], "Model 3 (Baseline vs Reinstatement)")
 
 
 
