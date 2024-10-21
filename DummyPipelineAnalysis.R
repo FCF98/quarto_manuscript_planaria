@@ -5,8 +5,9 @@ library(lme4)
 library(ggplot2)
 library(hrbrthemes)
 library(effectsize)
+library(emmeans)
 
-data <- read_excel("Datasets/PipelineAnalysisTestData2.xlsx")
+data <- read_excel("Datasets/PipelineAnalysisTestData3.xlsx")
 
 
 #########structuring data correctly############
@@ -47,13 +48,37 @@ data_subset_BE <- subset(data_long, Time %in% c("Baseline", "Endpoint"))
 
 ###### model comparing baseline to endpoint using subsetted data #####
 
+contrasts(data_long$Condition) <- contr.sum
+
+contrasts(data_long$Time) <- contr.sum
+
 m1 <- glmer(cbind(ActiveCount, InactiveCount) ~ Condition * Time + (1|Subject), 
-            data = data_subset_BE, 
+            data = data_long, 
             family = "binomial")
 
 summary(m1)
 
 car::Anova(m1, type = "III")
+
+emmeans(m1,pairwise~Time|Condition,adjust="bonferroni",type="response")
+
+emmeans(m1,pairwise~Condition|Time,adjust="bonferroni",type="response")
+
+
+
+
+
+
+
+
+
+#these below are a seperate way to do the adjustment 
+
+res <- emmeans(m1,pairwise~Time|Condition,adjust="none",type="response")
+
+res <- as.data.frame(res$contrasts)
+
+res$p.adj <- p.adjust(res$p.value,method="bonferroni")
 
 
 ###### For model 2 and 3, need to decide whether to test cocaine group (Treatment) only
@@ -231,7 +256,7 @@ ggplot(summary_data, aes(x = Time, y = mean_proportion, color = Condition, group
     panel.grid.major = element_line(color = "gray90"),
     panel.grid.minor = element_blank()
   ) +
-  scale_y_continuous(limits = c(0, 0.5), breaks = seq(0, 0.5, 0.1)) +
+  scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.1)) +
   scale_color_brewer(palette = "Set1")
 
 
