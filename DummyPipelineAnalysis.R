@@ -218,6 +218,68 @@ ggplot(lollipop_chart_data, aes(x = as.factor(Subject), y = change, color = Cond
 
 
 
+# Create the line plot with significance markers
+
+
+summary_data <- data_long %>%
+  group_by(Condition, Time) %>%
+  summarise(
+    mean_proportion = mean(ActiveArmProportion, na.rm = TRUE),
+    se_proportion = sd(ActiveArmProportion, na.rm = TRUE) / sqrt(sum(!is.na(ActiveArmProportion))),
+    n = sum(!is.na(ActiveArmProportion)),  # Add sample size calculation
+    .groups = 'drop'
+  )
+
+ggplot(summary_data, aes(x = Time, y = mean_proportion, color = Condition, group = Condition)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 3) +
+  geom_errorbar(aes(ymin = mean_proportion - se_proportion, 
+                    ymax = mean_proportion + se_proportion), 
+                width = 0.2) +
+  # Add significance markers for Control group
+  geom_signif(
+    data = data.frame(x = c(1, 2), xend = c(2, 3)),
+    aes(x = x, xend = xend, y = c(0.65, 0.60), yend = c(0.65, 0.60)),
+    annotation = c("***", "***"),
+    color = "navy",
+    map_signif_level = FALSE,
+    tip_length = 0.02,
+    vjust = 0.5
+  ) +
+  # Add significance markers for Treatment group
+  geom_signif(
+    data = data.frame(x = c(1, 1, 2), xend = c(2, 3, 4)),
+    aes(x = x, xend = xend, y = c(0.55, 0.50, 0.45), yend = c(0.55, 0.50, 0.45)),
+    annotation = c("**", "*", "*"),
+    color = "darkred",
+    map_signif_level = FALSE,
+    tip_length = 0.02,
+    vjust = 0.5
+  ) +
+  # Add sample size labels below the x-axis
+  geom_text(aes(label = label, y = -0.02), 
+            position = position_dodge(width = 0.4),
+            size = 3,
+            show.legend = FALSE) +
+  labs(
+    title = "Active Arm Choice Proportion Over Time",
+    subtitle = "By Experimental Condition",
+    x = "Time Point",
+    y = "Proportion of Active Arm Choices",
+    color = "Condition"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    panel.grid.major = element_line(color = "gray90"),
+    panel.grid.minor = element_blank(),
+    plot.margin = margin(b = 40, l = 20, r = 20, t = 20, unit = "pt")
+  ) +
+  scale_y_continuous(limits = c(-0.05, 0.7), breaks = seq(0, 0.7, 0.1)) +
+  scale_color_brewer(palette = "Set1")
+
+
 
 ###### caclulating effect sizes ########
 

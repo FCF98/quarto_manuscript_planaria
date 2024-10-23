@@ -7,6 +7,7 @@ library(hrbrthemes)
 library(effectsize)
 library(emmeans)
 library(DHARMa)
+library(ggsignif)
 
 data <- read_excel("Datasets/ExperimentTwoSummaryData.xlsx")
 
@@ -54,6 +55,7 @@ data_long <- data %>%
 
 
 
+
 ###### model to test for main effects and interactions across 4 time points #####
 
 contrasts(data_long$Condition) <- contr.sum
@@ -77,54 +79,118 @@ emmeans(m1,pairwise~Condition|Time,adjust="bonferroni",type="response")
 ############# plotting the grouped results   ############
 
 
-# Calculate mean and standard error for each Condition and Time, explicitly handling NAs
-summary_data <- data_long %>%
+# First, create a data frame for the between-group significance annotations
+between_signif <- data.frame(
+  x = 3,  # Test time point
+  y = 0.45,  # Position between the two points
+  label = "**"  # Two asterisks for p < 0.01
+)
+
+# Create the summary data for graphing
+
+summary_data_w_sample <- data_long %>%
   group_by(Condition, Time) %>%
   summarise(
     mean_proportion = mean(ActiveArmProportion, na.rm = TRUE),
     se_proportion = sd(ActiveArmProportion, na.rm = TRUE) / sqrt(sum(!is.na(ActiveArmProportion))),
-    n = sum(!is.na(ActiveArmProportion)),  # Add sample size calculation
+    n = sum(!is.na(ActiveArmProportion)),
     .groups = 'drop'
-  )
-
-# Add sample size to the plot labels
-summary_data <- summary_data %>%
+  ) %>%
   mutate(label = sprintf("n=%d", n))
 
-# Create the line plot with sample sizes
-ggplot(summary_data, aes(x = Time, y = mean_proportion, color = Condition, group = Condition)) +
+
+
+# Create APA-style plot with both types of comparisons
+grouped_comprison_w_significance_apa<- ggplot(summary_data_w_sample, aes(x = Time, y = mean_proportion, color = Condition, group = Condition)) +
   geom_line(linewidth = 1) +
   geom_point(size = 3) +
   geom_errorbar(aes(ymin = mean_proportion - se_proportion, 
                     ymax = mean_proportion + se_proportion), 
                 width = 0.2) +
+  # Control group within comparisons
+  geom_signif(
+    annotations = "***",
+    xmin = 1, xmax = 2,
+    y_position = 0.63,
+    color = "#377EB8"
+  ) +
+  geom_signif(
+    annotations = "***",
+    xmin = 2, xmax = 3,
+    y_position = 0.8,
+    color = "#377EB8"
+  ) +
+  # Treatment group within comparisons
+  geom_signif(
+    annotations = "**",
+    xmin = 1, xmax = 2,
+    y_position = 0.7,
+    color = "#E60012"
+  ) +
+  geom_signif(
+    annotations = "*",
+    xmin = 1, xmax = 3,
+    y_position = 0.88,
+    color = "#E60012"
+  ) +
+  geom_signif(
+    annotations = "*",
+    xmin = 2, xmax = 4,
+    y_position = 0.95,
+    color = "#E60012"
+  ) +
+  # Between group comparison
+  geom_signif(
+    annotations = "#",
+    xmin = 2.9, xmax = 3.1,
+    y_position = 0.6,
+    color = "black"
+  ) +
   # Add sample size labels below the x-axis
-  geom_text(aes(label = label, y = -0.02), 
+  geom_text(aes(label = label, y = 0.04), 
             position = position_dodge(width = 0.4),
             size = 3,
             show.legend = FALSE) +
+  # APA-style labels
   labs(
-    title = "Active Arm Choice Proportion Over Time",
-    subtitle = "By Experimental Condition",
     x = "Time Point",
-    y = "Proportion of Active Arm Choices",
+    y = "Mean Proportion of Active Arm Choices",
     color = "Condition"
   ) +
-  theme_minimal() +
+  # APA-style theme modifications
+  theme_classic() +
   theme(
-    legend.position = "bottom",
+    text = element_text(family = "Times New Roman", size = 12),
+    axis.title = element_text(size = 12),
+    axis.title.y = element_text(margin = margin(r = 15)),
+    axis.text = element_text(size = 10, color = "black"),
     axis.text.x = element_text(angle = 45, hjust = 1),
-    panel.grid.major = element_line(color = "gray90"),
-    panel.grid.minor = element_blank(),
-    # Add more space at the bottom for sample size labels
-    plot.margin = margin(b = 40, l = 20, r = 20, t = 20, unit = "pt")
+    legend.position = "bottom",
+    legend.title = element_text(size = 12),
+    legend.text = element_text(size = 10),
+    axis.line = element_line(color = "black", linewidth = 0.5),
+    panel.grid = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    plot.margin = margin(t = 20, r = 20, b = 40, l = 20, unit = "pt"),
+    panel.border = element_blank()
   ) +
-  scale_y_continuous(limits = c(-0.05, 0.7), breaks = seq(0, 0.7, 0.1)) +
-  scale_color_brewer(palette = "Set1")
+  scale_y_continuous(
+    limits = c(0, 1),
+    breaks = seq(0, 1, 0.1),
+    expand = c(0.02, 0)
+  ) +
+  scale_color_manual(values = c("Control" = "#377EB8", "Treatment" = "#E60012"))
 
-# Print the summary data to check the calculations
-print(summary_data)
+grouped_comprison_w_significance_apa
 
+#saving the plot
+ggsave("grouped_comprison_w_significance_apa.png", grouped_comprison_w_significance_apa, 
+       width = 12, height = 9, dpi = 300, units = "in",
+       bg = "white")
+
+
+
+############ Creating individual plots  #########
 
 
 # First, create an ordered factor for subjects based on their condition
@@ -174,6 +240,11 @@ ggsave("individual_subject_plots.png", individual_plots,
        width = 20, height = 24, dpi = 300, units = "in",
        bg = "white")
 
+
+
+
+
+
 ###### lollipop chart ######
 
 
@@ -204,5 +275,64 @@ ggplot(lollipop_chart_data, aes(x = as.factor(Subject), y = change, color = Cond
     title = "Change active arm preference from Baseline to Endpoint",
     subtitle = "Positive values indicate an increase, negative values indicate a decrease"
   )
+
+
+
+######### Plotting learning across conditioning days ##########
+
+Data_long_days <- data %>%
+  select(Subject, Condition, 
+         Baseline = `Baseline%`, 
+         Day1 = `Day1%`, 
+         Day2 = `Day2%`, 
+         Day3 = `Day3%`, 
+         Day4 = `Day4%`, 
+         Day5 = `Day5%`) %>%
+  pivot_longer(
+    cols = c(Baseline:Day5),
+    names_to = "TimePoint",
+    values_to = "Proportion"
+  ) %>%
+  mutate(
+    TimePoint = factor(TimePoint, 
+                       levels = c("Baseline", "Day1", "Day2", "Day3", "Day4", "Day5")),
+    Condition = factor(Condition)
+  ) %>%
+  # Calculate mean and SE for each condition and timepoint
+  group_by(Condition, TimePoint) %>%
+  summarise(
+    mean_prop = mean(Proportion, na.rm = TRUE),
+    se = sd(Proportion, na.rm = TRUE) / sqrt(n()),
+    .groups = 'drop'
+  )
+
+# Create the visualization
+ggplot(Data_long_days, aes(x = TimePoint, y = mean_prop, 
+                      color = Condition, group = Condition)) +
+  # Add mean lines
+  geom_line(linewidth = 1.5) +
+  # Add mean points
+  geom_point(size = 3) +
+  # Add error bars
+  geom_errorbar(aes(ymin = mean_prop - se, ymax = mean_prop + se), 
+                width = 0.2) +
+  # Customize the theme and labels
+  theme_minimal() +
+  labs(
+    title = "Average Proportion of Active Arm Choices Over Time",
+    y = "Proportion of Active Arm Choices",
+    x = "Time Point"
+  ) +
+  scale_color_manual(values = c("Control" = "#0072B2", "Treatment" = "#D55E00")) +
+  theme(
+    legend.position = "bottom",
+    panel.grid.minor = element_blank(),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 12, face = "bold"),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  ) +
+  ylim(0, 1)  # Set y-axis limits from 0 to 1
+
+
 
 
