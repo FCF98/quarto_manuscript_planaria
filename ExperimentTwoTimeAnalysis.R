@@ -5,6 +5,11 @@ library(emmeans)
 library(ggsignif)
 library(ggplot2)
 library(gghalves)
+library(dplyr)
+library(ggdist)
+library(ggtext)
+library(colorspace)
+library(forcats)
 
 Exp2_Time_Data <- read_excel("Datasets/ExpeimentTwoTimeData.xlsx")
 
@@ -187,13 +192,13 @@ grouped_time_plots_with_sig <- ggplot(Exp2_Time_Long_Four_Points, aes(x = TimePo
     annotations = "***",
     xmin = "Baseline", xmax = "Test",
     y_position = 200,
-    color = "#377EB8"
+    color = "#159090"
   ) +
   geom_signif(
     annotations = "***",
     xmin = "Endpoint", xmax = "Test",
     y_position = 300,
-    color = "#377EB8"
+    color = "#159090"
   ) +
   
   # Treatment group significance markers
@@ -201,25 +206,25 @@ grouped_time_plots_with_sig <- ggplot(Exp2_Time_Long_Four_Points, aes(x = TimePo
     annotations = "***",
     xmin = "Baseline", xmax = "Test",
     y_position = 230,
-    color = "#E60012"
+    color = "#FF8C00"
   ) +
   geom_signif(
     annotations = "***",
     xmin = "Baseline", xmax = "Reinst",
     y_position = 260,    # fixed the y-position from 2600
-    color = "#E60012"
+    color = "#FF8C00"
   ) +
   geom_signif(
     annotations = "**",
     xmin = "Endpoint", xmax = "Test",
     y_position = 330,
-    color = "#E60012"
+    color = "#FF8C00"
   ) +
   geom_signif(
     annotations = "**",
     xmin = "Endpoint", xmax = "Reinst",
     y_position = 360,
-    color = "#E60012"
+    color = "#FF8C00"
   ) +
   
   # APA-style theme modifications
@@ -243,7 +248,7 @@ grouped_time_plots_with_sig <- ggplot(Exp2_Time_Long_Four_Points, aes(x = TimePo
     limits = c(0, 400),
     breaks = seq(0, 300, 50)
   ) +
-  scale_color_manual(values = c("Control" = "#377EB8", "Treatment" = "#E60012")) +
+  scale_color_manual(values = c("Control" = "#159090", "Treatment" = "#FF8C00")) +
   labs(
     x = "Time Point",
     y = "Time to Decision (seconds)",
@@ -251,6 +256,10 @@ grouped_time_plots_with_sig <- ggplot(Exp2_Time_Long_Four_Points, aes(x = TimePo
   )
 
 grouped_time_plots_with_sig
+
+
+
+########## With APA formatting
 
 ggplot(Exp2_Time_Long_Four_Points, aes(x = TimePoint, y = Time, color = Condition, fill = Condition)) +
   # Add boxplots with transparency
@@ -344,13 +353,7 @@ ggplot(Exp2_Time_Long_Four_Points,
                       position = position_points_jitter(width = 0.05, height = 0)) +
   theme_ridges()
 
-ggplot(Exp2_Time_Long_Four_Points, aes(x = TimePoint, y = Time, color = Condition)) +
-  # Individual trajectories (light)
-  geom_line(aes(group = interaction(Subject, Condition)), alpha = 0.1) +
-  # Group means (bold)
-  stat_summary(fun = mean, geom = "line", size = 2) +
-  stat_summary(fun = mean, geom = "point", size = 3) +
-  theme_minimal()
+
 
 ############ plotting individual data ################
 
@@ -391,12 +394,138 @@ individual_time_plots <- ggplot(Exp2_Time_Long, aes(x = TimePoint, y = Time, gro
     legend.title = element_text(size = 12),
     legend.text = element_text(size = 10)
   ) +
-  scale_color_manual(values = c("Control" = "navy", "Treatment" = "darkred"))
+  scale_color_manual(values = c("Control" = "#159090", "Treatment" = "#FF8C00"))
 
 
 individual_time_plots
 
 # save the plot
-ggsave("individual_subject_time_plots.png", individual_time_plots, 
+ggsave("individual_time_plots.png", individual_time_plots, 
        width = 20, height = 24, dpi = 300, units = "in",
        bg = "white")
+
+
+
+
+############# Horizontal raincloud plot ###############
+
+# Define colors for control and treatment - reverse the order to match the desired visual order
+pal <- c("#FF8C00", "#159090")  # Now Orange for treatment, Teal for control
+
+# Helper function for sample size labels
+add_sample <- function(x) {
+  return(c(y = max(x) + 15, label = length(x)))
+}
+
+# Reorder the Condition factor levels (Treatment first, then Control) - reverse the order
+Exp2_Time_Long_Four_Points$Condition <- factor(Exp2_Time_Long_Four_Points$Condition, 
+                                               levels = c("Treatment", "Control"))
+
+# Create a modified position function for timepoint spacing
+position_dodge2 <- function(width = 1, preserve = c("total", "single")) {
+  preserve <- match.arg(preserve)
+  ggproto(NULL, PositionDodge2,
+          width = width,
+          preserve = preserve
+  )
+}
+
+rouped_time_horizontal_boxplot <- ggplot(Exp2_Time_Long_Four_Points, aes(x = fct_rev(TimePoint), y = Time, fill = Condition)) +
+  # Add extra spacing between timepoints
+  scale_x_discrete(expand = expansion(mult = 0.5)) +  # Changed to multiplicative expansion
+  # Boxplot layer
+  geom_boxplot(
+    aes(color = Condition,
+        color = after_scale(darken(color, .1, space = "HLS")),
+        fill = after_scale(desaturate(lighten(color, .8), .4))),
+    width = .5,
+    outlier.shape = NA,
+    position = position_dodge(width = 0.8)
+  ) +
+  # Individual points
+  geom_point(
+    aes(color = Condition,
+        color = after_scale(darken(color, .1, space = "HLS"))),
+    fill = "white",
+    shape = 21,
+    stroke = .4,
+    size = 2,
+    position = position_jitterdodge(dodge.width = 0.8, jitter.width = 0.15, seed = 1)
+  ) +
+  # Add median values
+  stat_summary(
+    geom = "text",
+    fun = "median",
+    aes(label = round(..y.., 1),
+        color = Condition,
+        color = after_scale(darken(color, .1, space = "HLS"))),
+    position = position_dodge(width = 0.8),
+    family = "Roboto Mono",
+    fontface = "bold",
+    size = 4,
+    vjust = -2.2
+  ) +
+  # Add sample size
+  stat_summary(
+    geom = "text",
+    fun.data = add_sample,
+    aes(label = paste("n =", ..label..),
+        color = Condition,
+        color = after_scale(darken(color, .1, space = "HLS"))),
+    position = position_dodge(width = 0.8),
+    family = "Roboto Condensed",
+    size = 3.5,
+    hjust = -0.2
+  ) +
+  # Flip coordinates with expanded limits
+  coord_flip(clip = "off", ylim = c(0, 275)) +
+  # Scales and labels
+  scale_color_manual(values = pal, breaks = c("Treatment", "Control")) +  # Reversed order
+  scale_fill_manual(values = pal, breaks = c("Treatment", "Control")) +  # Reversed order
+  facet_grid(rows = vars(TimePoint), scales = "free_y", space = "free_y") +
+  labs(
+    x = NULL,
+    y = "Response Time (seconds)",
+    title = "Planaria Response Times Across Time Points",
+    subtitle = "Distribution of response times for control and treatment groups",
+    caption = "Visualization adapted from Cédric Scherer's penguin visualization"
+  ) +
+  # Theme customization
+  theme_minimal(base_family = "Arial", base_size = 14) +
+  theme(
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_line(color = "grey90"),
+    panel.grid.major.y = element_blank(),
+    panel.spacing = unit(2, "cm"),
+    strip.text.y = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text = element_text(size = 12),
+    axis.text.y = element_text(
+      color = rev(darken(pal, .1, space = "HLS")),
+      size = 14,
+      margin = margin(r = 10)
+    ),
+    axis.title.x = element_text(margin = margin(t = 15), size = 14),
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(
+      color = "grey40",
+      hjust = 0,
+      margin = margin(0, 0, 25, 0)
+    ),
+    plot.title.position = "plot",
+    plot.caption = element_text(
+      color = "grey40",
+      size = 10,
+      margin = margin(25, 0, 0, 0)
+    ),
+    plot.margin = margin(20, 30, 15, 20),
+    legend.position = "top",
+    legend.title = element_blank(),
+    legend.margin = margin(0, 0, 15, 0)
+  )
+
+# save the plot
+ggsave("grouped_time_horizontal_boxplot.png", rouped_time_horizontal_boxplot, 
+       width = 15, height = 12, dpi = 300, units = "in",
+       bg = "white")
+

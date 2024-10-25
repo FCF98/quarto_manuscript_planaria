@@ -112,32 +112,32 @@ grouped_comprison_w_significance_apa<- ggplot(summary_data_w_sample, aes(x = Tim
     annotations = "***",
     xmin = 1, xmax = 2,
     y_position = 0.63,
-    color = "#377EB8"
+    color = "#159090"
   ) +
   geom_signif(
     annotations = "***",
     xmin = 2, xmax = 3,
     y_position = 0.8,
-    color = "#377EB8"
+    color = "#159090"
   ) +
   # Treatment group within comparisons
   geom_signif(
     annotations = "**",
     xmin = 1, xmax = 2,
     y_position = 0.7,
-    color = "#E60012"
+    color = "#FF8C00"
   ) +
   geom_signif(
     annotations = "*",
     xmin = 1, xmax = 3,
     y_position = 0.88,
-    color = "#E60012"
+    color = "#FF8C00"
   ) +
   geom_signif(
     annotations = "*",
     xmin = 2, xmax = 4,
     y_position = 0.95,
-    color = "#E60012"
+    color = "#FF8C00"
   ) +
   # Between group comparison
   geom_signif(
@@ -179,7 +179,7 @@ grouped_comprison_w_significance_apa<- ggplot(summary_data_w_sample, aes(x = Tim
     breaks = seq(0, 1, 0.1),
     expand = c(0.02, 0)
   ) +
-  scale_color_manual(values = c("Control" = "#377EB8", "Treatment" = "#E60012"))
+  scale_color_manual(values = c("Control" = "#159090", "Treatment" = "#FF8C00"))
 
 grouped_comprison_w_significance_apa
 
@@ -231,7 +231,7 @@ individual_plots <- ggplot(data_long, aes(x = Time, y = ActiveArmProportion, gro
     legend.text = element_text(size = 10)
   ) +
   scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
-  scale_color_manual(values = c("Control" = "navy", "Treatment" = "darkred"))
+  scale_color_manual(values = c("Control" = "#159090", "Treatment" = "#FF8C00"))
 
 individual_plots
 
