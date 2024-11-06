@@ -23,12 +23,28 @@ dose_response_data <- dose_response_data %>%
   mutate(Subject = seq(1, nrow(dose_response_data)))
 
 
-# Run ANOVA
-dose_response_anova_afex <- aov_car(Distance ~ Condition + Error(Subject), data = dose_response_data)
 
-# Create apa object
-apa_anova_results <- apa_print(dose_response_anova_afex)
+# I need to check assumption of equal variances
 
+levene_dose_response <- leveneTest(Distance ~ Condition, dose_response_data)
+
+
+# I need to check assumption of normality
+
+shapiro_test_dose_response <- shapiro.test(dose_response_data$Distance)
+
+
+# because assumption of normality is violated, I need to perform a non-parametric test
+
+kruskal_test <- kruskal.test(Distance ~ Condition, data = dose_response_data)
+
+
+
+
+
+######## anova format for future use ##########
+
+  #dose_response_anova <- aov_car(Distance ~ Condition + Error(Subject), data = dose_response_data)
 
 
 
