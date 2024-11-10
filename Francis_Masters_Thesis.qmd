@@ -127,6 +127,98 @@ execute:
 #removes scientific notation (e.g. 10 x e^2)
 options(scipen = 999)
 
+# Conflicted
+if (!require("conflicted")) install.packages("conflicted")
+library(conflicted)
+
+if (!require("pwr")) install.packages("pwr")
+library(pwr)
+
+# Tidyverse
+if (!require("tidyverse")) install.packages("tidyverse")
+library(tidyverse)
+
+# Flextable
+if (!require("flextable")) install.packages("flextable")
+library(flextable)
+
+# ftExtra
+if (!require("ftExtra")) install.packages("ftExtra")
+library(ftExtra)
+
+# Knitr
+if (!require("knitr")) install.packages("knitr")
+library(knitr)
+
+# Here
+if (!require("here")) install.packages("here")
+library(here)
+
+# Patchwork
+if (!require("patchwork")) install.packages("patchwork")
+library(patchwork)
+
+# Rempsyc
+if (!require("rempsyc")) install.packages("rempsyc")
+library(rempsyc)
+
+# PNG
+if (!require("png")) install.packages("png")
+library(png)
+
+# Grid
+if (!require("grid")) install.packages("grid")
+library(grid)
+
+# JPEG
+if (!require("jpeg")) install.packages("jpeg")
+library(jpeg)
+
+# ggplot2
+if (!require("ggplot2")) install.packages("ggplot2")
+library(ggplot2)
+
+# APA
+if (!require("apa")) install.packages("apa")
+library(apa)
+
+# Ghibli
+if (!require("ghibli")) install.packages("ghibli")
+library(ghibli)
+
+# ggdist
+if (!require("ggdist")) install.packages("ggdist")
+library(ggdist)
+
+# RColorBrewer
+if (!require("RColorBrewer")) install.packages("RColorBrewer")
+library(RColorBrewer)
+
+# dplyr
+if (!require("dplyr")) install.packages("dplyr")
+library(dplyr)
+
+# ggpubr
+if (!require("ggpubr")) install.packages("ggpubr")
+library(ggpubr)
+
+# tidyr
+if (!require("tidyr")) install.packages("tidyr")
+library(tidyr)
+
+# ggridges
+if (!require("ggridges")) install.packages("ggridges")
+library(ggridges)
+
+# viridis
+if (!require("viridis")) install.packages("viridis")
+library(viridis)
+
+# agridat
+if (!require("agridat")) install.packages("agridat")
+library(agridat)
+
+
 library(conflicted)
 library(tidyverse)
 library(flextable)
@@ -448,7 +540,17 @@ At test, six planaria were used per run. Three planaria were run concurrently in
 
 #### Results and disciussion
 
-@fig-Exp2-decisions-line shows the average percentage of trials where subjects entered the active arm across the four time points. A generalised linear model with family set to binomial was fitted in R. Subject ID was set as a random effect, with condition, time point and the interaction term as a fixed effects. Pairwise comparisons with a Bonferroni correction were carried out using the emmeans package in R. A type 3 ANOVA
+```{r}
+#| label: Experiment Two Results
+#| include: False
+
+
+# Source the script
+source("ExperimentTwoAnalysis.R")
+
+```
+
+@fig-Exp2-decisions-line shows the average percentage of trials where subjects entered the active arm across the four time points. A generalised linear mixed effects model with family set to binomial was fitted in R. Subject ID was set as a random effect, with condition, time point and the interaction term as a fixed effects. Pairwise comparisons with a Bonferroni correction were carried out using the emmeans package in R. Type III Wald chi-square tests were carried out to identify whether there was a main effect of condition, time, and their interaction. The results did not find a significant effect of condition (χ2 (`r (exp2_model_output$Df[2])`) = `r format(exp2_model_output$Chisq[2], digits = 3)`, p `r if(exp2_model_output$"Pr(>Chisq)"[2] < .001) "<.001" else format(exp2_model_output$"Pr(>Chisq)"[2], digits = 3)`). The results indicate a significant effect of time (χ2 (`r (exp2_model_output$Df[3])`) = `r format(exp2_model_output$Chisq[3], digits = 3)`, p = `r if(exp2_model_output$"Pr(>Chisq)"[3] < .001) "<.001" else format(exp2_model_output$"Pr(>Chisq)"[3], digits = 3)`) and a significant time\*condition interaction (χ2 (`r (exp2_model_output$Df[4])`) = `r format(exp2_model_output$Chisq[4], digits = 3)`, p = `r if(exp2_model_output$"Pr(>Chisq)"[4] < .001) "<.001" else format(exp2_model_output$"Pr(>Chisq)"[4], digits = 3)`)
 
 ```{r}
 #| label: fig-Exp2-decisions-line
@@ -459,7 +561,7 @@ At test, six planaria were used per run. Three planaria were run concurrently in
 
 source("ExperimentTwoAnalysis.R")
 
-print("*Update with plot name*")
+print(grouped_comprison_w_significance_apa)
 
 ```
 
@@ -473,7 +575,7 @@ Details about writing headings with markdown in APA style are [here](https://wjs
 
 A reference label for a figure must have the prefix `fig-`, and in a code chunk, the caption must be set with `fig-cap`. Captions are in [title case](https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case).
 
-```{r}
+```{r, eval = FALSE}
 #| label: fig-myplot
 #| fig-cap: The Figure Caption
 #| apa-note: This is the note below the figure.
@@ -495,7 +597,7 @@ To refer to any figure or table, use the `@` symbol followed by the reference la
 
 One way to import an existing graphic as a figure is to use `knitr::include_graphics` in a code chunk. For example, @fig-import1 is an imported image. Note that in apaquarto-pdf documents, we can specify that that a figure or table should span both columns when in journal mode by setting the `apa-twocolumn` chunk option to `true`. For other formats, this distinction does not matter.
 
-```{r}
+```{r, eval = FALSE}
 #| label: fig-import1
 #| fig-cap: An Imported Graphic
 #| apa-note: A note below the figure
@@ -514,7 +616,7 @@ Which style of creating figures you choose depends on preference and need.
 
 We can make a table the same way as a figure. Generating a table that conforms to APA format in all document formats can be tricky. When the table is simple, the `kable` function from knitr works well. Feel free to experiment with different methods, but I have found that David Gohel's [flextable](https://davidgohel.github.io/flextable/) to be the best option when I need something more complex.
 
-```{r}
+```{r, eval = FALSE}
 #| label: tbl-mytable
 #| tbl-cap: The Table Caption
 #| apa-note: The note below the table.
@@ -545,7 +647,7 @@ When creating tables and figures in journal mode, care must be taken not to make
 
 As demonstrated in @fig-twocolumn, you can make figures tables span the two columns by setting the `apa-twocolumn` chunk option to `true`.
 
-```{r}
+```{r, eval = FALSE}
 #| label: fig-twocolumn
 #| fig-cap: A Figure Spanning Two Columns When in Journal Mode
 #| apa-note: Figures in two-column mode are only different for jou mode in .pdf documents
