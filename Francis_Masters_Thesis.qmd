@@ -125,6 +125,8 @@ execute:
 
 #To pull updates git checkout origin/master -- Francis_Masters_Thesis.qmd
 
+# to push updates git commit -m "updating thesis manuscript"
+
 
 #removes scientific notation (e.g. 10 x e^2)
 options(scipen = 999)
