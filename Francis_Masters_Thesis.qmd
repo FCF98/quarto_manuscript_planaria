@@ -516,7 +516,7 @@ The results in @fig-boxplot convey the variability of planarian behaviour. All c
 
 The dose-response results suggest that any of the proposed doses would be appropriate for conditioning, in that they should not significantly alter planarian behaviour. Because planaria will be exposed to multiple trials within a short time interval, any effects on behaviour may mask evidence of learning. But given this null dose-response result, the primary selection criteria will now shift toward a focus on how rewarding (and therefore reinforcing) the dose is. A range of cocaine doses have been used to successfully condition planaria in CPP paradigms. These procedures typically involve low doses such as 1μM (Hutchinson et al., 2015), 5μM (Amaning-Kwarteng et al., 2017) or 10μM (Hutchinson et al., 2015). But in the case of CPP, exposure time per trial is relatively long, on the order of 15-20 minutes. In the operant conditioning paradigm proposed in Experiment 2, exposure time will be 3 minutes. Similar levels of absorbtion given the time constraint may be achieved by a higher concentration of the compound.
 
--   Discuss 10% average of missing frames
+-   Discuss 10% average of missing frames.
 
 ```{r}
 #| label: fig-ridgeplot
