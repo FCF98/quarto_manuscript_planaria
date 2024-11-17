@@ -4,12 +4,7 @@ library(readxl)
 library(dplyr)
 library(car)
 library(pwr)
-
-
-# ANOVA_Analysis.R
-
-# Load necessary libraries
-library(dplyr)
+library(dunn.test)
 library(afex)
 library(apa)
 library(papaja)
@@ -37,6 +32,13 @@ shapiro_test_dose_response <- shapiro.test(dose_response_data$Distance)
 # because assumption of normality is violated, I need to perform a non-parametric test
 
 kruskal_test <- kruskal.test(Distance ~ Condition, data = dose_response_data)
+
+
+# need to do post hoc comparisons
+
+dunn_test <- dunn.test(dose_response_data$Distance, 
+          dose_response_data$Condition, 
+        ) 
 
 
 
