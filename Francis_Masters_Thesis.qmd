@@ -61,18 +61,19 @@ language:
   title-block-role-introduction: "Author roles were classified using the Contributor Role Taxonomy (CRediT; https://credit.niso.org/) as follows:"
   references-meta-analysis: "References marked with an asterisk indicate studies included in the meta-analysis."
 
-#format:
-  #apaquarto-docx: default
-  #apaquarto-html: default
-  #apaquarto-typst: 
-   # keep-typ: true
-  
 format:
-  html:
-    css: styles.css
   apaquarto-docx: default
+  apaquarto-html: 
+    css: style.css
   apaquarto-typst: 
     keep-typ: true
+  
+#format:
+  #html:
+    #css: styles.css
+  #apaquarto-docx: default
+  #apaquarto-typst: 
+    #keep-typ: true
   apaquarto-pdf:
     # Can be jou (journal), man (manuscript), stu (student), or doc (document)
     documentmode: man
@@ -116,7 +117,6 @@ execute:
   warning: false
   error: false
 ---
-
 ```{r}
 #| label: global configuration and setup
 #| include: false
@@ -222,29 +222,38 @@ library(viridis)
 if (!require("agridat")) install.packages("agridat")
 library(agridat)
 
-
+# Conflicted
+if (!require("conflicted")) install.packages("conflicted")
 library(conflicted)
-library(tidyverse)
-library(flextable)
-library(ftExtra)
-library(knitr)
-library(here)
-library(patchwork)
-library(rempsyc)
-library(png)
-library(grid)
-library(jpeg)
-library(ggplot2)
-library(apa)
-library(ghibli)
-library(ggdist)
-library(RColorBrewer)
-library(dplyr)
-library(ggpubr)
-library(tidyr)
-library(ggridges)
-library(viridis)
-library(agridat)
+
+# showtext
+if (!require("showtext")) install.packages("showtext")
+library(showtext)
+
+
+
+#library(conflicted)
+#library(tidyverse)
+#library(flextable)
+#library(ftExtra)
+#library(knitr)
+#library(here)
+#library(patchwork)
+#library(rempsyc)
+#library(png)
+#library(grid)
+#library(jpeg)
+#library(ggplot2)
+#library(apa)
+#library(ghibli)
+#library(ggdist)
+#library(RColorBrewer)
+#library(dplyr)
+#library(ggpubr)
+#library(tidyr)
+#library(ggridges)
+#library(viridis)
+#library(agridat)
 set_here() #sets the working directory
 
 
@@ -278,19 +287,20 @@ Our current experimental competency arose from many small steps. Before we had t
 
 ### The meaning of memory and the different forms it takes
 
-Generally speaking, memory is the embodiment of past experience which shapes our future behaviour. Learning is the process of memory acquisition. Though, it must be said that there may be as many different definitions of learning and memory as there are papers published on the topic. @barron_embracing_2015 surveyed the various uses of the term "learning" across disciplines such as cognitive psychology, behavioural ecology, and machine learning and identified at least 50 definitions (albeit with a lot of overlap). Memory has been parceled into several distinct categories based on the content of the information being stored. The major distinction is between explicit (or declarative) and implicit (or procedural) memory [@squire_memory_1987; @schacter_memory_1994] as shown in Figure 1 below. Explicit memories are those accessible to consciousness. Implicit memories refer to information that you cannot consciously access. Explicit memory has been further subdivided into episodic and semantic memory (Tulving, 1972). With episodic referring to the rich experiential quality of personal memories, while semantic relates to things that you know, but that lack an experiential component (e.g. facts about the world).
+Generally speaking, memory is the embodiment of past experience which shapes our future behaviour. Learning is the process of memory acquisition. Though, it must be said that there may be as many different definitions of learning and memory as there are papers published on the topic. @barron_embracing_2015 surveyed the various uses of the term "learning" across disciplines such as cognitive psychology, behavioural ecology, and machine learning and identified at least 50 definitions (albeit with a lot of overlap). Memory has been parceled into several distinct categories based on the content of the information being stored. The major distinction is between explicit (or declarative) and implicit (or procedural) memory [@squire_memory_1987; @schacter_memory_1994] as shown in @fig-figure1 below, explicit memories are those accessible to consciousness. Implicit memories refer to information that you cannot consciously access. Explicit memory has been further subdivided into episodic and semantic memory (Tulving, 1972). With episodic referring to the rich experiential quality of personal memories, while semantic relates to things that you know, but that lack an experiential component (e.g. facts about the world).
 
 Memories can also be categorised on the temporal dimension. Atkinson and Shiffrin (1968) proposed three memory stores: a sensory register, a short term, and a long term store. This division is still usefully applied in the field of learning and memory [e.g, @miller_timescales_2024]. A temporal framing of memory reflects the learning process itself. Learning is normally broken up into several stages, each building on those before to further engrain the memory and expand its longevity (see @sec-mechanisms below) . Initially, information enters a short term state and may alter behaviour and decision making in the immediate future. However, most of the information that our brains initially perceive -- all the light hitting our eyes, and all the vibrations in the air registered by our ears -- is not retained. To successfully retain this information it must be actively incorporated into our biology and maintained so that it can be accessed or recalled in perpetuity. To put it another way, the Information that is taken on board but must undergo specific processes (known as consolidation) to stave off the forgetting process.
 
-These distinctions make a lot of sense when talking about memory in humans. But it may not be immediately clear what relevance these distinctions have when looking at other organisms. Most people do not attribute rich episodic (experiential) memories to rodents, let alone invertebrates. Yet, it is clear that even very simple organisms have the capacity to learn and store varied types of memory; Ranging from basic changes in a reflexes (habituation and sensitisation) to more complex operant behaviours. Such distinctions may be particlalry relevent for the phenomena of memory storage outside of the brain, as is the topic pursued in this project. if, as the literature suggests, some memories are able to be retained outside the brain (and perhaps outside the CNS) these concepts may help us derive the bounds of which memory types hold this property and which do not. It may be that procedural memories such as non-associative responses are stored outside of neural networks. But memories which are consciously accessible are only able to be stored among complex ensembles of neurons in the brain. We do not yet know the bounds of non-neuronal memory storage, if it truly exists. But armed with these conceptual distinctions between types of memory, we can apply tailored training techniques to find out what forms of learning persist outside the brain and which do not.
+These distinctions make a lot of sense when talking about memory in humans. But it may not be immediately clear what relevance these distinctions have when looking at other organisms. Most people do not attribute rich episodic (experiential) memories to rodents, let alone invertebrates. Yet, it is clear that even very simple organisms have the capacity to learn and store varied types of memory; Ranging from basic changes in a reflexes (habituation and sensitisation) to more complex operant behaviours. Such distinctions may be particularity relevent for the phenomena of memory storage outside of the brain, as is the topic pursued in this project. if, as the literature suggests, some memories are able to be retained outside the brain (and perhaps outside the CNS) these concepts may help us derive the bounds of which memory types hold this property and which do not. It may be that procedural memories such as non-associative responses are stored outside of neural networks. But memories which are consciously accessible are only able to be stored among complex ensembles of neurons in the brain. We do not yet know the bounds of non-neuronal memory storage, if it truly exists. But armed with these conceptual distinctions between types of memory, we can apply tailored training techniques to find out what forms of learning persist outside the brain and which do not.
 
-```{r, eval = FALSE}
-#| label: fig-Figure1
+```{r, eval = TRUE}
+#| label: fig-figure1
 #| fig-cap: "Theoretical Categories of Memory"
-#| include: true
-#| fig-width: 7
-#| fig-height: 3.4
-#Figure1
+#| out-width: "100%"
+#| fig-align: "center"
+
+library(png)
+library(grid)
 Figure1 <- readPNG("Figures/Figure1.png") 
 grid.raster(Figure1)
 ```
@@ -379,50 +389,6 @@ Amaning-Kwarteng et al., (2017) explored the establishment and extinction of a d
 
 Understanding the molecular changes and circuit dynamics underlying the establishment of addiction may illuminate a path towards chemical or behaviour therapies to change the brain and thus change behaviour. Currently, therapies focus on top down strategies. People are coached to recognise their thoughts and emotions related to drugs, and to manage them rather than simply act on them. However, if the chemistry and structural wiring of the brain change during the acquisition of an addiction, bottom up therapies may assist in reverting these maladaptive neuroadaptations (Chodkiewicz, 2023). And although we may not be in a position to attempt extreme interventions in humans or other mammals, planaria enable us to pursue these questions and progress our understanding of how bottom up changes may reduce drug seeking behaviour.
 
-```{r, eval = FALSE}
-#| label: tbl-studycharacteristics
-
-library(tibble)
-library(knitr)
-library(kableExtra)
-
-# Create the table with category subtitles
-data <- tibble(
-  Variable = c("Stimuli", "Shock", "Light", "Surface texture", "Other", 
-               "Substance", "Cocaine", "Nicotine", "Alcohol", "Sucrose", 
-               "Amphetamines", "Other", 
-               "Paradigm", "Classical conditioning", "Operant conditioning", 
-               "Locomotion", "Withdrawal", "Other"),
-  Papers = c(NA, 13, 28, 9, 10, NA, 11, 6, 3, 4, 2, 13, NA, 26, 11, 6, 4, 8),
-  Proportion = c(NA, NA, NA, NA, NA, NA, "21%", "11%", "6%", "8%", "4%", "25%", NA, "49%", "21%", "11%", "8%", "15%")
-)
-
-# Convert 'Papers' column to character
-data$Papers <- as.character(data$Papers)
-
-# Add category rows
-data <- data %>%
-  add_row(Variable = "Stimuli", Papers = "", Proportion = "", .before = 1) %>%
-  add_row(Variable = "Substance", Papers = "", Proportion = "", .before = 7) %>%
-  add_row(Variable = "Paradigm", Papers = "", Proportion = "", .before = 13)
-
-# Render the table with equal column spacing - depending on html or doc generated
-if (knitr::is_html_output()) {
-  data %>%
-    knitr::kable(format = "html", caption = "Characteristics of papers identified during literature review") %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE, position = "center") %>%
-    kableExtra::column_spec(1, width = "20em") %>%
-    kableExtra::column_spec(2, width = "10em") %>%
-    kableExtra::column_spec(3, width = "10em") %>%
-    kableExtra::footnote(general = "Some papers used multiple stimuli, so variables may not sum to 100%")
-} else {
-  data %>%
-    knitr::kable(format = "pandoc", caption = "Characteristics of papers identified during literature review") %>%
-    kableExtra::kable_styling(full_width = FALSE, position = "center") %>%
-    kableExtra::footnote(general = "Some papers used multiple stimuli, so variables may not sum to 100%")
-}
-```
-
 ### Unresolved questions
 
 In the first half of the 20th century, there was widespread doubt regarding whether invertebrates can learn. But as we look back nearly a centruy later, we have gathered ample evidence that planaria can learn (Wells, 1967; Samuel, 2021; Amaning-Kwarteng et al., 2017). In addition, Planaria serve as an especially useful organism due to their regenerative capabilities. Combined with conditioning procedures, there is now evidence that memory can be successfully retained in a planarian after having its head removed and thus having to regenerate a brain (Shomrat & Levin, 2013). It is an extraordinary finding that a simple preference or learned aversion can be maintained within the body despite complete devastation of the central nervous system. But even more incredible would be the persistence of complex behaviour.
@@ -435,45 +401,41 @@ With respect to both phenomena, the memory is not accessible or is not acted upo
 
 With respect to both phenomena, the memory is not accessible or is not acted upon, and requires exposure to the right stimulus to be reactivated. Extinction and reinstatement of drug seeking behaviour has been shown in planaria (Amaning-Kwarteng et al., 2017). But what remains to be seen is whether reinstatement can be used to reactivate memories which are dormant after decapitation and regeneration. The phenomena of savings demonstrates some memory trace is retained in the brainless tail half. Perhaps this can be reactivated promptly by exposing the planarian to the reinforcing stimulus before assessing for memory retention – an invetebrate reinstatement procedure.
 
-
 # Materials and Method
 
 ### Colony maintenance
 
-The exact specieis of planaria used for this research is not currently known. It was not possible to import a known planaria species from overseas, so planaria were sourced from two local streams within Wellington, New Zealand (X stream and Y stream). Given the basic characteristics of the planaria (colour, head shape etc.) it is thought that there is a combination of Cura and Neppia species -- both of which are commonly found in streams. We intend to perform genomic analysis at a later date to confirm the species identity. Planaria were housed in a 150 liter glass aquarium which was filtered externally and contained no rocks or sand. Water was maintained with \[describe water treatment protocol\] (refered to as "planaria water" hereafter). Water was changed approximately every three days. The room containing the aquarium was not specifically temperature controlled, though the temperature did not deviate largely from 23°C. Planarians were fed either twice or three times a week, with meals consisting of \[describe food source\]. The colony was maintained on a 12-hour light/dark cycle with lights on at 7am \[confirm with Meyrick\].
-
-Planaria used for experiment 2 and 3 were housed in 3D-printed compartments that were floating freely in the main aquarium described above. These individual compartments were printed using \[insert resin details\] and contained mesh on both ends which allowed water to pass through but stopped the planarian from escaping. Planaria were housed individually in these compartments. The compartments were labeled so as to allow tracking of individual planaria throughout the experiment. Planaria feeding during experiments?
+The species of planaria used in this research is not currently known. Due to restrictions on importing identified species such as *Schmidtea mediterranea* into New Zealand, local planria were sourced from two local streams within Wellington, New Zealand (X stream and Y stream). Given the basic characteristics of the planaria (colour, head shape etc.) it is thought that there is a combination of Cura and Neppia species -- both of which are commonly found in New Zealand waterways. We intend to perform genomic analysis at a later date to confirm the species identity. Planaria were housed in a 50 liter glass aquarium with interal filtering and which contained a natural ecological environment (rocks,snails,algae etc.). The tank water was maintained with \[describe water treatment protocol\] – this water will be refered to as "planaria water" hereafter. The room containing the aquarium was maintained at 23°C. Planarians were fed between one and three times a week, with meals consisting of \[describe food source\]. The colony was maintained on a 12-hour light/dark cycle with lights on at 9:30am till 9:30pm.
 
 ### Materials
 
-**Experiment 1** (dose-response analysis): plastic petri dishes with a diamter of 5.5cm were used to assess motility. Petri dishes contained a final solution of 8ml, made up of pure planaria water for control subjects and cocaine hydrochloride (Sigma Aldrich, United States???) mixed with planaria water for the experimental subjects. Planaria locomotion was captured using an OPPO A17 smart phone and videos were imported into EthoVision (Noldus Information Technologies, Wageningen, the Netherlands) for tracking.
+**Experiment 1** (dose-response analysis): plastic petri dishes with a diameter of 5.5cm were used to assess motility. Petri dishes contained a final solution of 8ml, made up of pure planaria water for control subjects and cocaine hydrochloride (Sigma Aldrich, United States??) mixed with planaria water for experimental subjects. Planaria locomotion was captured using an OPPO A17 smart phone and videos were imported into EthoVision (Noldus Information Technologies, Wageningen, the Netherlands) for motility tracking.
 
-**Experiment 2 and 3** (conditioning): two custom made Y-mazes were used. The mazes were identical, and were made from 80x80mm squares, with the comparments laser etched into the plastic. The mazes contain a 27mm long runway, and two arms each being 25mm long. All compartments were 6mm wide and all walls were 6.5mm high. Each maze could hold approximately \[insert ml volume\] of water. At the intersection between the runway and the arms, there is a small divot on the floor of the maze. This allows a plug 7mm in diameter to be inserted to trap liquid in the arms and enable controlled treatment with a drug. The maze floor contained semi-circular lines as a result of the etching process. It would not be described as a rough surface, but there were sufficient lines to consider the floor as slightly textured. At the base of the runway there is a small externally powered white light \[20 lux?\] which has been fixed into the plastic. The light is a mild aversive stimulus intended to induce negative phototaxis and discourage the planarian from sitting at the start of the runway.
+**Experiment 2** (Y-maze conditioning): three custom Y-mazes were used. The mazes were identical, and were made from 80x80mm squares, with the compartments laser etched into the plastic. The mazes contain a 27mm long runway, and two arms each being 25mm long. All compartments were 6mm wide and all walls were 6.5mm high. At the intersection between the runway and the arms, there is a small divot on the floor of the maze. This allows a plug 7mm in diameter to be inserted to trap liquid in the arms and enable controlled treatment with a drug. The maze floor contained subtle lines as a result of the etching process. At the base of the runway there is a small externally powered white light (\~20 lux) which was fixed into the plastic. The light is a mild aversive stimulus intended to induce negative phototaxis and discourage the planarian from resting at the start of the runway.
 
 ### Handling
 
-Planaria were handled using two different techniques. For moving planaria into their compartments, a large coral feeder extraction tube was used. Once planaira were in their individual compartments, they were handled using a fine artist's paintbrush to transfer them to the experimental apparatus \[See appendix X\]. Planaria were handled very gently throughout their lifespan. Rough handling was suspected to have caused a very high mortality rate in a pilot experiment. This was likely due to puncturing the planaria by pointing the bristles at the body on approach. For the studies reported here, a different technique was adopted whereby the side of the bristles was used to gently scoop the planaria up the side of the wall until they attached their cilia to the brush.
+Planaria were handled using several techniques based on the circumstances. When removing planaria from their 12-well-plate, a filbert paintbrush was prefered. However, when moving plannaria between petri dishes and the y-maze, a fine artist's paintbrush was prefered. In other cases, such as when planaria would sit in the middle of the y-maze divot, a plastic transfer pipette with the tip cut off was used. Planaria were handled very gently throughout their lifespan. Rough handling was suspected to have caused a very high mortality rate during pilot experiments. This was likely due to puncturing the planaria by pointing the bristles at the body on approach. For the studies reported here, a different technique was adopted whereby the side of the bristles was used to gently scoop the planaria up the side of the wall until they attached their cilia to the brush.
 
 ## Experiment 1
 
-Experiment 1 tested for an appropriate dose of cocaine which is rewarding to planaria while not drastically altering their their locomotive behaviour. Cocaine has been frequently used as a rewarding compound to classically condition planaria and to investigate its toxicity (Amaning-Kwarteng et al., 2017; Raffa & Desai, 2005; Tallarida et al., 2014a; Hutchinson et al., 2015; Pallidini et al., 1996). Doses used for conditioning have ranged from 1μM (Hutchinson, Prados & Davidson, 2015) to 90μM (Raffa et al., 2005). Planaria species employed across such conditioning experiments vary, including *Dugesia Tigrina*, *Dugesia gonocephala* and *Dugesia dorotocephala*.
+Experiment 1 tested for an appropriate dose of cocaine which is rewarding to planaria while not drastically altering their their locomotive behaviour. Cocaine has been frequently used as a rewarding compound to classically condition planaria and to investigate its toxicity (Amaning-Kwarteng et al., 2017; Raffa & Desai, 2005; Tallarida et al., 2014a; Hutchinson et al., 2015; Pallidini et al., 1996). Doses used for conditioning have ranged from 1μM (Hutchinson, Prados & Davidson, 2015) to 90μM (Raffa et al., 2005). Planaria species employed across conditioning experiments vary, including *Dugesia Tigrina*, *Dugesia gonocephala* and *Dugesia dorotocephala*.
 
-Investigators have observed that some species are more amenable to conditioning procedures than others (Samuel et al., 2021; Mueller & Levin, 2002). Differences in the behaviour and responses of planarian species have been observed in response to several types of stimuli (@cochet-escartin2015; @debold1965). That species differ in their behaviour is germane to this project, as the species used here had not been formally identified. The species used throughout this project likely differs from those used elsewhere in the literature and may in fact be a species indigenous to New Zealand. For this reason, it is important to identify a suitable dose of cocaine for this species which modifies motility, but not enough to impair performance in a y-maze.
+Investigators have observed that some species are more amenable to conditioning procedures than others (Samuel et al., 2021; Mueller & Levin, 2002). Differences in the behaviour and responses of planarian species have been observed in response to several types of stimuli (@cochet-escartin2015; @debold1965). The species used throughout this project likely differs from those used elsewhere in the literature and may in fact be a species indigenous to New Zealand. For this reason, it is important to identify a suitable dose of cocaine which is rewarding but does not significantly alter motility.
 
-60 planaria were used in this experiment and were spread across five conditions based on doses commonly used in the planarian conditioning literature. This included 0, 1, 5, 10, 20 and 100μM (*n* = 10 per condition). Subjects were run across twelve session. The first ten sessions each contained one subject from the 0 - 20μM conditions, whereas the last two session only contained subejcts in the 100μM condition. Subjects were collected from the breeding tank on the day of data collection. Within each session, subjects were randomly allocated to their condition using a random number generator (<https://stattrek.com/statistics/random-number-generator#table>).
+60 planaria were used in this experiment and were spread across six conditions based on doses commonly used in the planarian conditioning literature. This included 0, 1, 5, 10, 20 and 100μM (*n* = 10 per condition). Subjects were run across twelve session. The first ten sessions each contained one subject from the 0 - 20μM conditions, whereas the last two session only contained subjects in the 100μM condition \^\[initially only 0 - 20μM conditions were run. The 100μM condition was added after the initial data were analysed to ensure that the cocaine was having some effect on the planaria and was not inert\]. Subjects were collected from the breeding tank on the day of data collection. Within each session, subjects were randomly allocated to their condition using a random number generator (<https://stattrek.com/statistics/random-number-generator#table>).
 
-Each dose-response session lasted 15 minutes. Prior to the first recording session of the day, the drug concentrations were achieved by mixing cocaine (dissolved in distilled water) with planarian water to reach a final solution of 8ml. Each solution was mixed and allowed to sit for several minutes to ensure diffusion of the drug. Planaria were assigned to each condition from a large pool prior to the session. A planarian was picked up and a random number sequence was followed to determine which condition it was assigned to. The recording began once all five subjects were in their respective dishes. After completing a single trial, the planaria were not used for any subsequent experiments in this manuscrip and were instead rehoused in a large tank. 
+Each dose-response session lasted 15 minutes. Prior to the first recording session of the day, the drug concentrations were achieved by mixing cocaine (dissolved in distilled water) with planarian water to reach a final solution of 8ml. Each solution was mixed and allowed to sit for several minutes to ensure diffusion of the drug. Planaria were assigned to each condition from a large pool prior to the session. A planarian was picked up and a random number sequence was followed to determine which condition it was assigned to. The recording began once all five subjects were in their respective dishes. After completing a single trial, the planaria were rehoused in a large tank and were not used for any subsequent experiments in this manuscript.
 
-@fig-Figure2 provides an overview of the apparatus setup. Five petri dishes were positioned on a white acrylic sheet. Recording sessions took place under red light, with the light positioned 36cm above the petri dishes. The dishes were aligned in a 2x3 grid, with a gap left in the top middle position which is where the light was focused to minimise shadows in the petri dishes; this was important for subsequent tracking analysis. Each drug concentration was rotated across the 5 grid positions between trials to control for any effects of lighting angle[^2].
+@fig-figure2 provides an overview of the apparatus setup. Five petri dishes were positioned on a white acrylic sheet. Recording sessions took place under red light, with the light positioned 36cm above the petri dishes. The dishes were aligned in a 2x3 grid, with a gap left in the top middle position which is where the light was focused to minimise shadows in the petri dishes; this was important for subsequent digital tracking. Each drug concentration was rotated across the 5 grid positions between trials to control for any effects of lighting angle.
 
-[^2]: This was true of doses 0 - 20 μM, but was not possible for the 100 uM condition as this was added on after the initial data collection, and so five subjects in the same condition were recorded at once. 
-
-```{r, eval = FALSE}
-#| label: fig-Figure2
+```{r, eval = TRUE}
+#| label: fig-figure2
 #| fig-cap: "Dose response apparatus"
 #| include: true
 #| fig-width: 12
 #| fig-height: 7
+#| fig-align: "center"
 #Figure2
 Figure2 <- readJPEG("Figures/Figure2.jpg") 
 grid.raster(Figure2)
@@ -497,17 +459,18 @@ source("Descriptives.R")
 
 ```
 
-@fig-boxplot depicts the distance moved by planarians across the six conditions. Prior to performing any statistics, the assumptions of normality and homogeneity of variances were tested. Levene's test for homogeneity of variances suggests there were equal variances across conditions (F = `r format(levene_dose_response$F, digits = 3)`, p = `r format(levene_dose_response$P, digits = 3)`). The Shapiro-Wilk test results indicate that the data were not normally distributed (W = `r format(shapiro_test_dose_response$statistic, digits = 3)`, p = `r format(shapiro_test_dose_response$p.value, digits = 3)`). Due to violation of the assumptions of ANOVA, a Kuskal test was performed. The results indicated that the effect of `Condition` on `Distance` is not statistically significant (χ2 (`r kruskal_test$parameter`) = `r format(kruskal_test$statistic, digits = 3)`, p = `r format(kruskal_test$p.value, digits = 3)`).
+@fig-boxplot depicts the distance moved by planarians across the six conditions. Prior to performing any statistics, the assumptions of normality and homogeneity of variances were tested. Levene's test for homogeneity of variances suggests there were equal variances across conditions (F = `r format(levene_dose_response$F, digits = 3)`, *p* = `r format(levene_dose_response$P, digits = 3)`). The Shapiro-Wilk test results indicate that the data were not normally distributed (W = `r format(shapiro_test_dose_response$statistic, digits = 3)`, *p* = `r format(shapiro_test_dose_response$p.value, digits = 3)`). Due to violation of the assumptions of ANOVA, a Kuskal test was performed. The results indicated that the effect of `Condition` on `Distance` is statistically significant (χ2 (`r kruskal_test$parameter`) = `r format(kruskal_test$statistic, digits = 3)`, *p* = `r format(kruskal_test$p.value, digits = 3)`). An exploratory post-hoc Dunn's test was carried out to determine whether the 100μM group differed from other groups. The results indicated that the 100μM group differs significantly from several other groups: control (*p* = `r format(dunn_test$P[11], digits = 3)`), 5μM (*p* = `r format(dunn_test$P[7], digits = 3)`), 10μM (*p* = `r format(dunn_test$P[1], digits = 3)`), and 20μM (*p* = `r format(dunn_test$P[4], digits = 3)`).
 
 ```{r, eval = TRUE}
 #| label: fig-boxplot
-#| include: True
 #| fig-cap: "Plot of planarian motility by condition"
 #| fig-width: 12
 #| fig-height: 7
+#| fig-align: center
+#| warning: false
+#| message: false
 
 source("Plots/rainplot.R")
-
 print(rainplot)
 
 ```
@@ -524,6 +487,7 @@ The dose-response results suggest that any of the proposed doses would be approp
 #| fig-cap: "Plot of planarian motility across recording interval"
 #| fig-width: 12
 #| fig-height: 7
+#| fig-align: "center"
 
 source("Plots/ridgeplot.R")
 
@@ -535,11 +499,9 @@ X
 
 ## Experiment 2
 
-Next we sought to determine whether planaria can learn and retain an operant conditioned response. Prior research has demonstrated the capacity for learning by way of classical conditioning. And there is evidence that clasically conditioned memories can be retianed after decapitation and regeneration of the brain. But the capcity for complex memories shaped by operant conditioning to persist despite losing most of the central nervous system has not been definitively shown. As a first step towards testing retention of operant conditioned memory, we needed to first establish the capacity for operant learning in this species of planaria. This eperiment was preregistiered prior to data collection and can be found online at Open Science Framework (<https://osf.io/tq7u4/?view_only=9c794dd942fb4a54b6a986c0a893fe46>) and at PsychArchives (<https://www.psycharchives.org/en/item/d6109ed1-9aab-467b-b981-e009be95f308>
+Next we sought to determine whether planaria can learn and retain an operant conditioned response. Prior research has demonstrated the capacity for learning by way of classical conditioning. And there is evidence that classically conditioned memories can be retained after decapitation and regeneration of the brain. But the capacity for complex memories shaped by operant conditioning to persist despite losing most of the central nervous system has not been definitively shown. As a first step towards testing retention of operant conditioned memory, we needed to first establish the capacity for operant learning in this species of planaria. This experiment was preregistered prior to data collection and can be found online at Open Science Framework (<https://osf.io/tq7u4/?view_only=9c794dd942fb4a54b6a986c0a893fe46>) and at PsychArchives (<https://www.psycharchives.org/en/item/d6109ed1-9aab-467b-b981-e009be95f308>
 
-Sixty planaria were used (cocaine group, *n* = 30, vehicle group, *n* = 30). This experiment had four stages: baseline, conditioning, test, and priming. for baseline and conditioning two planaria were run concurrently in two separate Y-mazes. The maze was filled with 1.8ml of planaria water. The water was shaken so as to distribute evenly throughout the maze, with bubbles removed as needed. Six planaria were used per run, wherein they completed either 6 trials (baseline) or 4 trials per day (conditioning) with an intertrial interval of approximately 15 minutes. The six planaria were first moved into holding petri dishes, with the regular white room light on to encourage movement. At the start of a trial, two planaria were transferred to the middle of the runway using a paintbrush, and shaken loose into the water. Once the planaria had entered the runway, the timer was started. Planaria were given three minutes to enter one of the arms [^1]. Once a planarian had enterd an arm, the plug was inserted to block transfer of liquid between compartments (each arm contained 0.5ml with the plug inserted). A planarian was considered to have entered the arm when the plug could be safely inserted without touching the planarian.
-
-[^1]: If the planarian had some part of their body in an arm, they would be given up to an extra minute to make their decision.
+Sixty planaria were used (cocaine group, *n* = 30, vehicle group, *n* = 30). This experiment had four stages: baseline, conditioning, test, and priming. for baseline and conditioning two planaria were run concurrently in two separate Y-mazes. The maze was filled with 1.8ml of planaria water. The water was shaken so as to distribute evenly throughout the maze, with bubbles removed as needed. Six planaria were used per run, wherein they completed either 6 trials (baseline) or 4 trials per day (conditioning) with an intertrial interval of approximately 15 minutes. The six planaria were first moved into holding petri dishes, with the regular white room light on to encourage movement. At the start of a trial, two planaria were transferred to the middle of the runway using a paintbrush, and shaken loose into the water. Once the planaria had entered the runway, the timer was started. Planaria were given three minutes to enter one of the arms \^\[If the planarian had some part of their body in an arm, they would be given up to an extra minute to make their decision\]. Once a planarian had enterd an arm, the plug was inserted to stop liquid moving between compartments. Each arm contained 0.5ml after the plug was inserted. A planarian was considered to have entered the arm when the plug could be safely inserted without touching the planarian.
 
 After plug insertion the timer was stopped, and the decision and time were recorded on a computer. For treatment subjects, if the active arm was selected, 43.5μL of cocaine in distilled water was pipetted near the body. If the inactive arm was selected, an identical volume of distilled water was pipetted near the body. After administration, the timer was restarted and three minutes were given for absorption. For control subjects, either arm resulted in plugging and then pipetting 43.5μL of distilled water into the arm. If a subject failed to enter an arm, the plug was inserted and 43.5μL of distilled water was pipetted near the subjects body while in the runway and then three minutes were given. The runway light was on throughout the duration of the trial. At the end of a trial, planaria were gently removed and placed back into their holding dish.
 
@@ -557,14 +519,15 @@ source("ExperimentTwoAnalysis.R")
 
 ```
 
-@fig-Exp2-decisions-line shows the average percentage of trials where subjects entered the active arm across the four time points. A generalised linear mixed effects model with family set to binomial was fitted in R. Subject ID was set as a random effect, with condition, time point and the interaction term as a fixed effects. Pairwise comparisons with a Bonferroni correction were carried out using the emmeans package in R. Type III Wald chi-square tests were carried out to identify whether there was a main effect of condition, time, and their interaction. The results did not find a significant effect of condition (χ2 (`r (exp2_model_output$Df[2])`) = `r format(exp2_model_output$Chisq[2], digits = 3)`, p `r if(exp2_model_output$"Pr(>Chisq)"[2] < .001) "<.001" else format(exp2_model_output$"Pr(>Chisq)"[2], digits = 3)`). The results indicate a significant effect of time (χ2 (`r (exp2_model_output$Df[3])`) = `r format(exp2_model_output$Chisq[3], digits = 3)`, p = `r if(exp2_model_output$"Pr(>Chisq)"[3] < .001) "<.001" else format(exp2_model_output$"Pr(>Chisq)"[3], digits = 3)`) and a significant time\*condition interaction (χ2 (`r (exp2_model_output$Df[4])`) = `r format(exp2_model_output$Chisq[4], digits = 3)`, p = `r if(exp2_model_output$"Pr(>Chisq)"[4] < .001) "<.001" else format(exp2_model_output$"Pr(>Chisq)"[4], digits = 3)`)
+@fig-exp2decisions shows the average percentage of trials where subjects entered the active arm across the four time points. A generalised linear mixed effects model with family set to binomial was fitted in R. Subject ID was set as a random effect, with condition, time point and the interaction term as a fixed effects. Pairwise comparisons with a Bonferroni correction were carried out using the emmeans package in R. Type III Wald chi-square tests were carried out to identify whether there was a main effect of condition, time, and their interaction. The results did not find a significant effect of condition (χ2 (`r (exp2_model_output$Df[2])`) = `r format(exp2_model_output$Chisq[2], digits = 3)`, p `r if(exp2_model_output$"Pr(>Chisq)"[2] < .001) "<.001" else format(exp2_model_output$"Pr(>Chisq)"[2], digits = 3)`). The results indicate a significant effect of time (χ2 (`r (exp2_model_output$Df[3])`) = `r format(exp2_model_output$Chisq[3], digits = 3)`, p = `r if(exp2_model_output$"Pr(>Chisq)"[3] < .001) "<.001" else format(exp2_model_output$"Pr(>Chisq)"[3], digits = 3)`) and a significant time\*condition interaction (χ2 (`r (exp2_model_output$Df[4])`) = `r format(exp2_model_output$Chisq[4], digits = 3)`, p = `r if(exp2_model_output$"Pr(>Chisq)"[4] < .001) "<.001" else format(exp2_model_output$"Pr(>Chisq)"[4], digits = 3)`)
 
 ```{r}
-#| label: fig-Exp2-decisions-line
+#| label: fig-exp2decisions
 #| include: True
 #| fig-cap: "Mean percentage of choices for the active arm over time between conditions"
 #| fig-width: 12
 #| fig-height: 7
+#| fig-align: "center" 
 
 source("ExperimentTwoAnalysis.R")
 
@@ -574,206 +537,7 @@ print(grouped_comprison_w_significance_apa)
 
 \newpage
 
-This is my introductory paragraph. The title will be placed above it automatically. *Do not start with an introductory heading* (e.g., "Introduction"). The title acts as your Level 1 heading for the introduction.
 
-Details about writing headings with markdown in APA style are [here](https://wjschne.github.io/apaquarto/writing.html#headings-in-apa-style).
-
-## Displaying Figures
-
-A reference label for a figure must have the prefix `fig-`, and in a code chunk, the caption must be set with `fig-cap`. Captions are in [title case](https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case).
-
-```{r, eval = FALSE}
-#| label: fig-myplot
-#| fig-cap: The Figure Caption
-#| apa-note: This is the note below the figure.
-#| fig-height: 2
-#| fig-width: 3
-ggplot(data.frame(x = c(0, 35)), aes(x)) +
-  stat_function(fun = dchisq, 
-                args = list(df = 10),
-                geom = "area",
-                n = 1000,
-                color = NA,
-                fill = "#41448780") +
-  theme_void(base_size = 18)
-```
-
-To refer to any figure or table, use the `@` symbol followed by the reference label (e.g., @fig-myplot).
-
-## Imported Graphics
-
-One way to import an existing graphic as a figure is to use `knitr::include_graphics` in a code chunk. For example, @fig-import1 is an imported image. Note that in apaquarto-pdf documents, we can specify that that a figure or table should span both columns when in journal mode by setting the `apa-twocolumn` chunk option to `true`. For other formats, this distinction does not matter.
-
-```{r, eval = FALSE}
-#| label: fig-import1
-#| fig-cap: An Imported Graphic
-#| apa-note: A note below the figure
-#| fig-width: 3
-#| out-width: 48%
-knitr::include_graphics("sampleimage.png")
-```
-
-Figure graphics can be imported directly with Markdown, as with @fig-import2.
-
-![Another Way to Import Graphics](sampleimage.png){#fig-import2 apa-note="A note below the figure" width="49%"}
-
-Which style of creating figures you choose depends on preference and need.
-
-## Displaying Tables
-
-We can make a table the same way as a figure. Generating a table that conforms to APA format in all document formats can be tricky. When the table is simple, the `kable` function from knitr works well. Feel free to experiment with different methods, but I have found that David Gohel's [flextable](https://davidgohel.github.io/flextable/) to be the best option when I need something more complex.
-
-```{r, eval = FALSE}
-#| label: tbl-mytable
-#| tbl-cap: The Table Caption
-#| apa-note: The note below the table.
-tibble(Numbers = seq(1,4), Letters = LETTERS[seq(Numbers)]) %>%
-  knitr::kable()
-
-```
-
-To refer to this table in text, use the `@` symbol followed by the reference label like so: As seen in @tbl-mytable, the first few numbers and letters of the alphabet are displayed.
-
-In @tbl-mymarkdowntable, there is an example of a plain markdown table with a note below it.
-
-::: {#tbl-mymarkdowntable apa-note="This is a note below the markdown table."}
-| Default | Left | Right | Center |
-|---------|:-----|------:|:------:|
-| 12      | 12   |    12 |   12   |
-| 123     | 123  |   123 |  123   |
-| 1       | 1    |     1 |   1    |
-
-Table Caption of a Markdown Table
-:::
-
-What if you want the tables and figures to be at the end of the document? In the .pdf format, you can set the `floatsintext` option to false. For .html and .docx documents, there is not yet an automatic way to put tables and figures at the end. You can, of course, just put them all at the end, in order. The reference labels will work no matter where they are in the text.
-
-## Tables and Figures Spanning Two Columns in Journal Mode
-
-When creating tables and figures in journal mode, care must be taken not to make figures and tables wider than the columns, otherwise $\LaTeX$ sometimes makes them disappear.
-
-As demonstrated in @fig-twocolumn, you can make figures tables span the two columns by setting the `apa-twocolumn` chunk option to `true`.
-
-```{r, eval = FALSE}
-#| label: fig-twocolumn
-#| fig-cap: A Figure Spanning Two Columns When in Journal Mode
-#| apa-note: Figures in two-column mode are only different for jou mode in .pdf documents
-#| apa-twocolumn: true
-#| fig-height: 3
-#| fig-width: 6.2
-#| fig-align: center
-ggplot(data.frame(x = c(-4, 4)), aes(x)) +
-  stat_function(fun = dnorm, 
-                geom = "area",
-                n = 1000,
-                color = NA,
-                fill = "#41448780") +
-  theme_void()
-```
-
-## Math and Equations
-
-Inline math uses $\LaTeX$ syntax with single dollar signs. For example, the reliability coefficient of my measure is $r_{XX}=.95$.
-
-If you want to display and refer to a specific formula, enclose the formula in two dollar signs. After the second pair of dollar signs, place the label in curly braces. The label should have an `#eq-` prefix. To refer to the formula, use the same label but with the `@` symbol. For example, @eq-euler is Euler's Identity, which is much admired for its elegance.
-
-## Citations
-
-See [here](https://quarto.org/docs/authoring/footnotes-and-citations.html) for instructions on setting up citations and references.
-
-A parenthetical citation requires square brackets [@CameronTrivedi2013]. This reference was in my bibliography file. An in-text citation is done like so:
-
-@CameronTrivedi2013 make some important points ...
-
-See [here](https://wjschne.github.io/apaquarto/writing.html#references) for explanations, examples, and citation features exclusive to apaquarto. For example, apaquarto can automatically handle possessive citations:
-
-@schneider2012cattell ['s] position was ...
-
-## Masking Author Identity for Peer Review
-
-Setting `mask` to `true` will remove author names, affiliations, and correspondence from the title page. Any references listed in the `masked-citations` field will be masked as well. See [here](https://wjschne.github.io/apaquarto/writing.html#masked-citations-for-anonymous-peer-review) for more information.
-
-$$
-e^{i\pi}+1=0
-$$ {#eq-euler}
-
-## Block Quotes
-
-Sometimes you want to give a longer quote that needs to go in its own paragraph. Block quotes are on their own line starting with the \> character. For example, @austenMansfieldPark1990 ['s] *Mansfield Park* has some memorable insights about the mind:
-
-> If any one faculty of our nature may be called more wonderful than the rest, I do think it is memory. There seems something more speakingly incomprehensible in the powers, the failures, the inequalities of memory, than in any other of our intelligences. The memory is sometimes so retentive, so serviceable, so obedient; at others, so bewildered and so weak; and at others again, so tyrannic, so beyond control! We are, to be sure, a miracle every way; but our powers of recollecting and of forgetting do seem peculiarly past finding out. (p. 163)
-
-If your quote has multiple paragraphs, like this passage from @brownHowKilledPluto2012, separate them with a lone `>` character between the lines:
-
-> In the entire field of astronomy, there is no word other than *planet* that has a precise, lawyerly definition, in which certain criteria are specifically enumerated. Why does *planet* have such a definition but *star*, *galaxy*, and *giant molecular cloud* do not? Because in astronomy, as in most sciences, scientists work by concepts rather than by definitions. The concept of a star is clear; a star is a collection of gas with fusion reactions in the interior giving off energy. A galaxy is a large, bound collection of stars. A giant molecular cloud is a giant cloud of molecules. The concept of a planet---in the eight-planet solar system---is equally simple to state. A planet is a one of a small number of bodies that dominate a planetary system. That is a concept, not a definition. How would you write that down in a precise definition?
->
-> I wouldn't. Once you write down a definition with lawyerly precision, you get the lawyers involved in deciding whether or not your objects are planets. Astronomers work in concepts. We rarely call in the attorneys for adjudication. (p. 242)
-
-## Hypotheses, Aims, and Objectives
-
-The last paragraph of the introduction usually states the specific hypotheses of the study, often in a way that links them to the research design.
-
-# Method
-
-General remarks on method. This paragraph is optional.
-
-Not all papers require each of these sections. Edit them as needed. Consult the [Journal Article Reporting Standards](https://apastyle.apa.org/jars) for what is needed for your type of article.
-
-## Participants
-
-Who are they? How were they recruited? Report criteria for participant inclusion and exclusion. Perhaps some basic demographic stats are in order. A table is a great way to avoid repetition in statistical reporting.
-
-## Measures
-
-This section can also be titled **Materials** or **Apparatus**. Whatever tools, equipment, or measurement devices used in the study should be described.
-
-### Measure A
-
-Describe Measure A.
-
-### Measure B
-
-Describe Measure B.
-
-#### Subscale B1
-
-A paragraph after a 4th-level header will appear on the same line as the header.
-
-#### Subscale B2
-
-A paragraph after a 4th-level header will appear on the same line as the header.
-
-##### Subscale B2a
-
-A paragraph after a 5th-level header will appear on the same line as the header.
-
-##### Subscale B2b
-
-A paragraph after a 5th-level header will appear on the same line as the header.
-
-## Procedure
-
-What did participants do? How are the data going to be analyzed?
-
-# Results
-
-## Descriptive Statistics
-
-Describe the basic characteristics of the primary variables. My ideal is to describe the variables well enough that someone conducting a meta-analysis can include the study without needing to ask for additional information.
-
-<!-- Add Additional Sections as Needed -->
-
-# Discussion
-
-Describe results in non-statistical terms. <!-- Add sections as needed. -->
-
-## Limitations and Future Directions
-
-Every study has limitations. Based on this study, some additional steps might include...
-
-## Conclusion
-
-Describe the main point of the paper.
 
 # References
 
@@ -782,17 +546,6 @@ Describe the main point of the paper.
 ::: {#refs}
 :::
 
-# Appendix
-
-# The Title for Appendix
-
-If there are multiple appendices, label them with level 1 headings as Appendix A, Appendix B, and so forth.
-
-Tables and figures in the first appendix automatically get the prefix "A", and the numbering starts again at 1. See @fig-appendfig.
-
-If there were a second appendix, tables and figures would get the prefix "B", and the numbering starts again at 1. Make as many appendices as needed.
-
-![Appendix Figure](sampleimage.png){#fig-appendfig apa-note="A note below the figure"}
 
 ## Graveyard
 
