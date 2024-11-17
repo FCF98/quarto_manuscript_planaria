@@ -16,7 +16,7 @@ dose_rainplot_data <- mutate(dose_rainplot_data,
                              Distance = as.numeric(Distance))
 
 dose_rainplot_data$Condition <- factor(dose_rainplot_data$Condition,
-                                       levels = c('Control', '1uM', '5uM', '10uM', '20uM'))
+                                       levels = c('Control', '1uM', '5uM', '10uM', '20uM', '100uM'))
 
 
 
