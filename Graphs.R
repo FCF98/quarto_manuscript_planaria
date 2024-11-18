@@ -8,6 +8,7 @@ library(viridis)
 library(ggdist)
 library(ghibli)
 library(agridat)
+library(psych)
 
 dose_response_data <- read.csv('Datasets/DoseResponseStatistics.csv')
 
@@ -60,10 +61,23 @@ ggplot(time_binned_dose_response_data, aes(x = Distance, y = Minute, fill = as.f
 minute_comparison_data <- time_binned_dose_response_data %>%
   filter(Minute %in% c("1", "15"))
 
-time_binned_t_test_result <- t.test(Distance ~ Minute, data = minute_comparison_data)
+minute_1 <- minute_comparison_data$Distance[minute_comparison_data$Minute == 1]
+minute_15 <- minute_comparison_data$Distance[minute_comparison_data$Minute == 15]
+
+#replacing NAs with 0
+minute_15 <- replace_na(minute_15, 0)
+minute_1 <- replace_na(minute_1, 0)
+
+time_binned_t_test_result <-  t.test(minute_1, minute_15, na.rm = TRUE, paired = TRUE)
 
 # Print the t-test result
 print(time_binned_t_test_result)
+
+# get the mean of min 1 and 15
+
+minute1_descriptives <- as.data.frame(describe(minute_1))
+
+minute15_descriptives <- as.data.frame(describe(minute_15), na.rm = TRUE)
 
 
 
@@ -106,31 +120,6 @@ rainplot <- ggplot(dose_rainplot_data, aes(x = Condition, y = Distance, fill = C
 print(rainplot)
 
 
-############# Creating violing plot for velocity ################
-
-dose_response_velocity_violin <- ggplot(dose_response_data, aes(x = factor(Condition, levels = condition_order), y = Velocity, fill = factor(Condition, levels = condition_order))) +
-  geom_violin(trim = FALSE) +
-  geom_jitter(width = 0.2, alpha = 0.5) +
-  stat_summary(fun = mean, geom = "crossbar", color = "black", width = 0.5) +
-  coord_cartesian(ylim = c(0, NA)) +
-  theme_minimal() +
-  theme( 
-    axis.title.x = element_text(margin = margin(t = 20)),
-    axis.title.y = element_text(margin = margin(r = 20)))+
-  labs(x = "Condition",
-       y = "Mean velocity (cm/s)",
-       fill = "Legend") +
-  scale_fill_manual(values = set
-                    (pastel_colors, condition_order)) +
-  guides(fill = guide_legend(
-    override.aes = list(
-      color = NA,
-      fill = pastel_colors,
-      size = 3
-    )
-  ))
-
-dose_response_velocity_violin
 
 
 ############# Creating boxplot for distance ################
@@ -170,7 +159,7 @@ library(RColorBrewer)
 
 # Reorder Condition factor levels for the legend
 time_binned_dose_response_data$Condition <- factor(time_binned_dose_response_data$Condition,
-                                                   levels = c("control", "1uM", "5uM", "10uM", "20uM"))
+                                                   levels = c("control", "1uM", "5uM", "10uM", "20uM", "100uM"))
 
 # Create summary statistics for plotting (Mean and SEM for each Condition and Minute)
 plot_data <- time_binned_dose_response_data %>%
@@ -183,7 +172,8 @@ strong_colors <- c("control" = "#377eb8",  # Blue
                    "1uM" = "#e41a1c",     # Red
                    "5uM" = "#4daf4a",     # Green
                    "10uM" = "#ff7f00",    # Orange
-                   "20uM" = "#984ea3")    # Purple
+                   "20uM" = "#984ea3", # Purple
+                  "100uM" = "#A3984E") #gold
 
 # Create the plot with SEM error bars and custom strong colors
 
