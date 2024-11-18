@@ -37,8 +37,7 @@ kruskal_test <- kruskal.test(Distance ~ Condition, data = dose_response_data)
 # need to do post hoc comparisons
 
 dunn_test <- dunn.test(dose_response_data$Distance, 
-          dose_response_data$Condition, 
-        ) 
+          dose_response_data$Condition) 
 
 
 
