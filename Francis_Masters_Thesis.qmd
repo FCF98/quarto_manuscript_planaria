@@ -64,7 +64,7 @@ language:
 format:
   apaquarto-docx: default
   apaquarto-html: 
-    css: style.css
+    css: styles.css
   apaquarto-typst: 
     keep-typ: true
   
@@ -117,6 +117,7 @@ execute:
   warning: false
   error: false
 ---
+
 ```{r}
 #| label: global configuration and setup
 #| include: false
@@ -409,7 +410,7 @@ The species of planaria used in this research is not currently known. Due to res
 
 ### Materials
 
-**Experiment 1** (dose-response analysis): plastic petri dishes with a diameter of 5.5cm were used to assess motility. Petri dishes contained a final solution of 8ml, made up of pure planaria water for control subjects and cocaine hydrochloride (Sigma Aldrich, United States??) mixed with planaria water for experimental subjects. Planaria locomotion was captured using an OPPO A17 smart phone and videos were imported into EthoVision (Noldus Information Technologies, Wageningen, the Netherlands) for motility tracking.
+**Experiment 1** (dose-response analysis): plastic petri dishes with a diameter of 5.5cm were used to assess motility. Petri dishes contained a final solution of 8ml, made up of pure planaria water for control subjects and cocaine hydrochloride (Sigma Aldrich, United States??) mixed with planaria water for experimental subjects. Planaria locomotion was captured using an OPPO A17 smart phone and videos were imported into EthoVision (Noldus Information Technologies, Wageningen, the Netherlands) for motility tracking. Most subjects could not be tracked for some duration due to being in a shadow or obscured by the petri dish wall (\~10% of frames on average). To resolve this, the missing data were interpolated using the interpolation feature in EthoVision which uses a direct line from the subjects last location to the next observed location to determine the distance travelled.
 
 **Experiment 2** (Y-maze conditioning): three custom Y-mazes were used. The mazes were identical, and were made from 80x80mm squares, with the compartments laser etched into the plastic. The mazes contain a 27mm long runway, and two arms each being 25mm long. All compartments were 6mm wide and all walls were 6.5mm high. At the intersection between the runway and the arms, there is a small divot on the floor of the maze. This allows a plug 7mm in diameter to be inserted to trap liquid in the arms and enable controlled treatment with a drug. The maze floor contained subtle lines as a result of the etching process. At the base of the runway there is a small externally powered white light (\~20 lux) which was fixed into the plastic. The light is a mild aversive stimulus intended to induce negative phototaxis and discourage the planarian from resting at the start of the runway.
 
@@ -454,6 +455,7 @@ library(afex)
 
 # Source the script
 source("Descriptives.R")
+source("Graphs.R")
 
 
 
@@ -475,11 +477,11 @@ print(rainplot)
 
 ```
 
-The results in @fig-boxplot convey the variability of planarian behaviour. All conditions had at least one subject which moved less than 30cm over the 15 minute recording, and all groups had at least two subjects that moved more than 140cm. Experimenter observations indicate that when placed in the recording dish, some planaria -- typically those visible at the bottom of @fig-boxplot -- would move initially, and then come to rest within a few minutes at a spot on the wall. They would remain here without meaningful movement for the remainder of the recording. Although no statistically significant difference was detected, there is a curious grouping of planaria in the 1μM condition below 60cm. Consistant with this, Hutchinson et al. (2015) observed a significant decrease in motility during exposure to 1μM of cocaine but not to 10μM when compared to a control group. No potential explanation was offered for this unusual dose-response effect. The most likely explanation may be a type 1 error.
+The results in @fig-boxplot convey the variability of planarian behaviour. All conditions had at least one subject which moved less than 30cm over the 15 minute recording, and all groups had at least two subjects that moved more than 140cm. Experimenter observations indicate that when placed in the recording dish, some planaria would move initially, and then come to rest within a few minutes at a spot on the wall. They would remain here without meaningful movement for the remainder of the recording. Although the 1μM group did not differ significantly from the control group, there is a curious grouping of planaria in the 1μM condition below 60cm. Consistant with this, Hutchinson et al. (2015) observed a significant decrease in motility during exposure to 1μM of cocaine but not to 10μM when compared to a control group. No potential explanation was offered for this unusual dose-response effect.
 
-The dose-response results suggest that any of the proposed doses would be appropriate for conditioning, in that they should not significantly alter planarian behaviour. Because planaria will be exposed to multiple trials within a short time interval, any effects on behaviour may mask evidence of learning. But given this null dose-response result, the primary selection criteria will now shift toward a focus on how rewarding (and therefore reinforcing) the dose is. A range of cocaine doses have been used to successfully condition planaria in CPP paradigms. These procedures typically involve low doses such as 1μM (Hutchinson et al., 2015), 5μM (Amaning-Kwarteng et al., 2017) or 10μM (Hutchinson et al., 2015). But in the case of CPP, exposure time per trial is relatively long, on the order of 15-20 minutes. In the operant conditioning paradigm proposed in Experiment 2, exposure time will be 3 minutes. Similar levels of absorbtion given the time constraint may be achieved by a higher concentration of the compound.
+The dose-response results suggest that any doses between 1μM and 20μM would be appropriate for conditioning, as they should not significantly alter planarian behaviour. The next relevant criteria is to choose a dose that is sufficiently rewarding. A range of cocaine doses have been used to successfully condition planaria in CPP paradigms. These procedures typically involve low doses such as 1μM (Hutchinson et al., 2015), 5μM (Amaning-Kwarteng et al., 2017) or 10μM (Hutchinson et al., 2015). But in the case of CPP, exposure time per trial is relatively long, on the order of 15-20 minutes. In the operant conditioning paradigm proposed in Experiment 2, exposure time will be 3 minutes. To adjust for the smaller absorption window compared to CPP experiments, the higher dose of 20μM was chosen for future conditioning experiments.
 
--   Discuss 10% average of missing frames.
+One interesting observation is that planaria tend to move much more at the start of the session than towards the end, with a gradual decrease in the distance moved as each minute passes (see @fig-ridgeplot). An unplanned Welch's two sample t-test found a significant difference between the time traveled in the first minute ( M = `r format(minute1_descriptives$mean, digits = 3)`, SD = `r format(minute1_descriptives$sd, digits = 3)`) compared to the 15th minute (M = `r format(minute15_descriptives$mean, digits = 3)`, SD = `r format(minute15_descriptives$sd, digits = 3)`), with subjects travelling significantly further during minute 15 (t(`r time_binned_t_test_result$parameter`) = `r format(time_binned_t_test_result$statistic, digits = 3)`, p = `r if(time_binned_t_test_result$p.value < .001) "<.001" else if(time_binned_t_test_result$p.value < .05) "<.05" else format(time_binned_t_test_result$p.value, digits = 3)`). In future dose-response assessments, a shorter recording duration may be adequate to assess the effects of a compound on motility. 
 
 ```{r}
 #| label: fig-ridgeplot
@@ -537,15 +539,12 @@ print(grouped_comprison_w_significance_apa)
 
 \newpage
 
-
-
 # References
 
 <!-- References will auto-populate in the refs div below -->
 
 ::: {#refs}
 :::
-
 
 ## Graveyard
 
