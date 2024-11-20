@@ -9,6 +9,7 @@ library(afex)
 library(apa)
 library(papaja)
 
+
 # Load the data
 dose_response_data <- read.csv('Datasets/DoseResponseStatistics.csv')
 
