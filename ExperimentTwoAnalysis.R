@@ -8,6 +8,7 @@ library(effectsize)
 library(emmeans)
 library(DHARMa)
 library(ggsignif)
+library(patchwork)
 
 data <- read_excel("Datasets/ExperimentTwoSummaryData.xlsx")
 
@@ -113,93 +114,176 @@ summary_data_w_sample <- data_long %>%
 
 
 
-# Create APA-style plot with both types of comparisons
-grouped_comprison_w_significance_apa<- ggplot(summary_data_w_sample, aes(x = Time, y = mean_proportion, color = Condition, group = Condition)) +
-  geom_line(linewidth = 1) +
-  geom_point(size = 3) +
+# Create APA-style plots, and arranging in a panel of 3 plots
+
+# 1. Control Group Plot
+control_plot <- summary_data_w_sample %>%
+  filter(Condition == "Control") %>%
+  ggplot(aes(x = Time, y = mean_proportion, group = 1)) +
+  geom_line(linewidth = 1.5, color = "#159090") +
+  geom_point(size = 4, color = "#159090") +
   geom_errorbar(aes(ymin = mean_proportion - se_proportion, 
                     ymax = mean_proportion + se_proportion), 
-                width = 0.2) +
+                width = 0.2, linewidth = 1, color = "#159090") +
   # Control group within comparisons
   geom_signif(
     annotations = "***",
     xmin = 1, xmax = 2,
     y_position = 0.63,
-    color = "#159090"
+    color = "black",
+    size = 0.6,
+    textsize = 6
   ) +
   geom_signif(
     annotations = "***",
     xmin = 2, xmax = 3,
-    y_position = 0.8,
-    color = "#159090"
+    y_position = 0.70,
+    color = "black",
+    size = 0.6,
+    textsize = 6
   ) +
+  labs(
+    title = "Control Group",
+    x = "Time Point",
+    y = "Mean Proportion of Active Arm Choices"
+  ) +
+  theme_classic() +
+  theme(
+    text = element_text(family = "Times New Roman", size = 14),  # Reduced from 16
+    axis.title = element_text(size = 16, face = "bold"),  # Reduced from 18
+    axis.title.y = element_text(margin = margin(r = 20)),
+    axis.text = element_text(size = 12, color = "black"),  # Reduced from 14
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom",
+    legend.title = element_text(size = 14, face = "bold"),  # Reduced from 16
+    legend.text = element_text(size = 12),  # Reduced from 14
+    axis.line = element_line(color = "black", linewidth = 0.8),
+    panel.grid = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    plot.margin = margin(t = 30, r = 30, b = 50, l = 30, unit = "pt"),
+    panel.border = element_blank()
+  )+
+  scale_y_continuous(
+    limits = c(0, 1),
+    breaks = seq(0, 1, 0.1),
+  ) +
+  scale_color_manual(values = c("Control" = "#159090", "Treatment" = "#FF8C00"))
+
+
+# 2. Treatment Group Plot
+treatment_plot <- summary_data_w_sample %>%
+  filter(Condition == "Treatment") %>%
+  ggplot(aes(x = Time, y = mean_proportion, group = 1)) +
+  geom_line(linewidth = 1.5, color = "#FF8C00") +
+  geom_point(size = 4, color = "#FF8C00") +
+  geom_errorbar(aes(ymin = mean_proportion - se_proportion, 
+                    ymax = mean_proportion + se_proportion), 
+                width = 0.2, linewidth = 1, color = "#FF8C00") +
   # Treatment group within comparisons
   geom_signif(
     annotations = "**",
     xmin = 1, xmax = 2,
-    y_position = 0.7,
-    color = "#FF8C00"
+    y_position = 0.6,
+    color = "black",
+    size = 0.6,
+    textsize = 6
   ) +
   geom_signif(
     annotations = "*",
     xmin = 1, xmax = 3,
-    y_position = 0.88,
-    color = "#FF8C00"
+    y_position = 0.7,
+    color = "black",
+    size = 0.6,
+    textsize = 6
   ) +
   geom_signif(
     annotations = "*",
     xmin = 2, xmax = 4,
-    y_position = 0.95,
-    color = "#FF8C00"
+    y_position = 0.8,
+    color = "black",
+    size = 0.6,
+    textsize = 6
   ) +
-  # Between group comparison
-  geom_signif(
-    annotations = "#",
-    xmin = 2.9, xmax = 3.1,
-    y_position = 0.6,
-    color = "black"
-  ) +
-  # Add sample size labels below the x-axis
-  geom_text(aes(label = label, y = 0.04), 
-            position = position_dodge(width = 0.4),
-            size = 3,
-            show.legend = FALSE) +
-  # APA-style labels
   labs(
+    title = "Treatment Group",
+    x = "Time Point",
+    y = "Mean Proportion of Active Arm Choices"
+  ) +
+  theme_classic() +
+  theme(
+    text = element_text(family = "Times New Roman", size = 14),  # Reduced from 16
+    axis.title = element_text(size = 16, face = "bold"),  # Reduced from 18
+    axis.title.y = element_text(margin = margin(r = 20)),
+    axis.text = element_text(size = 12, color = "black"),  # Reduced from 14
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom",
+    legend.title = element_text(size = 14, face = "bold"),  # Reduced from 16
+    legend.text = element_text(size = 12),  # Reduced from 14
+    axis.line = element_line(color = "black", linewidth = 0.8),
+    panel.grid = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    plot.margin = margin(t = 30, r = 30, b = 50, l = 30, unit = "pt"),
+    panel.border = element_blank()
+  )+
+  scale_y_continuous(
+    limits = c(0, 1),
+    breaks = seq(0, 1, 0.1),
+  ) +
+  scale_color_manual(values = c("Control" = "#159090", "Treatment" = "#FF8C00"))
+
+# 3. Combined Plot (modify your original plot to show only between-group differences)
+combined_plot <- ggplot(summary_data_w_sample, 
+                        aes(x = Time, y = mean_proportion, 
+                            color = Condition, group = Condition)) +
+  geom_line(linewidth = 1.5) +
+  geom_point(size = 4) +
+  geom_errorbar(aes(ymin = mean_proportion - se_proportion, 
+                    ymax = mean_proportion + se_proportion), 
+                width = 0.1, linewidth = 1) +
+  # Only between group comparison
+  annotate("text", 
+           x = 3, 
+           y = 0.53, 
+           label = "*", 
+           size = 6,
+           color = "black")+
+  labs(
+    title = "Between-Group Comparison",
     x = "Time Point",
     y = "Mean Proportion of Active Arm Choices",
     color = "Condition"
   ) +
-  # APA-style theme modifications
   theme_classic() +
   theme(
-    text = element_text(family = "Times New Roman", size = 12),
-    axis.title = element_text(size = 12),
-    axis.title.y = element_text(margin = margin(r = 15)),
-    axis.text = element_text(size = 10, color = "black"),
+    text = element_text(family = "Times New Roman", size = 14),  # Reduced from 16
+    axis.title = element_text(size = 16, face = "bold"),  # Reduced from 18
+    axis.title.y = element_text(margin = margin(r = 20)),
+    axis.text = element_text(size = 12, color = "black"),  # Reduced from 14
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "bottom",
-    legend.title = element_text(size = 12),
-    legend.text = element_text(size = 10),
-    axis.line = element_line(color = "black", linewidth = 0.5),
+    legend.title = element_text(size = 14, face = "bold"),  # Reduced from 16
+    legend.text = element_text(size = 12),  # Reduced from 14
+    axis.line = element_line(color = "black", linewidth = 0.8),
     panel.grid = element_blank(),
     panel.background = element_rect(fill = "white"),
-    plot.margin = margin(t = 20, r = 20, b = 40, l = 20, unit = "pt"),
+    plot.margin = margin(t = 30, r = 30, b = 50, l = 30, unit = "pt"),
     panel.border = element_blank()
   ) +
   scale_y_continuous(
     limits = c(0, 1),
     breaks = seq(0, 1, 0.1),
-    expand = c(0.02, 0)
   ) +
   scale_color_manual(values = c("Control" = "#159090", "Treatment" = "#FF8C00"))
 
-grouped_comprison_w_significance_apa
+# Arrange the plots in a panel
+combined_panel <- (control_plot + treatment_plot) / (combined_plot) +
+  plot_layout(heights = c(1.2, 1.2)) +
+  plot_annotation(tag_levels = 'A')
 
-#saving the plot
-ggsave("grouped_comprison_w_significance_apa.png", grouped_comprison_w_significance_apa, 
-       width = 12, height = 9, dpi = 300, units = "in",
-       bg = "white")
+# Save the panel
+ggsave("panel_plot.png", combined_panel, 
+       width = 12, height = 12, dpi = 300) 
+
 
 
 
