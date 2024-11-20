@@ -506,9 +506,11 @@ Sixty planaria were used (cocaine group, *n* = 30, vehicle group, *n* = 30). Thi
 
 [^2]: If the planarian had some part of their body in an arm, they would be given up to an extra minute to make their decision
 
-After plug insertion the timer was stopped, and the decision and time were recorded on a computer. For treatment subjects, if the active arm was selected, 43.5μL of cocaine in distilled water was pipetted near the body. If the inactive arm was selected, an identical volume of distilled water was pipetted near the body. After administration, the timer was restarted and three minutes were given for absorption. For control subjects, either arm resulted in plugging and then pipetting 43.5μL of distilled water into the arm. If a subject failed to enter an arm, the plug was inserted and 43.5μL of distilled water was pipetted near the subjects body while in the runway and then three minutes were given. The runway light was on throughout the duration of the trial. At the end of a trial, planaria were gently removed and placed back into their holding dish.
+For treatment subjects, if the active arm was selected, 43.5μL of cocaine in distilled water was pipetted near the center of the arm. If the inactive arm was selected, an identical volume of distilled water was pipetted near the center of the arm. After administration, the timer was restarted and three minutes were given for absorption. For control subjects, either arm resulted in plugging and then pipetting 43.5μL of distilled water into the arm. If a subject failed to enter an arm, the plug was inserted and 43.5μL of distilled water was pipetted near the subjects body while in the runway and then three minutes were given. The runway light was on throughout the duration of the trial. At the end of a trial, planaria were gently removed and placed back into their holding dish.
 
-At test, six planaria were used per run. Three planaria were run concurrently in three separate Y-mazes. Planaria were given three minutes to make a decision. Once a decision was made, the plug was inserted and planaria were left for \~60 seconds before being moved back to the holding dish. No additional liquid was added to any compartment of the Y-maze during the test trials. The next group of three planaria would then begin their first test trial. The inter trial interval was approximately six minutes and thirty seconds. For the priming stage, the procedure was identical to the test stage, with the added component of the drug exposure before the first trial. At the start of a run, the planaria were placed in a 8ml solution of cocaine diluted in planaria water for 10 minutes (staggered so that subjects 1-3 had finished their first trial before the 10-minute period ended for subjects 4-6). At the end of the exposure interval, planaria were moved individually into a Y-maze to begin their first trial. Planaria were only exposed to cocaine before the first priming trial, but not before subsequent trials.
+At test, six planaria were used per run. Three planaria were run concurrently in three separate Y-mazes. Planaria were given three minutes to make a decision. Once a decision was made, the plug was inserted and planaria were left for \~60 seconds before being moved back to the holding dish. No additional liquid was added to any compartment of the Y-maze during the test trials. The next group of three planaria would then begin their first test trial. The inter trial interval was approximately six minutes and thirty seconds. For the priming stage, the procedure was identical to the test stage, with the added component of the drug exposure before the first trial. At the start of a run, the planaria were placed in a 8ml solution of cocaine diluted in planaria water at a conectration of 20μM for 10 minutes[^3]. At the end of the exposure interval, planaria were moved individually into a Y-maze to begin their first trial. Planaria were only exposed to cocaine before the first priming trial, but not before subsequent trials.
+
+[^3]: To optimise efficiency, the start time for each group of 3 was staggered so that subjects 1-3 had finished their first trial before the 10-minute period ended for subjects 4-6.
 
 #### Results and discussion
 
@@ -522,23 +524,29 @@ source("ExperimentTwoAnalysis.R")
 
 ```
 
-@fig-exp2decisions shows the average percentage of trials where subjects entered the active arm across the four time points. A generalised linear mixed effects model with family set to binomial was fitted in R. Subject ID was set as a random effect, with condition, time point and the interaction term as a fixed effects. Pairwise comparisons with a Bonferroni correction were carried out using the emmeans package in R. Type III Wald chi-square tests were carried out to identify whether there was a main effect of condition, time, and their interaction. The results did not find a significant effect of condition (χ2 (`r (exp2_model_output$Df[2])`) = `r format(exp2_model_output$Chisq[2], digits = 3)`, p `r if(exp2_model_output$"Pr(>Chisq)"[2] < .001) "<.001" else format(exp2_model_output$"Pr(>Chisq)"[2], digits = 3)`). The results indicate a significant effect of time (χ2 (`r (exp2_model_output$Df[3])`) = `r format(exp2_model_output$Chisq[3], digits = 3)`, p = `r if(exp2_model_output$"Pr(>Chisq)"[3] < .001) "<.001" else format(exp2_model_output$"Pr(>Chisq)"[3], digits = 3)`) and a significant time\*condition interaction (χ2 (`r (exp2_model_output$Df[4])`) = `r format(exp2_model_output$Chisq[4], digits = 3)`, p = `r if(exp2_model_output$"Pr(>Chisq)"[4] < .001) "<.001" else format(exp2_model_output$"Pr(>Chisq)"[4], digits = 3)`)
+@fig-exp2decisions shows the average percentage of trials where subjects entered the active arm across four stages. A generalised linear mixed effects model with family set to binomial was fitted in R. Subject ID was set as a random effect, with condition, time point and the interaction term as a fixed effects. Pairwise comparisons with a Bonferroni correction were carried out using the emmeans package in R. Type III Wald chi-square tests were carried out to identify whether there was a main effect of condition, time, and their interaction. The results did not find a significant effect of condition (χ2 (`r (exp2_model_output$Df[2])`) = `r format(exp2_model_output$Chisq[2], digits = 3)`, p `r if(exp2_model_output$"Pr(>Chisq)"[2] < .001) "<.001" else format(exp2_model_output$"Pr(>Chisq)"[2], digits = 3)`). The results indicate a significant effect of time (χ2 (`r (exp2_model_output$Df[3])`) = `r format(exp2_model_output$Chisq[3], digits = 3)`, p = `r if(exp2_model_output$"Pr(>Chisq)"[3] < .001) "<.001" else format(exp2_model_output$"Pr(>Chisq)"[3], digits = 3)`) and a significant time\*condition interaction (χ2 (`r (exp2_model_output$Df[4])`) = `r format(exp2_model_output$Chisq[4], digits = 3)`, p = `r if(exp2_model_output$"Pr(>Chisq)"[4] < .001) "<.001" else format(exp2_model_output$"Pr(>Chisq)"[4], digits = 3)`)
+
+\newpage
 
 ```{r}
 #| label: fig-exp2decisions
 #| include: True
 #| fig-cap: "Mean percentage of choices for the active arm over time between conditions"
+#| apa-note: "Change in y-maze arm preference across four experimental phases.A) mean proportion of trials where the active arm was chosen for the control subjects. There was a significant difference between baseline and endpoint, as well as endpoint and test. B) mean proportion of trials where the active arm was chosen for the treatment subjects. There were significant differences between baseline and endpoint, baseline and test, and endpoint and reinstaement. C) combined plot showing between group differences in the mean proportion of trials where the active arm was chosen. There was a significant difference in active arm preference at test." 
 #| fig-width: 12
-#| fig-height: 7
+#| fig-height: 14
 #| fig-align: "center" 
+#| dpi: 300
 
 source("ExperimentTwoAnalysis.R")
 
-print(grouped_comprison_w_significance_apa)
+print(combined_panel)
 
 ```
 
 \newpage
+
+Looking first at the treatment results [@fig-exp2decisions B], it appears that their preference was successfully shaped such that the subjects were more likely to choose the active arm at the end of conditioning (endpoint). Moreover, this preference was maintained for two weeks as evident by the heightened preference at the test point.
 
 # References
 
