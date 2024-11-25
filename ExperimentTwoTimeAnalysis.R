@@ -122,11 +122,11 @@ m2 <- lmer(log(Time) ~ Condition * TimePoint + (1|Subject),
 
 summary(m2)
 
-car::Anova(m2, type = "III")
+exp2_time_output <- car::Anova(m2, type = "III")
 
-emmeans(m2,pairwise~TimePoint|Condition,adjust="bonferroni",type="response")
+exp2_time_comparisons_within_group <- emmeans(m2,pairwise~TimePoint|Condition,adjust="bonferroni",type="response")
 
-emmeans(m2,pairwise~Condition|TimePoint,adjust="bonferroni",type="response")
+exp2_time_comparisons_between_group <- emmeans(m2,pairwise~Condition|TimePoint,adjust="bonferroni",type="response")
 
 
 
@@ -430,7 +430,7 @@ position_dodge2 <- function(width = 1, preserve = c("total", "single")) {
   )
 }
 
-rouped_time_horizontal_boxplot <- ggplot(Exp2_Time_Long_Four_Points, aes(x = fct_rev(TimePoint), y = Time, fill = Condition)) +
+grouped_time_horizontal_boxplot <- ggplot(Exp2_Time_Long_Four_Points, aes(x = fct_rev(TimePoint), y = Time, fill = Condition)) +
   # Add extra spacing between timepoints
   scale_x_discrete(expand = expansion(mult = 0.5)) +  # Changed to multiplicative expansion
   # Boxplot layer
@@ -487,8 +487,7 @@ rouped_time_horizontal_boxplot <- ggplot(Exp2_Time_Long_Four_Points, aes(x = fct
     x = NULL,
     y = "Response Time (seconds)",
     title = "Planaria Response Times Across Time Points",
-    subtitle = "Distribution of response times for control and treatment groups",
-    caption = "Visualization adapted from Cédric Scherer's penguin visualization"
+    subtitle = "Distribution of response times for control and treatment groups"
   ) +
   # Theme customization
   theme_minimal(base_family = "Arial", base_size = 14) +
@@ -525,7 +524,8 @@ rouped_time_horizontal_boxplot <- ggplot(Exp2_Time_Long_Four_Points, aes(x = fct
   )
 
 # save the plot
-ggsave("grouped_time_horizontal_boxplot.png", rouped_time_horizontal_boxplot, 
+ggsave("grouped_time_horizontal_boxplot.png", grouped_time_horizontal_boxplot, 
        width = 15, height = 12, dpi = 300, units = "in",
        bg = "white")
 
+# boxplot Visualization adapted from Cédric Scherer's penguin visualization"
