@@ -71,11 +71,15 @@ m1 <- glmer(cbind(ActiveCount, InactiveCount) ~ Condition * Time + (1|Subject),
 
 summary(m1)
 
-exp2_model_output <- car::Anova(m1, type = "III")
+exp2_decisions_model_output <- car::Anova(m1, type = "III")
 
-emmeans(m1,pairwise~Time|Condition,adjust="bonferroni",type="response")
+exp2_decision_comparisons_within_group <-  emmeans(m1,pairwise~Time|Condition,adjust="bonferroni",type="response")
 
-emmeans(m1,pairwise~Condition|Time,adjust="bonferroni",type="response")
+exp2_decision_comparisons_between_group <- emmeans(m1,pairwise~Condition|Time,adjust="bonferroni",type="response")
+
+exp2_decision_comparisons_within_group <- summary(exp2_decision_comparisons_within_group)$contrasts
+ 
+exp2_decision_comparisons_between_group <- summary(exp2_decision_comparisons_between_group)$contrasts
 
 #nice_output <- nice(m1, sig_symbols = c(" = ", "<"))
 
