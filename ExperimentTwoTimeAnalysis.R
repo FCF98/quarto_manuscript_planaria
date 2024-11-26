@@ -129,7 +129,9 @@ exp2_time_comparisons_within_group <- emmeans(m2,pairwise~TimePoint|Condition,ad
 exp2_time_comparisons_between_group <- emmeans(m2,pairwise~Condition|TimePoint,adjust="bonferroni",type="response")
 
 
+exp2_time_comparisons_within_group <- summary(exp2_time_comparisons_within_group)$contrasts
 
+exp2_time_comparisons_between_group <- summary(exp2_time_comparisons_between_group)$contrasts
 
 
 
@@ -414,7 +416,7 @@ pal <- c("#FF8C00", "#159090")  # Now Orange for treatment, Teal for control
 
 # Helper function for sample size labels
 add_sample <- function(x) {
-  return(c(y = max(x) + 15, label = length(x)))
+  return(c(y = 5, label = length(x))) 
 }
 
 # Reorder the Condition factor levels (Treatment first, then Control) - reverse the order
@@ -432,7 +434,7 @@ position_dodge2 <- function(width = 1, preserve = c("total", "single")) {
 
 grouped_time_horizontal_boxplot <- ggplot(Exp2_Time_Long_Four_Points, aes(x = fct_rev(TimePoint), y = Time, fill = Condition)) +
   # Add extra spacing between timepoints
-  scale_x_discrete(expand = expansion(mult = 0.5)) +  # Changed to multiplicative expansion
+  scale_x_discrete(expand = expansion(mult = 0.3)) +  # Changed to multiplicative expansion
   # Boxplot layer
   geom_boxplot(
     aes(color = Condition,
@@ -440,7 +442,7 @@ grouped_time_horizontal_boxplot <- ggplot(Exp2_Time_Long_Four_Points, aes(x = fc
         fill = after_scale(desaturate(lighten(color, .8), .4))),
     width = .5,
     outlier.shape = NA,
-    position = position_dodge(width = 0.8)
+    position = position_dodge(width = 1)
   ) +
   # Individual points
   geom_point(
@@ -459,26 +461,25 @@ grouped_time_horizontal_boxplot <- ggplot(Exp2_Time_Long_Four_Points, aes(x = fc
     aes(label = round(..y.., 1),
         color = Condition,
         color = after_scale(darken(color, .1, space = "HLS"))),
-    position = position_dodge(width = 0.8),
+    position = position_dodge(width = 1),
     family = "Roboto Mono",
     fontface = "bold",
     size = 4,
-    vjust = -2.2
+    vjust = -1.6
   ) +
   # Add sample size
   stat_summary(
     geom = "text",
     fun.data = add_sample,
     aes(label = paste("n =", ..label..),
-        color = Condition,
-        color = after_scale(darken(color, .1, space = "HLS"))),
+        color = Condition),
     position = position_dodge(width = 0.8),
     family = "Roboto Condensed",
     size = 3.5,
-    hjust = -0.2
+    hjust = 0  # Set to 0 for left alignment at the fixed position
   ) +
   # Flip coordinates with expanded limits
-  coord_flip(clip = "off", ylim = c(0, 275)) +
+  coord_flip(clip = "off", ylim = c(0, 200)) +
   # Scales and labels
   scale_color_manual(values = pal, breaks = c("Treatment", "Control")) +  # Reversed order
   scale_fill_manual(values = pal, breaks = c("Treatment", "Control")) +  # Reversed order
@@ -522,6 +523,8 @@ grouped_time_horizontal_boxplot <- ggplot(Exp2_Time_Long_Four_Points, aes(x = fc
     legend.title = element_blank(),
     legend.margin = margin(0, 0, 15, 0)
   )
+
+grouped_time_horizontal_boxplot
 
 # save the plot
 ggsave("grouped_time_horizontal_boxplot.png", grouped_time_horizontal_boxplot, 
