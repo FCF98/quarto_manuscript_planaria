@@ -527,8 +527,7 @@ source("ExperimentTwoTimeAnalysis.R")
 
 @fig-exp2decisions shows the average percentage of trials where subjects entered the active arm across four stages. A generalised linear mixed effects model with family set to binomial was fitted in R. Subject ID was set as a random effect, with condition, time point and the interaction term as a fixed effects. Pairwise comparisons with a Bonferroni correction were carried out using the emmeans package in R. Type III Wald chi-square tests were carried out to identify whether there was a main effect of condition, time, and their interaction. The results did not find a significant effect of condition (χ2 (`r (exp2_decisions_model_output$Df[2])`) = `r format(exp2_decisions_model_output$Chisq[2], digits = 3)`,`r format_pvalue(exp2_decisions_model_output$"Pr(>Chisq)"[2])`). The results indicate a significant effect of time (χ2 (`r (exp2_decisions_model_output$Df[3])`) = `r format(exp2_decisions_model_output$Chisq[3], digits = 3)`, `r format_pvalue(exp2_decisions_model_output$"Pr(>Chisq)"[3])`) and a significant time\*condition interaction (χ2 (`r (exp2_decisions_model_output$Df[4])`) = `r format(exp2_decisions_model_output$Chisq[4], digits = 3)`, `r format_pvalue(exp2_decisions_model_output$"Pr(>Chisq)"[4])`).
 
-Post-hoc pairwise comparisons were carried out using estimated marginal means with Bonferroni corrections applied to account for multiple comparisons. Pairwise comparisons were carried out based on the model-estimated response probabilities rather than the raw proportions. Comparisons looked at within group differences in response probability across the four phases, and looked at between group differences at each stage.The results indicated that there were several within-group differences for the control subjects: endpoint differed significantly from baseline (`r format_pvalue(exp2_decision_comparisons_within_group$p.value[1])`), and test differed significantly from endpoint (`r format_pvalue(exp2_decision_comparisons_within_group$p.value[4])`)
-
+Post-hoc pairwise comparisons were carried out using estimated marginal means with Bonferroni corrections applied to account for multiple comparisons. Pairwise comparisons were carried out based on the model-estimated response probabilities rather than the raw proportions. Comparisons looked at within group differences in response probability across the four phases and also at between group differences at each stage.The results indicated that there were two within-group differences for the control subjects: endpoint differed significantly from baseline (`r format_pvalue(exp2_decision_comparisons_within_group$p.value[1])`), and test differed significantly from endpoint (`r format_pvalue(exp2_decision_comparisons_within_group$p.value[4])`). There were three within-group differences for the treatment subjects: endpoint differed significantly from baseline (`r format_pvalue(exp2_decision_comparisons_within_group$p.value[7])`), test differed significantly from baseline (`r format_pvalue(exp2_decision_comparisons_within_group$p.value[8])`), and reinstatement differed significantly from endpoint (`r format_pvalue(exp2_decision_comparisons_within_group$p.value[11])`). A significant difference was found in the preference score between treatment and control groups at test (`r format_pvalue(exp2_decision_comparisons_between_group$p.value[3])`).
 \newpage
 
 ```{r}
@@ -553,7 +552,7 @@ Looking first at the results [@fig-exp2decisions, B], subjects in the treatment 
 
 The control group [@fig-exp2decisions, A] demonstrated a similar increase in preference for the active arm despite receiving just the vehicle (distilled water) for making this choice. However, it contrast to the treatment group, the change in preference returned to levels seen at baseline when tested two weeks after conditioning. This highlights natural variability in planaria behaviour over time and introduces healthy skepticism against the claim that treatment planaria were successfully conditioned.
 
-The between groups comparison seen in [@fig-exp2decisions, C] shows a significant difference between groups found during the test trials two weeks after the conditioning procedure. It may be that the persisting increase in preference shown by the treatment group is evidence of true learning as opposed to the natural variability of behaviour seen in the control group. This could explain why the treatment group effect remained even after two weeks, while the control group effect diminished back to baseline. The reinforcement day results constrain this line of thinking. Although conditioned responses have been shown to extinguish relatively quickly in planaria, reinstatement procedures have also been shown to be effective. Therefore, if the conditioned behaviour was able to persist for several weeks, there is little reason to expect it would be extinguished so quickly but fail to show the expected effect of reinstatement. Overall, the results do show some promise for the capacity of planaria to learn this y-maze procedure. Future replications and refinements may be needed to more convicly demonstrate a learned operant y-maze response.
+The between groups comparison seen in [@fig-exp2decisions, C] shows a significant difference between groups found during the test trials two weeks after the conditioning procedure. It may be that the persisting increase in preference shown by the treatment group is evidence of true learning as opposed to the natural variability of behaviour seen in the control group. This could explain why the treatment group effect remained even after two weeks, while the control group effect diminished back to baseline. The reinforcement day results constrain this line of thinking. Although conditioned responses have been shown to extinguish relatively quickly in planaria, reinstatement procedures have also been shown to be effective. Therefore, if the conditioned behaviour was able to persist for several weeks, there is little reason to expect it would be extinguished so quickly but fail to show the expected effect of reinstatement. Overall, the results do show some promise for the capacity of planaria to learn this y-maze procedure. Future replications and refinements may be needed to more convincingly demonstrate a learned response.
 
 This experiment also considered the response time of planaria during each trial. It was hypothesised that although planaria may not be able to learn the complex operant behaviour, they may demonstrate increased motivation from being aware that an award is available. This could be inferred from faster responding in the treatment group compared to the control group. The response time data across the four phases are shown in [@fig-decision-time].
 
@@ -571,6 +570,21 @@ source("ExperimentTwoTimeAnalysis.R")
 
 print(grouped_time_horizontal_boxplot)
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # References
 
