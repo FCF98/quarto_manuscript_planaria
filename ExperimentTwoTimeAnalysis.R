@@ -134,6 +134,40 @@ exp2_time_comparisons_within_group <- summary(exp2_time_comparisons_within_group
 exp2_time_comparisons_between_group <- summary(exp2_time_comparisons_between_group)$contrasts
 
 
+##### Calculating cohens h effect sizes #####
+
+# Calculate effect sizes - within groups
+within_group_stats_exp2_time <- exp2_time_comparisons_within_group %>%
+  as.data.frame() %>%
+  mutate(
+    log_ratio = log(ratio),
+    pooled_sd = SE * sqrt(df),
+    cohens_d = abs(log_ratio) / pooled_sd,
+    apa_result = paste0("d = ", round(cohens_d, 2), 
+                        ", p ", ifelse(p.value < .001, "< .001",
+                                       paste0("= ", round(p.value, 3))))
+  )
+
+# Split into control and treatment results
+control_results_exp2_time <- within_group_stats_exp2_time %>%
+  filter(Condition == "Control")
+
+treatment_results_exp2_time <- within_group_stats_exp2_time %>%
+  filter(Condition == "Treatment")
+
+# Between group stats
+between_group_stats_exp2_time <- exp2_time_comparisons_between_group %>%
+  as.data.frame() %>%
+  mutate(
+    log_ratio = log(ratio),
+    pooled_sd = SE * sqrt(df),
+    cohens_d = abs(log_ratio) / pooled_sd,
+    apa_result = paste0("d = ", round(cohens_d, 2), 
+                        ", p ", ifelse(p.value < .001, "< .001",
+                                       paste0("= ", round(p.value, 3))))
+  )
+
+
 
 ######### Plotting the grouped data by condition across days #############
 
