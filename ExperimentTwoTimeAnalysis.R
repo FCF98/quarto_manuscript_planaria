@@ -150,10 +150,12 @@ within_group_stats_exp2_time <- exp2_time_comparisons_within_group %>%
 
 # Split into control and treatment results
 control_results_exp2_time <- within_group_stats_exp2_time %>%
-  filter(Condition == "Control")
+  filter(Condition == "Control")  %>%
+  select(contrast, cohens_d, p.value, apa_result)
 
 treatment_results_exp2_time <- within_group_stats_exp2_time %>%
-  filter(Condition == "Treatment")
+  filter(Condition == "Treatment") %>%
+  select(contrast, cohens_d, p.value, apa_result)
 
 # Between group stats
 between_group_stats_exp2_time <- exp2_time_comparisons_between_group %>%
