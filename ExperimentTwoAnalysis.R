@@ -81,18 +81,82 @@ exp2_decision_comparisons_within_group <- summary(exp2_decision_comparisons_with
  
 exp2_decision_comparisons_between_group <- summary(exp2_decision_comparisons_between_group)$contrasts
 
-#nice_output <- nice(m1, sig_symbols = c(" = ", "<"))
 
+##### calculating cohens h values for effect size reporting #####
 
-## trying afex format ##
+# Function for Cohen's h calculation
+calc_cohens_h <- function(p1, p2) {
+  2 * (asin(sqrt(p1)) - asin(sqrt(p2)))
+}
 
-#m1_afex <- mixed(cbind(ActiveCount, InactiveCount) ~ Condition * Time + (1|Subject), 
-               #  data = data_long, 
-                # family = binomial,
-                # method = "LRT")
+# Get mean proportions for each time point
+time_props <- data_long %>%
+  group_by(Time, Condition) %>%
+  summarize(
+    prop = mean(ActiveArmProportion, na.rm = TRUE),
+    .groups = "drop"
+  )
 
-#################################
+# Define contrast levels explicitly
+contrast_levels <- c(
+  "Baseline / Endpoint",
+  "Baseline / Test",
+  "Baseline / Reinst",
+  "Endpoint / Test",
+  "Endpoint / Reinst",
+  "Test / Reinst"
+)
 
+# Get p-values from emmeans results
+p_values_df <- exp2_decision_comparisons_within_group %>%
+  as.data.frame() %>%
+  select(Condition, contrast, p.value)
+
+# Get all unique times
+times <- levels(data_long$Time)
+# Create all possible pairs
+pairs <- t(combn(times, 2))
+
+# Create the final dataframe with all comparisons
+within_group_h <- do.call(rbind, lapply(unique(data_long$Condition), function(cond) {
+  # Get props for this condition
+  condition_props <- time_props %>% filter(Condition == cond)
+  
+  # Create dataframe of all comparisons
+  data.frame(
+    Condition = cond,
+    contrast = factor(
+      ifelse(grepl("Reinstatement", paste(pairs[,1], "/", pairs[,2])),
+             gsub("Reinstatement", "Reinst", paste(pairs[,1], "/", pairs[,2])),
+             paste(pairs[,1], "/", pairs[,2])),
+      levels = contrast_levels
+    ),
+    prop1 = condition_props$prop[match(pairs[,1], condition_props$Time)],
+    prop2 = condition_props$prop[match(pairs[,2], condition_props$Time)],
+    stringsAsFactors = FALSE
+  )
+})) %>%
+  # Calculate Cohen's h
+  mutate(
+    cohens_h = abs(calc_cohens_h(prop1, prop2))
+  ) %>%
+  # Join with p-values
+  left_join(p_values_df, by = c("Condition", "contrast")) %>%
+  # Format results
+  mutate(
+    apa_result = paste0("h = ", round(cohens_h, 2), 
+                        ", p ", ifelse(p.value < .001, "< .001",
+                                       paste0("= ", round(p.value, 3))))
+  )
+
+# Create separate dataframes for control and treatment results
+control_h_values_exp2_decisions <- within_group_h %>%
+  filter(Condition == "Control") %>%
+  select(contrast, cohens_h, p.value, apa_result)
+
+treatment_h_values_exp2_decisions <- within_group_h %>%
+  filter(Condition == "Treatment") %>%
+  select(contrast, cohens_h, p.value, apa_result)
 
 ############# plotting the grouped results   ############
 
