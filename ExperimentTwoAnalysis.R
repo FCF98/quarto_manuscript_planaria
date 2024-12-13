@@ -84,6 +84,8 @@ exp2_decision_comparisons_between_group <- summary(exp2_decision_comparisons_bet
 
 ##### calculating cohens h values for effect size reporting #####
 
+### Getting the within group effect sizes
+
 # Function for Cohen's h calculation
 calc_cohens_h <- function(p1, p2) {
   2 * (asin(sqrt(p1)) - asin(sqrt(p2)))
@@ -144,9 +146,9 @@ within_group_h <- do.call(rbind, lapply(unique(data_long$Condition), function(co
   left_join(p_values_df, by = c("Condition", "contrast")) %>%
   # Format results
   mutate(
-    apa_result = paste0("h = ", round(cohens_h, 2), 
-                        ", p ", ifelse(p.value < .001, "< .001",
-                                       paste0("= ", round(p.value, 3))))
+    apa_result = paste0("*h* = ", round(cohens_h, 2), 
+                        ", *p* ", ifelse(p.value < .001, "< .001",
+                                       paste0("= ",gsub("0\\.", ".", round(p.value, 3)))))
   )
 
 # Create separate dataframes for control and treatment results
@@ -157,6 +159,43 @@ control_h_values_exp2_decisions <- within_group_h %>%
 treatment_h_values_exp2_decisions <- within_group_h %>%
   filter(Condition == "Treatment") %>%
   select(contrast, cohens_h, p.value, apa_result)
+
+
+
+### Getting the between group effect sizes
+
+
+p_values_between_df <- exp2_decision_comparisons_between_group %>%
+  as.data.frame()
+
+# Calculate between-group h values
+between_group_h <- time_props %>%
+  pivot_wider(
+    names_from = Condition,
+    values_from = prop
+  ) %>%
+  mutate(
+    cohens_h = abs(calc_cohens_h(Control, Treatment))
+  )
+
+# Create final between-group results dataframe
+between_group_h_final <- between_group_h %>%
+  mutate(
+    cohens_h = abs(calc_cohens_h(Control, Treatment))
+  ) %>%
+  left_join(
+    p_values_between_df %>% 
+      select(Time, p.value),
+    by = "Time"
+  ) %>%
+  mutate(
+    contrast = factor(Time, levels = times),  # Use the times object we defined earlier
+    apa_result = paste0("*h* = ", round(cohens_h, 2), 
+                        ", *p* ", ifelse(p.value < .001, "< .001",
+                                         paste0("= ", round(p.value, 3))))
+  ) %>%
+  select(Time, contrast, cohens_h, p.value, apa_result)
+
 
 ############# plotting the grouped results   ############
 

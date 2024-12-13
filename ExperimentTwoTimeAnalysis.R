@@ -137,16 +137,19 @@ exp2_time_comparisons_between_group <- summary(exp2_time_comparisons_between_gro
 ##### Calculating cohens h effect sizes #####
 
 # Calculate effect sizes - within groups
-within_group_stats_exp2_time <- exp2_time_comparisons_within_group %>%
-  as.data.frame() %>%
+within_group_stats_exp2_time <- exp2_time_comparisons_within_group %>% 
+  as.data.frame() %>% 
   mutate(
     log_ratio = log(ratio),
     pooled_sd = SE * sqrt(df),
     cohens_d = abs(log_ratio) / pooled_sd,
-    apa_result = paste0("d = ", round(cohens_d, 2), 
-                        ", p ", ifelse(p.value < .001, "< .001",
-                                       paste0("= ", round(p.value, 3))))
-  )
+    apa_result = paste0(
+      "*d* = ", 
+      gsub("0\\.", ".", format(round(cohens_d, 2), nsmall = 2)), 
+      ", *p* ", 
+      ifelse(p.value < .001, 
+             "< .001", 
+             paste0("= ", gsub("0\\.", ".", format(round(p.value, 3), nsmall = 3))))))
 
 # Split into control and treatment results
 control_results_exp2_time <- within_group_stats_exp2_time %>%
@@ -164,8 +167,8 @@ between_group_stats_exp2_time <- exp2_time_comparisons_between_group %>%
     log_ratio = log(ratio),
     pooled_sd = SE * sqrt(df),
     cohens_d = abs(log_ratio) / pooled_sd,
-    apa_result = paste0("d = ", round(cohens_d, 2), 
-                        ", p ", ifelse(p.value < .001, "< .001",
+    apa_result = paste0("*d* = ", round(cohens_d, 2), 
+                        ", *p* ", ifelse(p.value < .001, "< .001",
                                        paste0("= ", round(p.value, 3))))
   )
 
@@ -500,8 +503,8 @@ grouped_time_horizontal_boxplot <- ggplot(Exp2_Time_Long_Four_Points, aes(x = fc
     position = position_dodge(width = 1),
     family = "Roboto Mono",
     fontface = "bold",
-    size = 4,
-    vjust = -1.6
+    size = 5,
+    vjust = -2.8
   ) +
   # Add sample size
   stat_summary(
@@ -511,7 +514,7 @@ grouped_time_horizontal_boxplot <- ggplot(Exp2_Time_Long_Four_Points, aes(x = fc
         color = Condition),
     position = position_dodge(width = 0.8),
     family = "Roboto Condensed",
-    size = 3.5,
+    size = 6,
     hjust = 0  # Set to 0 for left alignment at the fixed position
   ) +
   # Flip coordinates with expanded limits
@@ -523,11 +526,9 @@ grouped_time_horizontal_boxplot <- ggplot(Exp2_Time_Long_Four_Points, aes(x = fc
   labs(
     x = NULL,
     y = "Response Time (seconds)",
-    title = "Planaria Response Times Across Time Points",
-    subtitle = "Distribution of response times for control and treatment groups"
   ) +
   # Theme customization
-  theme_minimal(base_family = "Arial", base_size = 14) +
+  theme_minimal(base_family = "Arial", base_size = 16) +
   theme(
     panel.grid.minor = element_blank(),
     panel.grid.major.x = element_line(color = "grey90"),
@@ -556,8 +557,10 @@ grouped_time_horizontal_boxplot <- ggplot(Exp2_Time_Long_Four_Points, aes(x = fc
     ),
     plot.margin = margin(20, 30, 15, 20),
     legend.position = "top",
+    legend.key.size = unit(1.5, "cm"),
     legend.title = element_blank(),
-    legend.margin = margin(0, 0, 15, 0)
+    legend.margin = margin(0, 0, 15, 0),
+    legend.text = element_text(size = 16)
   )
 
 grouped_time_horizontal_boxplot
