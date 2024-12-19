@@ -134,6 +134,10 @@ execute:
 #removes scientific notation (e.g. 10 x e^2)
 options(scipen = 999)
 
+
+#YOu may need Rtools installed to enable lme4 and Matrix package to be installed
+#otherwise errors arise.
+
 # Conflicted
 if (!require("conflicted")) install.packages("conflicted")
 library(conflicted)
@@ -233,30 +237,74 @@ library(conflicted)
 if (!require("showtext")) install.packages("showtext")
 library(showtext)
 
+#svglite
+if (!require("svglite")) install.packages("svglite")
+library(svglite)
 
+#rstatix
+if(!require("rstatix")) install.packages("rstatic")
+library(rstatix)
 
-#library(conflicted)
-#library(tidyverse)
-#library(flextable)
-#library(ftExtra)
-#library(knitr)
-#library(here)
-#library(patchwork)
-#library(rempsyc)
-#library(png)
-#library(grid)
-#library(jpeg)
-#library(ggplot2)
-#library(apa)
-#library(ghibli)
-#library(ggdist)
-#library(RColorBrewer)
-#library(dplyr)
-#library(ggpubr)
-#library(tidyr)
-#library(ggridges)
-#library(viridis)
-#library(agridat)
+#dunn.test
+if(!require("dunn.test")) install.packages("dunn.test")
+library(dunn.test)
+
+#psych
+if(!require("psych")) install.packages("psych")
+library(psych)
+
+#psych
+if(!require("hrbrthemes")) install.packages("hrbrthemes")
+library(hrbrthemes)
+
+#psych
+if(!require("hrbrthemes")) install.packages("hrbrthemes")
+library(hrbrthemes)
+
+#effectsize
+if(!require("effectsize")) install.packages("effectsize")
+library(effectsize)
+
+#gghalves
+if(!require("gghalves")) install.packages("gghalves")
+library(gghalves)
+
+#ggtext
+if(!require("ggtext")) install.packages("ggtext")
+library(ggtext)
+
+#emmeans
+if(!require("emmeans")) install.packages("emmeans")
+library(emmeans)
+
+#DHARMa
+if(!require("DHARMa")) install.packages("DHARMa")
+library(DHARMa)
+
+#car
+if(!require("car")) install.packages("car")
+library(car)
+
+#lme4
+if(!require("lme4")) install.packages("lme4", type = "binary")
+library(lme4)
+
+#ggsignif
+if(!require("ggsignif")) install.packages("ggsignif")
+library(ggsignif)
+
+#readxl
+if(!require("readxl")) install.packages("readxl")
+library(readxl)
+
+#Matrix
+if(!require("Matrix")) install.packages("Matrix", type = "binary")
+library(Matrix)
+
+#colorspace
+if(!require("colorspace")) install.packages("colorspace")
+library(colorspace)
+
 set_here() #sets the working directory
 
 

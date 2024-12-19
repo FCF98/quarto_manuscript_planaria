@@ -1,13 +1,13 @@
 
 
-library(readxl)
-library(dplyr)
-library(car)
-library(pwr)
-library(dunn.test)
-library(afex)
-library(apa)
-library(papaja)
+# library(readxl)
+# library(dplyr)
+# library(car)
+# library(pwr)
+# library(dunn.test)
+# library(afex)
+# library(apa)
+# library(papaja)
 
 
 # Load the data
