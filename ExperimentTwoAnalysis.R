@@ -486,58 +486,58 @@ ggplot(lollipop_chart_data, aes(x = as.factor(Subject), y = change, color = Cond
 
 #Ctr + Shft + c to uncomment
 
-# Data_long_days <- data %>%
-#   select(Subject, Condition,
-#          Baseline = `Baseline%`,
-#          Day1 = `Day1%`,
-#          Day2 = `Day2%`,
-#          Day3 = `Day3%`,
-#          Day4 = `Day4%`,
-#          Day5 = `Day5%`) %>%
-#   pivot_longer(
-#     cols = c(Baseline:Day5),
-#     names_to = "TimePoint",
-#     values_to = "Proportion"
-#   ) %>%
-#   mutate(
-#     TimePoint = factor(TimePoint,
-#                        levels = c("Baseline", "Day1", "Day2", "Day3", "Day4", "Day5")),
-#     Condition = factor(Condition)
-#   ) %>%
-#   # Calculate mean and SE for each condition and timepoint
-#   group_by(Condition, TimePoint) %>%
-#   summarise(
-#     mean_prop = mean(Proportion, na.rm = TRUE),
-#     se = sd(Proportion, na.rm = TRUE) / sqrt(n()),
-#     .groups = 'drop'
-#   )
-# 
-# # Create the visualization
-# ggplot(Data_long_days, aes(x = TimePoint, y = mean_prop,
-#                       color = Condition, group = Condition)) +
-#   # Add mean lines
-#   geom_line(linewidth = 1.5) +
-#   # Add mean points
-#   geom_point(size = 3) +
-#   # Add error bars
-#   geom_errorbar(aes(ymin = mean_prop - se, ymax = mean_prop + se),
-#                 width = 0.2) +
-#   # Customize the theme and labels
-#   theme_minimal() +
-#   labs(
-#     title = "Average Proportion of Active Arm Choices Over Time",
-#     y = "Proportion of Active Arm Choices",
-#     x = "Time Point"
-#   ) +
-#   scale_color_manual(values = c("Control" = "#0072B2", "Treatment" = "#D55E00")) +
-#   theme(
-#     legend.position = "bottom",
-#     panel.grid.minor = element_blank(),
-#     axis.text = element_text(size = 12),
-#     axis.title = element_text(size = 12, face = "bold"),
-#     axis.text.x = element_text(angle = 45, hjust = 1)
-#   ) +
-#   ylim(0, 1)  # Set y-axis limits from 0 to 1
+Data_long_days <- data %>%
+  select(Subject, Condition,
+         Baseline = `Baseline%`,
+         Day1 = `Day1%`,
+         Day2 = `Day2%`,
+         Day3 = `Day3%`,
+         Day4 = `Day4%`,
+         Day5 = `Day5%`) %>%
+  pivot_longer(
+    cols = c(Baseline:Day5),
+    names_to = "TimePoint",
+    values_to = "Proportion"
+  ) %>%
+  mutate(
+    TimePoint = factor(TimePoint,
+                       levels = c("Baseline", "Day1", "Day2", "Day3", "Day4", "Day5")),
+    Condition = factor(Condition)
+  ) %>%
+  # Calculate mean and SE for each condition and timepoint
+  group_by(Condition, TimePoint) %>%
+  summarise(
+    mean_prop = mean(Proportion, na.rm = TRUE),
+    se = sd(Proportion, na.rm = TRUE) / sqrt(n()),
+    .groups = 'drop'
+  )
+
+# Create the visualization
+ggplot(Data_long_days, aes(x = TimePoint, y = mean_prop,
+                      color = Condition, group = Condition)) +
+  # Add mean lines
+  geom_line(linewidth = 1.5) +
+  # Add mean points
+  geom_point(size = 3) +
+  # Add error bars
+  geom_errorbar(aes(ymin = mean_prop - se, ymax = mean_prop + se),
+                width = 0.2) +
+  # Customize the theme and labels
+  theme_minimal() +
+  labs(
+    title = "Average Proportion of Active Arm Choices Over Time",
+    y = "Proportion of Active Arm Choices",
+    x = "Time Point"
+  ) +
+  scale_color_manual(values = c("Control" = "#0072B2", "Treatment" = "#D55E00")) +
+  theme(
+    legend.position = "bottom",
+    panel.grid.minor = element_blank(),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 12, face = "bold"),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  ) +
+  ylim(0, 1)  # Set y-axis limits from 0 to 1
 
 
 
