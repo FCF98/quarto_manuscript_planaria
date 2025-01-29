@@ -486,7 +486,13 @@ ggplot(lollipop_chart_data, aes(x = as.factor(Subject), y = change, color = Cond
 
 #Ctr + Shft + c to uncomment
 
-Data_long_days <- data %>%
+Exp2_fulldata <- read_excel("Datasets/ExperimentTwoFullData.xlsx", sheet = "Data for analysis")
+
+Exp2_fulldata <- Exp2_fulldata %>%
+  filter(!Subject %in% c(3, 4, 14, 22, 27, 35, 40, 44, 47, 50, 52, 55, 56))
+
+
+Data_long_days <- Exp2_fulldata %>%
   select(Subject, Condition,
          Baseline = `Baseline%`,
          Day1 = `Day1%`,
@@ -537,7 +543,7 @@ ggplot(Data_long_days, aes(x = TimePoint, y = mean_prop,
     axis.title = element_text(size = 12, face = "bold"),
     axis.text.x = element_text(angle = 45, hjust = 1)
   ) +
-  ylim(0, 1)  # Set y-axis limits from 0 to 1
+  ylim(0, 0.75)  # Set y-axis limits from 0 to 1
 
 
 
