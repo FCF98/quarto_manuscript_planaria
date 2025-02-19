@@ -1,0 +1,74 @@
+/* APA7 Styling for Quarto HTML Output */
+
+/* Body text */
+body {
+    font-size: 12pt;
+    line-height: 2;
+    margin: 1in;
+}
+
+
+
+h1 {
+    font-size: 16pt;
+    text-align: center;
+}
+
+h2 {
+    font-size: 14pt;
+}
+
+h3 {
+    font-size: 13pt;
+    font-style: italic;
+}
+
+h4 {
+    font-size: 12pt;
+    font-style: italic;
+}
+
+h5, h6 {
+    font-size: 12pt;
+}
+
+/* Paragraphs */
+p {
+    text-indent: 0.5in;
+    margin-bottom: 2;
+    margin-top: 2; /* Ensure no extra space between paragraphs */
+}
+
+/* Lists */
+ul, ol {
+    padding-left: 0.5in;
+}
+
+/* Tables */
+table {
+    border-collapse: collapse;
+    margin-bottom: 1em;
+    width: 100%;
+}
+
+
+/* Figure captions */
+figcaption {
+    font-style: italic;
+    margin-top: 0.5em;
+}
+
+/* References */
+.references {
+    margin-top: 2em;
+}
+
+.references p {
+    text-indent: -0.5in;
+    padding-left: 0.5in;
+}
+
+/* In-text citations */
+cite {
+    font-style: normal;
+}
