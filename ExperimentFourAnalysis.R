@@ -341,7 +341,7 @@ conditioning_props <- data.frame(
     mean(calculate_daily_prop(selected_data, conditioning_day3)),
     mean(calculate_daily_prop(selected_data, conditioning_day4)),
     mean(calculate_daily_prop(selected_data, conditioning_day5))
-  ),
+  ), 
   Phase = "Conditioning",
   TimePoint = 3:7
 )
