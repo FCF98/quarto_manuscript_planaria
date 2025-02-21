@@ -66,7 +66,7 @@ Exp2_Time_Data_Clean <- Exp2_Time_Data_converted %>%
     Test_Mean = mean(c(Time_T1, Time_T2, Time_T3, Time_T4), na.rm = TRUE),
     
     # Reinstatement mean (R1-R4)
-    Reinst_Mean = mean(c(Time_R1, Time_R2, Time_R3, Time_R4), na.rm = TRUE)
+    Reinstatement_Mean = mean(c(Time_R1, Time_R2, Time_R3, Time_R4), na.rm = TRUE)
   ) %>%
   ungroup()
 
@@ -85,14 +85,14 @@ Exp2_Time_Long <- Exp2_Time_Data_Clean %>%
          Day5 = Cond_Day5_Mean,
          Endpoint = Endpoint,
          Test = Test_Mean,
-         Reinst = Reinst_Mean) %>%
+         Reinstatement = Reinstatement_Mean) %>%
   pivot_longer(
-    cols = c(Baseline:Reinst),
+    cols = c(Baseline:Reinstatement),
     names_to = "TimePoint",
     values_to = "Time"
   ) %>%
   mutate(TimePoint = factor(TimePoint, 
-                            levels = c("Baseline", "Day1", "Day2", "Day3", "Day4", "Day5", "Endpoint", "Test", "Reinst")))
+                            levels = c("Baseline", "Day1", "Day2", "Day3", "Day4", "Day5", "Endpoint", "Test", "Reinstatement")))
 
 
 ######### Creating a model and testing change in completion time across time points between conditions ##########
@@ -105,14 +105,14 @@ Exp2_Time_Long_Four_Points <- Exp2_Time_Data_Clean %>%
          Baseline = Baseline_Mean,
          Endpoint = Endpoint,
          Test = Test_Mean,
-         Reinst = Reinst_Mean) %>%
+         Reinstatement = Reinstatement_Mean) %>%
   pivot_longer(
-    cols = c(Baseline:Reinst),
+    cols = c(Baseline:Reinstatement),
     names_to = "TimePoint",
     values_to = "Time"
   ) %>%
   mutate(TimePoint = factor(TimePoint, 
-                            levels = c("Baseline", "Endpoint", "Test", "Reinst")))
+                            levels = c("Baseline", "Endpoint", "Test", "Reinstatement")))
 
 
 

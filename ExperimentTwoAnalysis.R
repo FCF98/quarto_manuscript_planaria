@@ -103,10 +103,10 @@ time_props <- data_long %>%
 contrast_levels <- c(
   "Baseline / Endpoint",
   "Baseline / Test",
-  "Baseline / Reinst",
+  "Baseline / Reinstatement",
   "Endpoint / Test",
-  "Endpoint / Reinst",
-  "Test / Reinst"
+  "Endpoint / Reinstatement",
+  "Test / Reinstatement"
 )
 
 # Get p-values from emmeans results
@@ -129,7 +129,7 @@ within_group_h <- do.call(rbind, lapply(unique(data_long$Condition), function(co
     Condition = cond,
     contrast = factor(
       ifelse(grepl("Reinstatement", paste(pairs[,1], "/", pairs[,2])),
-             gsub("Reinstatement", "Reinst", paste(pairs[,1], "/", pairs[,2])),
+             gsub("Reinstatement", "Reinstatement", paste(pairs[,1], "/", pairs[,2])),
              paste(pairs[,1], "/", pairs[,2])),
       levels = contrast_levels
     ),
@@ -150,6 +150,7 @@ within_group_h <- do.call(rbind, lapply(unique(data_long$Condition), function(co
                         ", *p* ", ifelse(p.value < .001, "< .001",
                                        paste0("= ",gsub("0\\.", ".", round(p.value, 3)))))
   )
+
 
 # Create separate dataframes for control and treatment results
 control_h_values_exp2_decisions <- within_group_h %>%
