@@ -2,6 +2,7 @@
 # Load required libraries
 library(readr)
 library(tidyverse)
+library(ggsignif)
 library(lme4)
 library(emmeans)
 library(grid)
@@ -251,183 +252,6 @@ pooled_sd <- sqrt(((sum((Memory_test_data$ActiveProportion[Memory_test_data$Body
 memory_cohens_d <- (head_mean - tail_mean) / pooled_sd
 print(paste("Memory Test Cohen's d:", memory_cohens_d))
 
-# Visualization of memory test results
-memory_plot <- Memory_test_data %>%
-  group_by(BodyPart) %>%
-  summarise(
-    mean_prop = mean(ActiveProportion, na.rm = TRUE),
-    se = sd(ActiveProportion, na.rm = TRUE) / sqrt(n()),
-    .groups = 'drop'
-  ) %>%
-  ggplot(aes(x = BodyPart, y = mean_prop)) +
-  geom_bar(stat = "identity", position = position_dodge(0.8), width = 0.6, fill = "#FF8C00") +
-  geom_errorbar(aes(ymin = mean_prop - se, ymax = mean_prop + se),
-                position = position_dodge(0.8), width = 0.2, linewidth = 0.8) +
-  # Add significance annotation based on t-test result
-  geom_signif(
-    annotations = ifelse(memory_test_ttest$p.value < 0.05, "*", "ns"),
-    xmin = 1, xmax = 2,
-    y_position = max(Memory_test_data$ActiveProportion, na.rm = TRUE) + 0.1,
-    color = "black",
-    size = 0.6,
-    textsize = 6
-  ) +
-  labs(
-    title = "Memory Retention After Regeneration",
-    y = "Proportion of Active Arm Choices",
-    x = "Body Part"
-  ) +
-  scale_y_continuous(
-    limits = c(0, 1),
-    breaks = seq(0, 1, 0.1)
-  ) +
-  consistent_theme()
-
-print(memory_plot)
-
-#=================================================================
-# PART 4: REINSTATEMENT ANALYSIS - UPDATED WITH NEW COLUMN NAMES
-#=================================================================
-
-# Create a dataset for the reinstatement phase - UPDATED
-Reinstatement_data <- Regen_subjects %>%
-  select(Subject, OrigSubject, BodyPart, R1, R2, R3, Reinstatment_test_total) %>%
-  filter(!is.na(Reinstatment_test_total)) %>%
-  mutate(
-    TotalTrials = 3,
-    InactiveCount = TotalTrials - Reinstatment_test_total,
-    ActiveProportion = Reinstatment_test_total / TotalTrials
-  )
-
-# Compare Head vs Tail for reinstatement
-reinstatement_ttest <- t.test(
-  ActiveProportion ~ BodyPart, 
-  data = Reinstatement_data, 
-  var.equal = TRUE
-)
-
-# Print test result
-print("Reinstatement: Head vs Tail comparison")
-print(reinstatement_ttest)
-
-# Calculate effect size (Cohen's d)
-head_mean_r <- mean(Reinstatement_data$ActiveProportion[Reinstatement_data$BodyPart == "Head"])
-tail_mean_r <- mean(Reinstatement_data$ActiveProportion[Reinstatement_data$BodyPart == "Tail"])
-pooled_sd_r <- sqrt(((sum((Reinstatement_data$ActiveProportion[Reinstatement_data$BodyPart == "Head"] - head_mean_r)^2) + 
-                        sum((Reinstatement_data$ActiveProportion[Reinstatement_data$BodyPart == "Tail"] - tail_mean_r)^2)) / 
-                       (nrow(Reinstatement_data) - 2)))
-reinstatement_cohens_d <- (head_mean_r - tail_mean_r) / pooled_sd_r
-print(paste("Reinstatement Cohen's d:", reinstatement_cohens_d))
-
-# Visualization of reinstatement results
-reinstatement_plot <- Reinstatement_data %>%
-  group_by(BodyPart) %>%
-  summarise(
-    mean_prop = mean(ActiveProportion, na.rm = TRUE),
-    se = sd(ActiveProportion, na.rm = TRUE) / sqrt(n()),
-    .groups = 'drop'
-  ) %>%
-  ggplot(aes(x = BodyPart, y = mean_prop)) +
-  geom_bar(stat = "identity", position = position_dodge(0.8), width = 0.6, fill = "#FF8C00") +
-  geom_errorbar(aes(ymin = mean_prop - se, ymax = mean_prop + se),
-                position = position_dodge(0.8), width = 0.2, linewidth = 0.8) +
-  # Add significance annotation based on t-test result
-  geom_signif(
-    annotations = ifelse(reinstatement_ttest$p.value < 0.05, "*", "ns"),
-    xmin = 1, xmax = 2,
-    y_position = max(Reinstatement_data$ActiveProportion, na.rm = TRUE) + 0.1,
-    color = "black",
-    size = 0.6,
-    textsize = 6
-  ) +
-  labs(
-    title = "Reinstatement After Regeneration",
-    y = "Proportion of Active Arm Choices",
-    x = "Body Part"
-  ) +
-  scale_y_continuous(
-    limits = c(0, 1),
-    breaks = seq(0, 1, 0.1)
-  ) +
-  consistent_theme()
-
-print(reinstatement_plot)
-
-#=================================================================
-# PART 5: COMPARISON OF TEST AND REINSTATEMENT - UPDATED
-#=================================================================
-
-# Create a combined dataset for test and reinstatement phases
-Combined_regen_data <- bind_rows(
-  Memory_test_data %>% 
-    select(Subject, OrigSubject, BodyPart, ActiveProportion) %>%
-    mutate(Phase = "Regeneration"),
-  Reinstatement_data %>% 
-    select(Subject, OrigSubject, BodyPart, ActiveProportion) %>%
-    mutate(Phase = "Reinstatement")
-) %>%
-  mutate(
-    Phase = factor(Phase, levels = c("Regeneration", "Reinstatement"))
-  )
-
-# Perform 2x2 mixed ANOVA (BodyPart as between-subjects factor, Phase as within-subjects)
-# For this, we'll reshape the data to wide format for each subject
-wide_data <- Combined_regen_data %>%
-  pivot_wider(
-    id_cols = c(Subject, OrigSubject, BodyPart),
-    names_from = Phase,
-    values_from = ActiveProportion
-  )
-
-# Run ANOVAs separately
-aov_result <- aov(Regeneration ~ BodyPart, data = wide_data)
-print("ANOVA for Regeneration phase:")
-print(summary(aov_result))
-
-aov_result2 <- aov(Reinstatement ~ BodyPart, data = wide_data)
-print("ANOVA for Reinstatement phase:")
-print(summary(aov_result2))
-
-# For paired comparison between Regeneration and Reinstatement
-head_paired <- wide_data %>% 
-  filter(BodyPart == "Head") %>%
-  with(t.test(Regeneration, Reinstatement, paired = TRUE))
-
-tail_paired <- wide_data %>% 
-  filter(BodyPart == "Tail") %>%
-  with(t.test(Regeneration, Reinstatement, paired = TRUE))
-
-print("Head: Regeneration vs Reinstatement comparison")
-print(head_paired)
-
-print("Tail: Regeneration vs Reinstatement comparison")
-print(tail_paired)
-
-# Visualization for combined test and reinstatement
-combined_plot <- Combined_regen_data %>%
-  group_by(BodyPart, Phase) %>%
-  summarise(
-    mean_prop = mean(ActiveProportion, na.rm = TRUE),
-    se = sd(ActiveProportion, na.rm = TRUE) / sqrt(n()),
-    .groups = 'drop'
-  ) %>%
-  ggplot(aes(x = Phase, y = mean_prop, fill = BodyPart)) +
-  geom_bar(stat = "identity", position = position_dodge(0.8), width = 0.6) +
-  geom_errorbar(aes(ymin = mean_prop - se, ymax = mean_prop + se),
-                position = position_dodge(0.8), width = 0.2, linewidth = 0.8) +
-  scale_fill_manual(values = c("Head" = "#FF8C00", "Tail" = "#159090")) +
-  labs(
-    title = "Memory Retention and Reinstatement After Regeneration",
-    y = "Proportion of Active Arm Choices",
-    x = "Phase"
-  ) +
-  scale_y_continuous(
-    limits = c(0, 1),
-    breaks = seq(0, 1, 0.1)
-  ) +
-  consistent_theme()
-
-print(combined_plot)
 
 #=================================================================
 # PART 6: COMPARING REGENERATED PARTS TO ORIGINAL BASELINE SCORES
@@ -555,45 +379,7 @@ reinstate_summary <- reinstate_plot_data %>%
     .groups = 'drop'
   )
 
-# Create regeneration plot
-regeneration_plot <- ggplot(regen_summary, aes(x = BodyStatus, y = mean_prop)) +
-  geom_point(size = 8, aes(shape = BodyStatus, color = BodyStatus)) +
-  geom_errorbar(aes(ymin = mean_prop - se, ymax = mean_prop + se, color = BodyStatus),
-                width = 0.2, linewidth = 1) +
-  scale_shape_manual(values = c("Original" = 16, "Head" = 17, "Tail" = 25)) +
-  scale_color_manual(values = c("Original" = "#F8766D", "Head" = "#619CFF", "Tail" = "#619CFF")) +
-  labs(
-    title = "Regeneration Active Arm Preference Compared to Baseline",
-    y = "Proportion of Active Arm Choices",
-    x = "Body Status"
-  ) +
-  scale_y_continuous(
-    limits = c(0, 1),
-    breaks = seq(0, 1, 0.25)
-  ) +
-  consistent_theme()
 
-# Create reinstatement plot
-reinstatement_plot <- ggplot(reinstate_summary, aes(x = BodyStatus, y = mean_prop)) +
-  geom_point(size = 8, aes(shape = BodyStatus, color = BodyStatus)) +
-  geom_errorbar(aes(ymin = mean_prop - se, ymax = mean_prop + se, color = BodyStatus),
-                width = 0.2, linewidth = 1) +
-  scale_shape_manual(values = c("Original" = 16, "Head" = 17, "Tail" = 25)) +
-  scale_color_manual(values = c("Original" = "#F8766D", "Head" = "#619CFF", "Tail" = "#619CFF")) +
-  labs(
-    title = "Reinstatement Active Arm Preference Compared to Baseline",
-    y = "Proportion of Active Arm Choices",
-    x = "Body Status"
-  ) +
-  scale_y_continuous(
-    limits = c(0, 1),
-    breaks = seq(0, 1, 0.25)
-  ) +
-  consistent_theme()
-
-# Display plots
-print(regeneration_plot)
-print(reinstatement_plot)
 
 # Statistical tests - comparing to the SAME baseline
 # For Regeneration
@@ -997,83 +783,6 @@ combined_long <- combined_data %>%
     Measurement = factor(Measurement, levels = c("Original", "Regenerated"))
   )
 
-# Create a faceted plot showing all conditions
-final_plot <- combined_long %>%
-  ggplot(aes(x = Measurement, y = Proportion, 
-             color = interaction(BodyPart, Phase), 
-             group = interaction(OrigSubject, BodyPart, Phase))) +
-  # Add individual lines
-  geom_line(alpha = 0.2) +
-  # Add points
-  geom_point(size = 2) +
-  # Add means and error bars
-  stat_summary(
-    fun = mean, 
-    geom = "point", 
-    size = 4, 
-    aes(group = interaction(Measurement, BodyPart, Phase)),
-    position = position_dodge(width = 0.05)
-  ) +
-  stat_summary(
-    fun.data = function(x) {
-      return(c(y = mean(x), ymin = mean(x) - sd(x)/sqrt(length(x)), 
-               ymax = mean(x) + sd(x)/sqrt(length(x))))
-    },
-    geom = "errorbar", 
-    width = 0.1, 
-    linewidth = 0.8,
-    aes(group = interaction(Measurement, BodyPart, Phase)),
-    position = position_dodge(width = 0.05)
-  ) +
-  # Facet by body part and phase
-  facet_grid(BodyPart ~ Phase) +
-  # Custom colors
-  scale_color_manual(values = c(
-    "Head.Regeneration" = "#FF8C00", 
-    "Tail.Regeneration" = "#159090",
-    "Head.Reinstatement" = "#FF5733", 
-    "Tail.Reinstatement" = "#44D7D7"
-  )) +
-  # Labels and titles
-  labs(
-    title = "Memory Retention Across Conditions",
-    subtitle = "Comparison between Original and Regenerated/Reinstated Body Parts",
-    y = "Proportion of Active Arm Choices",
-    x = "Measurement"
-  ) +
-  # Consistent theme with modifications for facets
-  consistent_theme() +
-  theme(
-    strip.background = element_rect(fill = "lightgray"),
-    strip.text = element_text(size = 12, face = "bold"),
-    legend.position = "none"
-  )
-
-# Print final plot
-print(final_plot)
-
-# Optional: Create a combined figure using patchwork
-library(patchwork)
-combined_figure <- (head_regeneration_viz + tail_regeneration_viz) / 
-  (head_reinstatement_viz + tail_reinstatement_viz) +
-  plot_annotation(
-    title = "Memory Retention in Regenerated Planarians",
-    subtitle = "Comparing baseline to regeneration and reinstatement performance",
-    tag_levels = "A"
-  )
-
-print(combined_figure)
-
-# Save with larger dimensions
-ggsave(
-  "Exp4_combined_figure.pdf", 
-  combined_figure, 
-  width = 16, 
-  height = 14, 
-  dpi = 300
-)
-
-
 
 # Create a more visually appealing theme that matches the desired output
 publication_theme <- function() {
@@ -1106,22 +815,22 @@ improved_regeneration_plot <- ggplot(regen_summary, aes(x = BodyStatus, y = mean
   geom_errorbar(
     aes(ymin = mean_prop - se, ymax = mean_prop + se, color = BodyStatus),
     width = 0.2, 
-    linewidth = 1.2,
+    linewidth = 0.7,
     position = position_dodge(0.9)
   ) +
   # Add points with custom shapes - ADD FILL AESTHETIC
   geom_point(
     aes(shape = BodyStatus, color = BodyStatus, fill = BodyStatus),  # Added fill aesthetic
-    size = 7,
-    stroke = 1.2
+    size = 5,
+    stroke = 0.7
   ) +
   # Set shapes manually
   scale_shape_manual(
     name = "Body Status",
     values = c(
-      "Original" = 16,  # Circle
-      "Head" = 17,      # Triangle
-      "Tail" = 24       # CHANGED to 24 (filled triangle down) instead of 25
+      "Original" = 21,  # Circle
+      "Head" = 24,      # Triangle
+      "Tail" = 25       # CHANGED to 24 (filled triangle down) instead of 25
     ),
     labels = c(
       "Original" = "Intact Baseline",
@@ -1166,7 +875,7 @@ improved_regeneration_plot <- ggplot(regen_summary, aes(x = BodyStatus, y = mean
   # Y-axis limits
   scale_y_continuous(
     limits = c(0, 1),
-    breaks = seq(0, 1, 0.25)
+    breaks = seq(0, 1, 0.1)
   ) +
   # Apply publication theme
   theme_classic() +
@@ -1200,22 +909,22 @@ improved_reinstatement_plot <- ggplot(reinstate_summary, aes(x = BodyStatus, y =
   geom_errorbar(
     aes(ymin = mean_prop - se, ymax = mean_prop + se, color = BodyStatus),
     width = 0.2, 
-    linewidth = 1.2,
+    linewidth = 0.7,
     position = position_dodge(0.9)
   ) +
   # Add points with custom shapes - ADD FILL AESTHETIC
   geom_point(
     aes(shape = BodyStatus, color = BodyStatus, fill = BodyStatus),  # Added fill aesthetic
-    size = 7,
-    stroke = 1.2
+    size = 5,
+    stroke = 0.7
   ) +
   # Set shapes manually
   scale_shape_manual(
     name = "Body Status",
     values = c(
-      "Original" = 16,  # Circle
-      "Head" = 17,      # Triangle
-      "Tail" = 24       # CHANGED to 24 (filled triangle down) instead of 25
+      "Original" = 21,  # Circle
+      "Head" = 24,      # Triangle
+      "Tail" = 25       # CHANGED to 24 (filled triangle down) instead of 25
     ),
     labels = c(
       "Original" = "Intact Baseline",
@@ -1260,7 +969,7 @@ improved_reinstatement_plot <- ggplot(reinstate_summary, aes(x = BodyStatus, y =
   # Y-axis limits
   scale_y_continuous(
     limits = c(0, 1),
-    breaks = seq(0, 1, 0.25)
+    breaks = seq(0, 1, 0.1)
   ) +
   # Apply publication theme
   theme_classic() +
@@ -1355,7 +1064,7 @@ reinstatement_plot_ordered <- improved_reinstatement_plot +
     shape = guide_legend(
       order = 2, 
       title = "Legend",
-      override.aes = list(stroke = 0.7, size = 5)
+      override.aes = list(stroke = 0.7, size = 5, color = "black", fill = "#FF8C00")
     ),
     color = "none"  # Hide separate color legend since it's redundant
   )
