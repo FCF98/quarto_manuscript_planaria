@@ -131,7 +131,7 @@ intact_plot <- Exp4_plot_data %>%
   geom_signif(
     annotations = ifelse(paired_ttest_model$p.value < 0.05, "*", "ns"),
     xmin = 1, xmax = 2,
-    y_position = max(Exp4_plot_data$ActiveArmProportion, na.rm = TRUE) + 0.1,
+    y_position = 0.7,
     color = "black",
     size = 0.6,
     textsize = 6
@@ -149,25 +149,6 @@ intact_plot <- Exp4_plot_data %>%
 
 print(intact_plot)
 
-# Visualization 2: Individual subject trajectories
-trajectory_plot <- ggplot(Exp4_plot_data, aes(x = Time, y = ActiveArmProportion, group = Subject)) +
-  geom_line(alpha = 0.3) +  # Individual subject trajectories
-  geom_point(aes(color = Time), size = 2) +
-  stat_summary(fun = mean, geom = "point", size = 4, color = "red") +
-  stat_summary(fun = mean, geom = "line", size = 1, color = "red", group = 1) +
-  labs(
-    title = "Individual Trajectories of Active Arm Choices",
-    y = "Proportion of Active Arm Choices",
-    x = "Time"
-  ) +
-  scale_color_manual(values = c("Baseline" = "blue", "Endpoint" = "orange")) +
-  scale_y_continuous(
-    limits = c(0, 1),
-    breaks = seq(0, 1, 0.1)
-  ) +
-  consistent_theme()
-
-print(trajectory_plot)
 
 #=================================================================
 # PART 2: LEARNING ACROSS CONDITIONING DAYS
@@ -1321,3 +1302,89 @@ combined_plots <- improved_regeneration_plot + improved_reinstatement_plot +
 print(improved_regeneration_plot)
 print(improved_reinstatement_plot)
 print(combined_plots)
+
+
+
+
+
+
+
+###### the retention and reinstatement plots for regenerates
+
+# Combine the regeneration and reinstatement plots
+
+# Remvoe legend from one of the grapghs
+reinstatement_plot_no_legend <- improved_reinstatement_plot +
+  theme(legend.position = "none")
+
+# Combine the plots, keeping only the regeneration_plot legend
+Regen_combined_figure <- (improved_regeneration_plot + reinstatement_plot_no_legend) +
+  plot_layout(
+    guides = "collect",
+    widths = c(1, 1)
+  ) +
+  plot_annotation(
+    tag_levels = 'A',
+    theme = theme(
+      plot.tag = element_text(face = "bold", size = 16, family = "Times New Roman"),
+      plot.margin = margin(t = 20, r = 20, b = 20, l = 20)
+    )
+  )
+
+print(Regen_combined_figure)
+
+#=======================================================================
+# PART 10: Combined visualisation of both conditioning and regeneration
+#=======================================================================
+
+#### removing the uneeded legends
+learning_plot_no_legend <- learning_plot + 
+  theme(legend.position = "none")
+
+intact_plot_no_legend <- intact_plot + 
+  theme(legend.position = "none")
+
+regeneration_plot_no_legend <- improved_regeneration_plot + 
+  theme(legend.position = "none")
+
+##### Ordering the legend
+
+reinstatement_plot_ordered <- improved_reinstatement_plot +
+  guides(
+    # Set up the shape legend
+    shape = guide_legend(
+      order = 2, 
+      title = "Legend",
+      override.aes = list(stroke = 0.7, size = 5)
+    ),
+    color = "none"  # Hide separate color legend since it's redundant
+  )
+
+combined_figure <- (learning_plot_no_legend + intact_plot_no_legend) / 
+  (regeneration_plot_no_legend + reinstatement_plot_ordered) +
+  plot_layout(
+    guides = "collect",
+    widths = c(1, 1),
+    heights = c(0.7, 0.7)
+  ) +
+  plot_annotation(
+    tag_levels = 'A',
+    theme = theme(
+      plot.tag = element_text(face = "bold", size = 16, family = "Times New Roman"),
+      plot.margin = margin(t = 20, r = 20, b = 20, l = 20)
+    )
+  )
+
+
+print(combined_figure)
+# Save with larger dimensions and explicit device
+# Try using a larger canvas size and the Cairo PDF device for better rendering
+
+ggsave(
+  "Exp4_combined_figure.pdf", 
+  combined_figure, 
+  width = 16,          # Increased width
+  height = 14,         # Increased height
+  dpi = 300,
+  device = cairo_pdf   # Using Cairo PDF device for better handling of complex graphics
+)
