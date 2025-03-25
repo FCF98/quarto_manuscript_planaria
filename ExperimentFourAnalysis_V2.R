@@ -12,7 +12,7 @@ library(readxl)
 library(patchwork) # For combining plots
 
 # Read in the data
-Exp4_full_data <- read_csv("ExperimentFourFullData.csv")
+Exp4_full_data <- read_csv("Datasets/ExperimentFourFullData.csv")
 
 #=================================================================
 # Creating theme for all plots
@@ -40,12 +40,13 @@ consistent_theme <- function() {
 # PART 1: ANALYSIS OF INTACT SUBJECTS (PRE-REGENERATION)
 #=================================================================
 
-# Filter for original intact subjects (numeric subject IDs)
-Orig_subjects <- Exp4_data %>%
-  filter(is.numeric(Subject))
+# Filter for original intact subjects (subjects with numeric IDs)
+# Use grepl to identify purely numeric subject IDs
+Orig_subjects <- Exp4_full_data %>%
+  filter(grepl("^[0-9]+$", as.character(Subject)))
 
 # Restructure data for intact analysis (comparing baseline vs endpoint)
-Exp4_data_long <- Orig_subjects %>%
+Exp4_full_data_long <- Orig_subjects %>%
   mutate(across(ends_with("_arm_entries"), 
                 ~as.numeric(as.character(.)))) %>%
   pivot_longer(
@@ -75,25 +76,46 @@ Exp4_data_long <- Orig_subjects %>%
   ) %>%
   filter(is.na(ActiveCount) | ActiveCount <= TotalTrials)
 
-# For Drug condition only analysis, we'll use a paired t-test instead of GLMM
-# This is simpler for a single treatment group
+# Convert to wide format for paired t-test
+Exp4_wide_format <- Exp4_full_data_long %>%
+  select(Subject, Time, ActiveArmProportion) %>%
+  pivot_wider(
+    names_from = Time,
+    values_from = ActiveArmProportion
+  )
+
+# Display wide format data structure to verify
+print("Wide format data structure:")
+print(str(Exp4_wide_format))
+
+# Perform paired t-test
 paired_ttest_model <- t.test(
-  Exp4_data_long %>% filter(Time == "Baseline") %>% pull(ActiveArmProportion),
-  Exp4_data_long %>% filter(Time == "Endpoint") %>% pull(ActiveArmProportion),
+  Exp4_wide_format$Baseline,
+  Exp4_wide_format$Endpoint,
   paired = TRUE
 )
 
 # Print t-test results
+print("Paired t-test results:")
 print(paired_ttest_model)
 
 # Calculate effect size (Cohen's d for paired data)
-t_value <- paired_ttest_model$statistic
-n <- length(Exp4_data_long %>% filter(Time == "Baseline") %>% pull(ActiveArmProportion))
-cohen_d <- t_value / sqrt(n)
+mean_diff <- mean(Exp4_wide_format$Endpoint - Exp4_wide_format$Baseline, na.rm = TRUE)
+sd_diff <- sd(Exp4_wide_format$Endpoint - Exp4_wide_format$Baseline, na.rm = TRUE)
+cohen_d <- mean_diff / sd_diff
 print(paste("Cohen's d:", cohen_d))
 
-# Visualization for intact subjects
-intact_plot <- Exp4_data_long %>%
+# Convert wide format back to long for plotting
+Exp4_plot_data <- Exp4_wide_format %>%
+  pivot_longer(
+    cols = c(Baseline, Endpoint),
+    names_to = "Time",
+    values_to = "ActiveArmProportion"
+  ) %>%
+  mutate(Time = factor(Time, levels = c("Baseline", "Endpoint")))
+
+# Visualization 1: Bar plot with error bars
+intact_plot <- Exp4_plot_data %>%
   group_by(Time) %>%
   summarise(
     mean_prop = mean(ActiveArmProportion, na.rm = TRUE),
@@ -109,7 +131,7 @@ intact_plot <- Exp4_data_long %>%
   geom_signif(
     annotations = ifelse(paired_ttest_model$p.value < 0.05, "*", "ns"),
     xmin = 1, xmax = 2,
-    y_position = max(Exp4_data_long$ActiveArmProportion, na.rm = TRUE) + 0.1,
+    y_position = max(Exp4_plot_data$ActiveArmProportion, na.rm = TRUE) + 0.1,
     color = "black",
     size = 0.6,
     textsize = 6
@@ -127,12 +149,32 @@ intact_plot <- Exp4_data_long %>%
 
 print(intact_plot)
 
+# Visualization 2: Individual subject trajectories
+trajectory_plot <- ggplot(Exp4_plot_data, aes(x = Time, y = ActiveArmProportion, group = Subject)) +
+  geom_line(alpha = 0.3) +  # Individual subject trajectories
+  geom_point(aes(color = Time), size = 2) +
+  stat_summary(fun = mean, geom = "point", size = 4, color = "red") +
+  stat_summary(fun = mean, geom = "line", size = 1, color = "red", group = 1) +
+  labs(
+    title = "Individual Trajectories of Active Arm Choices",
+    y = "Proportion of Active Arm Choices",
+    x = "Time"
+  ) +
+  scale_color_manual(values = c("Baseline" = "blue", "Endpoint" = "orange")) +
+  scale_y_continuous(
+    limits = c(0, 1),
+    breaks = seq(0, 1, 0.1)
+  ) +
+  consistent_theme()
+
+print(trajectory_plot)
+
 #=================================================================
 # PART 2: LEARNING ACROSS CONDITIONING DAYS
 #=================================================================
 
 # Reshape the data for plotting conditioning days
-Exp4_data_long_days <- Orig_subjects %>%
+Exp4_full_data_long_days <- Orig_subjects %>%
   select(Subject,
          Baseline_day1, 
          Baseline_day2, 
@@ -157,7 +199,7 @@ Exp4_data_long_days <- Orig_subjects %>%
   )
 
 # Create the learning curve visualization
-learning_plot <- Exp4_data_long_days %>%
+learning_plot <- Exp4_full_data_long_days %>%
   group_by(TimePoint) %>%
   summarise(
     mean_prop = mean(Proportion, na.rm = TRUE),
@@ -184,11 +226,11 @@ learning_plot <- Exp4_data_long_days %>%
 print(learning_plot)
 
 #=================================================================
-# PART 3: REGENERATION ANALYSIS
+# PART 3: REGENERATION ANALYSIS - UPDATED WITH NEW COLUMN NAMES
 #=================================================================
 
 # Filter for regenerated subjects (subjects with H or T suffix)
-Regen_subjects <- Exp4_data %>%
+Regen_subjects <- Exp4_full_data %>%
   filter(grepl("[HT]$", Subject)) %>%
   mutate(
     # Extract original subject number and body part
@@ -198,14 +240,14 @@ Regen_subjects <- Exp4_data %>%
     Subject = factor(Subject)
   )
 
-# Create a dataset for the memory test phase
+# Create a dataset for the regeneration memory test phase - UPDATED
 Memory_test_data <- Regen_subjects %>%
-  select(Subject, OrigSubject, BodyPart, T1, T2, T3, Test_total) %>%
-  filter(!is.na(Test_total)) %>%
+  select(Subject, OrigSubject, BodyPart, T1, T2, T3, Regeneration_test_total) %>%
+  filter(!is.na(Regeneration_test_total)) %>%
   mutate(
     TotalTrials = 3,
-    InactiveCount = TotalTrials - Test_total,
-    ActiveProportion = Test_total / TotalTrials
+    InactiveCount = TotalTrials - Regeneration_test_total,
+    ActiveProportion = Regeneration_test_total / TotalTrials
   )
 
 # Since we only have one condition, we'll compare Head vs Tail directly
@@ -263,20 +305,17 @@ memory_plot <- Memory_test_data %>%
 print(memory_plot)
 
 #=================================================================
-# PART 4: REINSTATEMENT ANALYSIS
+# PART 4: REINSTATEMENT ANALYSIS - UPDATED WITH NEW COLUMN NAMES
 #=================================================================
 
-# Create a dataset for the reinstatement phase
+# Create a dataset for the reinstatement phase - UPDATED
 Reinstatement_data <- Regen_subjects %>%
-  select(Subject, OrigSubject, BodyPart, R1, R2, R3) %>%
+  select(Subject, OrigSubject, BodyPart, R1, R2, R3, Reinstatment_test_total) %>%
+  filter(!is.na(Reinstatment_test_total)) %>%
   mutate(
-    # Counting number of active arm choices in R1, R2, R3
-    # Assuming R1, R2, R3 contain "L" or "R" and the active arm is defined
-    ActiveArm = "R",  # Update this if it varies by subject
-    Reinstatement = rowSums(across(c(R1, R2, R3), ~ . == ActiveArm), na.rm = TRUE),
     TotalTrials = 3,
-    InactiveCount = TotalTrials - Reinstatement,
-    ActiveProportion = Reinstatement / TotalTrials
+    InactiveCount = TotalTrials - Reinstatment_test_total,
+    ActiveProportion = Reinstatment_test_total / TotalTrials
   )
 
 # Compare Head vs Tail for reinstatement
@@ -334,20 +373,20 @@ reinstatement_plot <- Reinstatement_data %>%
 print(reinstatement_plot)
 
 #=================================================================
-# PART 5: COMPARISON OF TEST AND REINSTATEMENT
+# PART 5: COMPARISON OF TEST AND REINSTATEMENT - UPDATED
 #=================================================================
 
 # Create a combined dataset for test and reinstatement phases
 Combined_regen_data <- bind_rows(
   Memory_test_data %>% 
     select(Subject, OrigSubject, BodyPart, ActiveProportion) %>%
-    mutate(Phase = "Test"),
+    mutate(Phase = "Regeneration"),
   Reinstatement_data %>% 
     select(Subject, OrigSubject, BodyPart, ActiveProportion) %>%
     mutate(Phase = "Reinstatement")
 ) %>%
   mutate(
-    Phase = factor(Phase, levels = c("Test", "Reinstatement"))
+    Phase = factor(Phase, levels = c("Regeneration", "Reinstatement"))
   )
 
 # Perform 2x2 mixed ANOVA (BodyPart as between-subjects factor, Phase as within-subjects)
@@ -360,27 +399,27 @@ wide_data <- Combined_regen_data %>%
   )
 
 # Run ANOVAs separately
-aov_result <- aov(Test ~ BodyPart, data = wide_data)
-print("ANOVA for Test phase:")
+aov_result <- aov(Regeneration ~ BodyPart, data = wide_data)
+print("ANOVA for Regeneration phase:")
 print(summary(aov_result))
 
 aov_result2 <- aov(Reinstatement ~ BodyPart, data = wide_data)
 print("ANOVA for Reinstatement phase:")
 print(summary(aov_result2))
 
-# For paired comparison between Test and Reinstatement
+# For paired comparison between Regeneration and Reinstatement
 head_paired <- wide_data %>% 
   filter(BodyPart == "Head") %>%
-  with(t.test(Test, Reinstatement, paired = TRUE))
+  with(t.test(Regeneration, Reinstatement, paired = TRUE))
 
 tail_paired <- wide_data %>% 
   filter(BodyPart == "Tail") %>%
-  with(t.test(Test, Reinstatement, paired = TRUE))
+  with(t.test(Regeneration, Reinstatement, paired = TRUE))
 
-print("Head: Test vs Reinstatement comparison")
+print("Head: Regeneration vs Reinstatement comparison")
 print(head_paired)
 
-print("Tail: Test vs Reinstatement comparison")
+print("Tail: Regeneration vs Reinstatement comparison")
 print(tail_paired)
 
 # Visualization for combined test and reinstatement
@@ -413,146 +452,349 @@ print(combined_plot)
 # PART 6: COMPARING REGENERATED PARTS TO ORIGINAL BASELINE SCORES
 #=================================================================
 
-# First, create a baseline scores dataset for original subjects
-Baseline_scores <- Exp4_data %>%
-  filter(is.numeric(Subject)) %>%
+# First, identify only the subjects that were cut
+cut_subjects <- Exp4_full_data %>%
+  filter(grepl("^[0-9]+$", as.character(Subject)) & `Selected to be cut` == "Y") %>%
+  mutate(Subject = as.character(Subject))  # Ensure Subject is character type
+
+# Create a baseline scores dataset for ONLY the cut subjects
+cut_subjects_baseline <- cut_subjects %>%
   mutate(
-    BaselineProportion = baseline_active_arm_entries / 6
+    BaselineProportion = baseline_active_arm_entries / 6,
+    Subject = as.character(Subject)  # Ensure Subject is character type for joining
   )
 
-# Find the original subjects that were cut and had regenerated parts
-cut_subjects <- Exp4_data %>%
-  filter(is.numeric(Subject) & `Selected to be cut` == "Y")
+# Print the subjects that were cut
+print("Subjects that were cut:")
+print(cut_subjects$Subject)
+print(paste("Number of cut subjects:", nrow(cut_subjects)))
 
 # Create a dataset linking original subjects to their regenerated parts
-Original_to_regen <- Exp4_data %>%
+Original_to_regen <- Exp4_full_data %>%
   filter(grepl("[HT]$", Subject)) %>%
   mutate(
-    OrigSubject = as.numeric(str_remove(Subject, "[HT]$")),
+    OrigSubject = str_remove(Subject, "[HT]$"),  # Keep as character for joining
     BodyPart = str_extract(Subject, "[HT]$"),
     BodyPart = factor(BodyPart, levels = c("H", "T"), labels = c("Head", "Tail"))
   ) %>%
+  # Only join with the cut subjects' baseline data
   inner_join(
-    Baseline_scores %>% 
+    cut_subjects_baseline %>% 
       select(Subject, BaselineProportion),
     by = c("OrigSubject" = "Subject")
   )
 
-# Create a parallel dataset for memory test
-Memory_vs_baseline <- Original_to_regen %>%
-  select(Subject, OrigSubject, BodyPart, BaselineProportion, Test_total) %>%
+# Print the regenerated parts and their original subjects
+print("Regenerated parts and their original subjects:")
+print(Original_to_regen %>% select(Subject, OrigSubject, BodyPart))
+print(paste("Number of regenerated parts:", nrow(Original_to_regen)))
+
+# Create datasets for the regeneration and reinstatement phases - UPDATED
+Memory_test_comparison <- Original_to_regen %>%
   mutate(
-    ActiveProportion = Test_total / 3
+    RegeneratedProportion = Regeneration_test_total / 3,
+    Change = RegeneratedProportion - BaselineProportion
   )
 
-# Create a parallel dataset for reinstatement
-# Get the active arm for each original subject
-active_arms <- Exp4_data %>%
-  filter(is.numeric(Subject)) %>%
-  select(Subject, `Active arm`) %>%
-  rename(OrigSubject = Subject, ActiveArm = `Active arm`)
-
-Reinstatement_vs_baseline <- Original_to_regen %>%
-  select(Subject, OrigSubject, BodyPart, BaselineProportion, R1, R2, R3) %>%
-  inner_join(active_arms, by = "OrigSubject") %>%
+# Create datasets for the reinstatement phases - UPDATED
+Reinstatement_comparison <- Original_to_regen %>%
   mutate(
-    # Count matches between R1, R2, R3 and ActiveArm
-    R1_match = as.numeric(R1 == ActiveArm),
-    R2_match = as.numeric(R2 == ActiveArm),
-    R3_match = as.numeric(R3 == ActiveArm),
-    Reinstatement_total = R1_match + R2_match + R3_match,
-    ActiveProportion = Reinstatement_total / 3
+    ReinstatedProportion = Reinstatment_test_total / 3,
+    Change = ReinstatedProportion - BaselineProportion
   )
 
-# Individual comparisons: Baseline vs Memory Test
-# Create a dataset for paired comparisons with regenerated parts
-Individual_comparison <- bind_rows(
+# Verify we're using the same baseline values for both comparisons
+print("Regeneration analysis - Mean baseline value:")
+print(mean(Memory_test_comparison$BaselineProportion, na.rm = TRUE))
+
+print("Reinstatement analysis - Mean baseline value:")
+print(mean(Reinstatement_comparison$BaselineProportion, na.rm = TRUE))
+
+# Prepare data for plotting with consistent format
+# REGENERATION PLOT DATA
+regen_plot_data <- rbind(
   # Original baseline data
-  Baseline_scores %>%
-    filter(Subject %in% cut_subjects$Subject) %>%
-    select(Subject, BaselineProportion) %>%
-    rename(
-      OrigSubject = Subject,
-      ActiveProportion = BaselineProportion
-    ) %>%
-    mutate(
-      BodyPart = "Original",
-      TestPhase = "Baseline"
-    ),
+  cut_subjects_baseline %>%
+    mutate(BodyStatus = "Original") %>%
+    select(BodyStatus, Proportion = BaselineProportion),
   
-  # Memory test data for regenerated parts
-  Memory_vs_baseline %>%
-    select(OrigSubject, BodyPart, ActiveProportion) %>%
-    mutate(TestPhase = "Memory")
-) %>%
+  # Head data
+  Memory_test_comparison %>%
+    filter(BodyPart == "Head") %>%
+    mutate(BodyStatus = "Head") %>%
+    select(BodyStatus, Proportion = RegeneratedProportion),
+  
+  # Tail data
+  Memory_test_comparison %>%
+    filter(BodyPart == "Tail") %>%
+    mutate(BodyStatus = "Tail") %>%
+    select(BodyStatus, Proportion = RegeneratedProportion)
+)
+
+# REINSTATEMENT PLOT DATA - using SAME original baseline data
+reinstate_plot_data <- rbind(
+  # Original baseline data - SAME AS ABOVE
+  cut_subjects_baseline %>%
+    mutate(BodyStatus = "Original") %>%
+    select(BodyStatus, Proportion = BaselineProportion),
+  
+  # Head data
+  Reinstatement_comparison %>%
+    filter(BodyPart == "Head") %>%
+    mutate(BodyStatus = "Head") %>%
+    select(BodyStatus, Proportion = ReinstatedProportion),
+  
+  # Tail data
+  Reinstatement_comparison %>%
+    filter(BodyPart == "Tail") %>%
+    mutate(BodyStatus = "Tail") %>%
+    select(BodyStatus, Proportion = ReinstatedProportion)
+)
+
+# Set factor levels for proper ordering
+regen_plot_data$BodyStatus <- factor(regen_plot_data$BodyStatus, 
+                                     levels = c("Original", "Head", "Tail"))
+reinstate_plot_data$BodyStatus <- factor(reinstate_plot_data$BodyStatus, 
+                                         levels = c("Original", "Head", "Tail"))
+
+# Calculate summary statistics for plotting
+regen_summary <- regen_plot_data %>%
+  group_by(BodyStatus) %>%
+  summarise(
+    mean_prop = mean(Proportion, na.rm = TRUE),
+    se = sd(Proportion, na.rm = TRUE) / sqrt(sum(!is.na(Proportion))),
+    .groups = 'drop'
+  )
+
+reinstate_summary <- reinstate_plot_data %>%
+  group_by(BodyStatus) %>%
+  summarise(
+    mean_prop = mean(Proportion, na.rm = TRUE),
+    se = sd(Proportion, na.rm = TRUE) / sqrt(sum(!is.na(Proportion))),
+    .groups = 'drop'
+  )
+
+# Create regeneration plot
+regeneration_plot <- ggplot(regen_summary, aes(x = BodyStatus, y = mean_prop)) +
+  geom_point(size = 8, aes(shape = BodyStatus, color = BodyStatus)) +
+  geom_errorbar(aes(ymin = mean_prop - se, ymax = mean_prop + se, color = BodyStatus),
+                width = 0.2, linewidth = 1) +
+  scale_shape_manual(values = c("Original" = 16, "Head" = 17, "Tail" = 25)) +
+  scale_color_manual(values = c("Original" = "#F8766D", "Head" = "#619CFF", "Tail" = "#619CFF")) +
+  labs(
+    title = "Regeneration Active Arm Preference Compared to Baseline",
+    y = "Proportion of Active Arm Choices",
+    x = "Body Status"
+  ) +
+  scale_y_continuous(
+    limits = c(0, 1),
+    breaks = seq(0, 1, 0.25)
+  ) +
+  consistent_theme()
+
+# Create reinstatement plot
+reinstatement_plot <- ggplot(reinstate_summary, aes(x = BodyStatus, y = mean_prop)) +
+  geom_point(size = 8, aes(shape = BodyStatus, color = BodyStatus)) +
+  geom_errorbar(aes(ymin = mean_prop - se, ymax = mean_prop + se, color = BodyStatus),
+                width = 0.2, linewidth = 1) +
+  scale_shape_manual(values = c("Original" = 16, "Head" = 17, "Tail" = 25)) +
+  scale_color_manual(values = c("Original" = "#F8766D", "Head" = "#619CFF", "Tail" = "#619CFF")) +
+  labs(
+    title = "Reinstatement Active Arm Preference Compared to Baseline",
+    y = "Proportion of Active Arm Choices",
+    x = "Body Status"
+  ) +
+  scale_y_continuous(
+    limits = c(0, 1),
+    breaks = seq(0, 1, 0.25)
+  ) +
+  consistent_theme()
+
+# Display plots
+print(regeneration_plot)
+print(reinstatement_plot)
+
+# Statistical tests - comparing to the SAME baseline
+# For Regeneration
+head_regen_ttest <- t.test(
+  Memory_test_comparison %>% filter(BodyPart == "Head" & !is.na(RegeneratedProportion)) %>% pull(RegeneratedProportion),
+  cut_subjects_baseline$BaselineProportion,
+  paired = FALSE  # Using unpaired because we might have different numbers
+)
+
+tail_regen_ttest <- t.test(
+  Memory_test_comparison %>% filter(BodyPart == "Tail" & !is.na(RegeneratedProportion)) %>% pull(RegeneratedProportion),
+  cut_subjects_baseline$BaselineProportion,
+  paired = FALSE
+)
+
+# For Reinstatement
+head_reinst_ttest <- t.test(
+  Reinstatement_comparison %>% filter(BodyPart == "Head" & !is.na(ReinstatedProportion)) %>% pull(ReinstatedProportion),
+  cut_subjects_baseline$BaselineProportion,
+  paired = FALSE
+)
+
+tail_reinst_ttest <- t.test(
+  Reinstatement_comparison %>% filter(BodyPart == "Tail" & !is.na(ReinstatedProportion)) %>% pull(ReinstatedProportion),
+  cut_subjects_baseline$BaselineProportion,
+  paired = FALSE
+)
+
+# Print test results
+print("REGENERATION T-TESTS:")
+print("Head vs Original Baseline:")
+print(head_regen_ttest)
+
+print("Tail vs Original Baseline:")
+print(tail_regen_ttest)
+
+print("REINSTATEMENT T-TESTS:")
+print("Head vs Original Baseline:")
+print(head_reinst_ttest)
+
+print("Tail vs Original Baseline:")
+print(tail_reinst_ttest)
+
+#=================================================================
+# PART 7: PAIRED COMPARISON BETWEEN BASELINE AND REGENERATION/REINSTATEMENT
+#=================================================================
+
+# Create baseline data frame
+Baseline_scores <- cut_subjects_baseline %>%
+  select(Subject, BaselineProportion)
+
+# Create datasets for paired analysis
+# For regeneration test
+Regeneration_vs_baseline <- Memory_test_comparison %>%
+  select(Subject, OrigSubject, BodyPart, RegeneratedProportion) %>%
+  rename(ActiveProportion = RegeneratedProportion)
+
+# For reinstatement test
+Reinstatement_vs_baseline <- Reinstatement_comparison %>%
+  select(Subject, OrigSubject, BodyPart, ReinstatedProportion) %>%
+  rename(ActiveProportion = ReinstatedProportion)
+
+# Reshape data for paired analysis - separate for Head and Tail
+# For Regeneration
+head_regeneration_paired <- Regeneration_vs_baseline %>%
+  filter(BodyPart == "Head") %>%
+  inner_join(Baseline_scores, by = c("OrigSubject" = "Subject")) %>%
+  select(OrigSubject, ActiveProportion, BaselineProportion)
+
+tail_regeneration_paired <- Regeneration_vs_baseline %>%
+  filter(BodyPart == "Tail") %>%
+  inner_join(Baseline_scores, by = c("OrigSubject" = "Subject")) %>%
+  select(OrigSubject, ActiveProportion, BaselineProportion)
+
+# For Reinstatement
+head_reinstatement_paired <- Reinstatement_vs_baseline %>%
+  filter(BodyPart == "Head") %>%
+  inner_join(Baseline_scores, by = c("OrigSubject" = "Subject")) %>%
+  select(OrigSubject, ActiveProportion, BaselineProportion)
+
+tail_reinstatement_paired <- Reinstatement_vs_baseline %>%
+  filter(BodyPart == "Tail") %>%
+  inner_join(Baseline_scores, by = c("OrigSubject" = "Subject")) %>%
+  select(OrigSubject, ActiveProportion, BaselineProportion)
+
+# Perform paired t-tests
+# For Regeneration
+head_regeneration_test <- head_regeneration_paired %>%
+  with(t.test(ActiveProportion, BaselineProportion, paired = TRUE))
+
+tail_regeneration_test <- tail_regeneration_paired %>%
+  with(t.test(ActiveProportion, BaselineProportion, paired = TRUE))
+
+# For Reinstatement
+head_reinstatement_test <- head_reinstatement_paired %>%
+  with(t.test(ActiveProportion, BaselineProportion, paired = TRUE))
+
+tail_reinstatement_test <- tail_reinstatement_paired %>%
+  with(t.test(ActiveProportion, BaselineProportion, paired = TRUE))
+
+# Print results
+print("PAIRED T-TESTS RESULTS:")
+
+print("Head Regeneration vs Original Baseline:")
+print(head_regeneration_test)
+
+print("Tail Regeneration vs Original Baseline:")
+print(tail_regeneration_test)
+
+print("Head Reinstatement vs Original Baseline:")
+print(head_reinstatement_test)
+
+print("Tail Reinstatement vs Original Baseline:")
+print(tail_reinstatement_test)
+
+# Calculate effect sizes (Cohen's d)
+# For Head Regeneration
+head_regeneration_d <- head_regeneration_paired %>%
+  summarise(
+    mean_diff = mean(ActiveProportion - BaselineProportion, na.rm = TRUE),
+    sd_diff = sd(ActiveProportion - BaselineProportion, na.rm = TRUE),
+    cohen_d = mean_diff / sd_diff,
+    n = n()
+  )
+
+# For Tail Regeneration
+tail_regeneration_d <- tail_regeneration_paired %>%
+  summarise(
+    mean_diff = mean(ActiveProportion - BaselineProportion, na.rm = TRUE),
+    sd_diff = sd(ActiveProportion - BaselineProportion, na.rm = TRUE),
+    cohen_d = mean_diff / sd_diff,
+    n = n()
+  )
+
+# For Head Reinstatement
+head_reinstatement_d <- head_reinstatement_paired %>%
+  summarise(
+    mean_diff = mean(ActiveProportion - BaselineProportion, na.rm = TRUE),
+    sd_diff = sd(ActiveProportion - BaselineProportion, na.rm = TRUE),
+    cohen_d = mean_diff / sd_diff,
+    n = n()
+  )
+
+# For Tail Reinstatement
+tail_reinstatement_d <- tail_reinstatement_paired %>%
+  summarise(
+    mean_diff = mean(ActiveProportion - BaselineProportion, na.rm = TRUE),
+    sd_diff = sd(ActiveProportion - BaselineProportion, na.rm = TRUE),
+    cohen_d = mean_diff / sd_diff,
+    n = n()
+  )
+
+print("Effect sizes:")
+print("Head Regeneration (Cohen's d):")
+print(head_regeneration_d)
+
+print("Tail Regeneration (Cohen's d):")
+print(tail_regeneration_d)
+
+print("Head Reinstatement (Cohen's d):")
+print(head_reinstatement_d)
+
+print("Tail Reinstatement (Cohen's d):")
+print(tail_reinstatement_d)
+
+#=================================================================
+# PART 8: VISUALIZATIONS FOR PAIRED COMPARISONS
+#=================================================================
+
+# Create visualization for head regeneration
+head_regeneration_viz <- head_regeneration_paired %>%
+  pivot_longer(
+    cols = c(ActiveProportion, BaselineProportion),
+    names_to = "Measurement",
+    values_to = "Proportion"
+  ) %>%
   mutate(
-    OrigSubject = as.character(OrigSubject), # Ensure consistent type
-    BodyPart = factor(BodyPart, levels = c("Original", "Head", "Tail")),
-    TestPhase = factor(TestPhase, levels = c("Baseline", "Memory"))
-  )
-
-# Reshape data for paired analysis of Heads
-paired_data_head <- Individual_comparison %>%
-  filter(BodyPart %in% c("Original", "Head")) %>%
-  select(OrigSubject, BodyPart, ActiveProportion) %>%
-  pivot_wider(
-    names_from = BodyPart,
-    values_from = ActiveProportion
-  )
-
-# Perform paired t-test for heads
-head_paired_test <- paired_data_head %>%
-  with(t.test(Head, Original, paired = TRUE))
-
-# Print results
-print("Head vs Original Baseline (Paired t-test)")
-print(head_paired_test)
-
-# Calculate effect size (Cohen's d for paired data)
-head_d <- paired_data_head %>%
-  summarise(
-    mean_diff = mean(Head - Original, na.rm = TRUE),
-    sd_diff = sd(Head - Original, na.rm = TRUE),
-    cohen_d = mean_diff / sd_diff,
-    n = n()
-  )
-
-print("Effect size for Head vs Original (Cohen's d):")
-print(head_d)
-
-# Reshape data for paired analysis of Tails
-paired_data_tail <- Individual_comparison %>%
-  filter(BodyPart %in% c("Original", "Tail")) %>%
-  select(OrigSubject, BodyPart, ActiveProportion) %>%
-  pivot_wider(
-    names_from = BodyPart,
-    values_from = ActiveProportion
-  )
-
-# Perform paired t-test for tails
-tail_paired_test <- paired_data_tail %>%
-  with(t.test(Tail, Original, paired = TRUE))
-
-# Print results
-print("Tail vs Original Baseline (Paired t-test)")
-print(tail_paired_test)
-
-# Calculate effect size (Cohen's d for paired data)
-tail_d <- paired_data_tail %>%
-  summarise(
-    mean_diff = mean(Tail - Original, na.rm = TRUE),
-    sd_diff = sd(Tail - Original, na.rm = TRUE),
-    cohen_d = mean_diff / sd_diff,
-    n = n()
-  )
-
-print("Effect size for Tail vs Original (Cohen's d):")
-print(tail_d)
-
-# Create visualization for original vs regenerated head
-head_comparison_viz <- Individual_comparison %>%
-  filter(BodyPart %in% c("Original", "Head")) %>%
-  ggplot(aes(x = BodyPart, y = ActiveProportion)) +
+    Measurement = factor(Measurement, 
+                         levels = c("BaselineProportion", "ActiveProportion"),
+                         labels = c("Original", "Regenerated Head"))
+  ) %>%
+  ggplot(aes(x = Measurement, y = Proportion)) +
   # Add individual subject lines
   geom_line(aes(group = OrigSubject), alpha = 0.3, color = "#FF8C00") +
   # Add points
@@ -570,22 +812,31 @@ head_comparison_viz <- Individual_comparison %>%
   ) +
   # Add p-value annotations
   annotate("text", x = 1.5, y = 0.95, 
-           label = paste0("p = ", format(head_paired_test$p.value, digits = 3)), 
+           label = paste0("p = ", format(head_regeneration_test$p.value, digits = 3)), 
            color = "#FF8C00", fontface = "bold", size = 3.5) +
   # Customize aesthetics
   labs(
     title = "Head Regeneration vs Original Baseline",
     subtitle = "Lines connect individual subjects across measurements",
     y = "Proportion of Active Arm Choices",
-    x = "Body Status"
+    x = "Measurement"
   ) +
   ylim(0, 1) +
   consistent_theme()
 
-# Create visualization for original vs regenerated tail
-tail_comparison_viz <- Individual_comparison %>%
-  filter(BodyPart %in% c("Original", "Tail")) %>%
-  ggplot(aes(x = BodyPart, y = ActiveProportion)) +
+# Create visualization for tail regeneration
+tail_regeneration_viz <- tail_regeneration_paired %>%
+  pivot_longer(
+    cols = c(ActiveProportion, BaselineProportion),
+    names_to = "Measurement",
+    values_to = "Proportion"
+  ) %>%
+  mutate(
+    Measurement = factor(Measurement, 
+                         levels = c("BaselineProportion", "ActiveProportion"),
+                         labels = c("Original", "Regenerated Tail"))
+  ) %>%
+  ggplot(aes(x = Measurement, y = Proportion)) +
   # Add individual subject lines
   geom_line(aes(group = OrigSubject), alpha = 0.3, color = "#159090") +
   # Add points
@@ -603,114 +854,31 @@ tail_comparison_viz <- Individual_comparison %>%
   ) +
   # Add p-value annotations
   annotate("text", x = 1.5, y = 0.95, 
-           label = paste0("p = ", format(tail_paired_test$p.value, digits = 3)), 
+           label = paste0("p = ", format(tail_regeneration_test$p.value, digits = 3)), 
            color = "#159090", fontface = "bold", size = 3.5) +
   # Customize aesthetics
   labs(
     title = "Tail Regeneration vs Original Baseline",
     subtitle = "Lines connect individual subjects across measurements",
     y = "Proportion of Active Arm Choices",
-    x = "Body Status"
+    x = "Measurement"
   ) +
   ylim(0, 1) +
   consistent_theme()
 
-# Print the visualizations
-print(head_comparison_viz)
-print(tail_comparison_viz)
-
-#=================================================================
-# PART 7: REINSTATEMENT VS BASELINE ANALYSIS
-#=================================================================
-
-# Now compare baseline to reinstatement
-# Create a parallel dataset structure for Reinstatement
-Reinstatement_comparison <- bind_rows(
-  # Original baseline data
-  Baseline_scores %>%
-    filter(Subject %in% cut_subjects$Subject) %>%
-    select(Subject, BaselineProportion) %>%
-    rename(
-      OrigSubject = Subject,
-      ActiveProportion = BaselineProportion
-    ) %>%
-    mutate(
-      BodyPart = "Original",
-      TestPhase = "Baseline"
-    ),
-  
-  # Reinstatement data for regenerated parts
-  Reinstatement_vs_baseline %>%
-    select(OrigSubject, BodyPart, ActiveProportion) %>%
-    mutate(TestPhase = "Reinstatement")
-) %>%
-  mutate(
-    OrigSubject = as.character(OrigSubject), # Ensure consistent type
-    BodyPart = factor(BodyPart, levels = c("Original", "Head", "Tail")),
-    TestPhase = factor(TestPhase, levels = c("Baseline", "Reinstatement"))
-  )
-
-# Reshape data for paired analysis - separate for Head and Tail
-head_reinstatement_paired <- Reinstatement_comparison %>%
-  filter(BodyPart %in% c("Original", "Head")) %>%
-  select(OrigSubject, BodyPart, ActiveProportion) %>%
-  pivot_wider(
-    names_from = BodyPart,
-    values_from = ActiveProportion
-  )
-
-tail_reinstatement_paired <- Reinstatement_comparison %>%
-  filter(BodyPart %in% c("Original", "Tail")) %>%
-  select(OrigSubject, BodyPart, ActiveProportion) %>%
-  pivot_wider(
-    names_from = BodyPart,
-    values_from = ActiveProportion
-  )
-
-# Perform paired t-tests for Head vs Original
-head_reinstatement_test <- head_reinstatement_paired %>%
-  with(t.test(Head, Original, paired = TRUE))
-
-# Perform paired t-tests for Tail vs Original
-tail_reinstatement_test <- tail_reinstatement_paired %>%
-  with(t.test(Tail, Original, paired = TRUE))
-
-# Print results
-print("Head Reinstatement vs Original Baseline:")
-print(head_reinstatement_test)
-
-print("Tail Reinstatement vs Original Baseline:")
-print(tail_reinstatement_test)
-
-# Calculate effect sizes (Cohen's d)
-# For Head Reinstatement
-head_reinstatement_d <- head_reinstatement_paired %>%
-  summarise(
-    mean_diff = mean(Head - Original, na.rm = TRUE),
-    sd_diff = sd(Head - Original, na.rm = TRUE),
-    cohen_d = mean_diff / sd_diff,
-    n = n()
-  )
-
-# For Tail Reinstatement
-tail_reinstatement_d <- tail_reinstatement_paired %>%
-  summarise(
-    mean_diff = mean(Tail - Original, na.rm = TRUE),
-    sd_diff = sd(Tail - Original, na.rm = TRUE),
-    cohen_d = mean_diff / sd_diff,
-    n = n()
-  )
-
-print("Effect sizes for Head Reinstatement (Cohen's d):")
-print(head_reinstatement_d)
-
-print("Effect sizes for Tail Reinstatement (Cohen's d):")
-print(tail_reinstatement_d)
-
 # Create visualization for head reinstatement
-head_reinstatement_viz <- Reinstatement_comparison %>%
-  filter(BodyPart %in% c("Original", "Head")) %>%
-  ggplot(aes(x = BodyPart, y = ActiveProportion)) +
+head_reinstatement_viz <- head_reinstatement_paired %>%
+  pivot_longer(
+    cols = c(ActiveProportion, BaselineProportion),
+    names_to = "Measurement",
+    values_to = "Proportion"
+  ) %>%
+  mutate(
+    Measurement = factor(Measurement, 
+                         levels = c("BaselineProportion", "ActiveProportion"),
+                         labels = c("Original", "Reinstated Head"))
+  ) %>%
+  ggplot(aes(x = Measurement, y = Proportion)) +
   # Add individual subject lines
   geom_line(aes(group = OrigSubject), alpha = 0.3, color = "#FF8C00") +
   # Add points
@@ -735,15 +903,24 @@ head_reinstatement_viz <- Reinstatement_comparison %>%
     title = "Head Reinstatement vs Original Baseline",
     subtitle = "Lines connect individual subjects across measurements",
     y = "Proportion of Active Arm Choices",
-    x = "Body Status"
+    x = "Measurement"
   ) +
   ylim(0, 1) +
   consistent_theme()
 
 # Create visualization for tail reinstatement
-tail_reinstatement_viz <- Reinstatement_comparison %>%
-  filter(BodyPart %in% c("Original", "Tail")) %>%
-  ggplot(aes(x = BodyPart, y = ActiveProportion)) +
+tail_reinstatement_viz <- tail_reinstatement_paired %>%
+  pivot_longer(
+    cols = c(ActiveProportion, BaselineProportion),
+    names_to = "Measurement",
+    values_to = "Proportion"
+  ) %>%
+  mutate(
+    Measurement = factor(Measurement, 
+                         levels = c("BaselineProportion", "ActiveProportion"),
+                         labels = c("Original", "Reinstated Tail"))
+  ) %>%
+  ggplot(aes(x = Measurement, y = Proportion)) +
   # Add individual subject lines
   geom_line(aes(group = OrigSubject), alpha = 0.3, color = "#159090") +
   # Add points
@@ -768,174 +945,140 @@ tail_reinstatement_viz <- Reinstatement_comparison %>%
     title = "Tail Reinstatement vs Original Baseline",
     subtitle = "Lines connect individual subjects across measurements",
     y = "Proportion of Active Arm Choices",
-    x = "Body Status"
+    x = "Measurement"
   ) +
   ylim(0, 1) +
   consistent_theme()
 
 # Print the visualizations
+print(head_regeneration_viz)
+print(tail_regeneration_viz)
 print(head_reinstatement_viz)
 print(tail_reinstatement_viz)
 
 #=================================================================
-# PART 8: COMBINED VISUALIZATION
+# PART 9: FINAL COMBINED VISUALIZATION
 #=================================================================
 
-# Create a cleaner version of regeneration plot with only means and SE bars
-regeneration_plot <- Individual_comparison %>%
-  group_by(BodyPart, TestPhase) %>%
-  summarise(
-    Mean = mean(ActiveProportion, na.rm = TRUE),
-    SE = sd(ActiveProportion, na.rm = TRUE)/sqrt(n()),
-    .groups = 'drop'
+# Create a dataset for all four conditions
+combined_data <- bind_rows(
+  # Head Regeneration
+  head_regeneration_paired %>%
+    mutate(
+      BodyPart = "Head",
+      Phase = "Regeneration",
+      Original = BaselineProportion,
+      Regenerated = ActiveProportion
+    ) %>%
+    select(OrigSubject, BodyPart, Phase, Original, Regenerated),
+  
+  # Tail Regeneration
+  tail_regeneration_paired %>%
+    mutate(
+      BodyPart = "Tail",
+      Phase = "Regeneration",
+      Original = BaselineProportion,
+      Regenerated = ActiveProportion
+    ) %>%
+    select(OrigSubject, BodyPart, Phase, Original, Regenerated),
+  
+  # Head Reinstatement
+  head_reinstatement_paired %>%
+    mutate(
+      BodyPart = "Head",
+      Phase = "Reinstatement",
+      Original = BaselineProportion,
+      Regenerated = ActiveProportion
+    ) %>%
+    select(OrigSubject, BodyPart, Phase, Original, Regenerated),
+  
+  # Tail Reinstatement
+  tail_reinstatement_paired %>%
+    mutate(
+      BodyPart = "Tail",
+      Phase = "Reinstatement",
+      Original = BaselineProportion,
+      Regenerated = ActiveProportion
+    ) %>%
+    select(OrigSubject, BodyPart, Phase, Original, Regenerated)
+)
+
+# Reshape to long format for plotting
+combined_long <- combined_data %>%
+  pivot_longer(
+    cols = c(Original, Regenerated),
+    names_to = "Measurement",
+    values_to = "Proportion"
   ) %>%
-  ggplot(aes(x = BodyPart, y = Mean)) +
-  # Add mean points with different shapes by TestPhase and BodyPart
-  geom_point(
-    aes(shape = interaction(TestPhase, BodyPart), fill = interaction(TestPhase, BodyPart)),
-    size = 5, stroke = 0.7
-  ) +
-  # Add error bars
-  geom_errorbar(
-    aes(ymin = Mean - SE, ymax = Mean + SE, color = interaction(TestPhase, BodyPart)),
-    width = 0.2, linewidth = 0.7
-  ) +
-  # Customize aesthetics
-  scale_fill_manual(values = c(
-    "Baseline.Original" = "#7f7f7f",
-    "Memory.Head" = "#FF8C00", 
-    "Memory.Tail" = "#159090"
-  )) +
-  scale_color_manual(values = c(
-    "Baseline.Original" = "#7f7f7f",
-    "Memory.Head" = "#FF8C00", 
-    "Memory.Tail" = "#159090"
-  )) +
-  # Custom shape scale
-  scale_shape_manual(
-    name = "Test Phase",
-    values = c(
-      "Baseline.Original" = 21,  # Circle for baseline
-      "Memory.Original" = 21,    # Circle for baseline (should not appear)
-      "Memory.Head" = 24,        # Triangle pointing up for heads
-      "Memory.Tail" = 25,        # Triangle pointing down for tails
-      "Baseline.Head" = 24,      # Should not appear
-      "Baseline.Tail" = 25       # Should not appear
-    ),
-    labels = c(
-      "Baseline.Original" = "Intact Baseline",
-      "Memory.Head" = "Head Regenerates",
-      "Memory.Tail" = "Tail Regenerates"
-    )
-  ) +
-  # Labels and titles
-  labs(
-    title = "Regeneration Active Arm Preference Compared to Baseline",
-    y = "Proportion of Active Arm Choices",
-    x = "Body Status"
-  ) +
-  ylim(0, 1) +
-  # Use consistent theme
-  consistent_theme() +
-  theme(
-    legend.position = "right",
-  ) +
-  guides(
-    shape = guide_legend(title = "Legend", override.aes = list(stroke = 0.7)),
-    fill = "none",  # Hide fill legend since it's redundant
-    color = "none"  # Hide color legend since it's redundant
+  mutate(
+    BodyPart = factor(BodyPart, levels = c("Head", "Tail")),
+    Phase = factor(Phase, levels = c("Regeneration", "Reinstatement")),
+    Measurement = factor(Measurement, levels = c("Original", "Regenerated"))
   )
 
-# Create a cleaner version of reinstatement plot
-reinstatement_plot <- Reinstatement_comparison %>%
-  group_by(BodyPart, TestPhase) %>%
-  summarise(
-    Mean = mean(ActiveProportion, na.rm = TRUE),
-    SE = sd(ActiveProportion, na.rm = TRUE)/sqrt(n()),
-    .groups = 'drop'
-  ) %>%
-  ggplot(aes(x = BodyPart, y = Mean)) +
-  # Add mean points with different shapes by TestPhase and BodyPart
-  geom_point(
-    aes(shape = interaction(TestPhase, BodyPart), fill = interaction(TestPhase, BodyPart)),
-    size = 5, stroke = 0.7
+# Create a faceted plot showing all conditions
+final_plot <- combined_long %>%
+  ggplot(aes(x = Measurement, y = Proportion, 
+             color = interaction(BodyPart, Phase), 
+             group = interaction(OrigSubject, BodyPart, Phase))) +
+  # Add individual lines
+  geom_line(alpha = 0.2) +
+  # Add points
+  geom_point(size = 2) +
+  # Add means and error bars
+  stat_summary(
+    fun = mean, 
+    geom = "point", 
+    size = 4, 
+    aes(group = interaction(Measurement, BodyPart, Phase)),
+    position = position_dodge(width = 0.05)
   ) +
-  # Add error bars
-  geom_errorbar(
-    aes(ymin = Mean - SE, ymax = Mean + SE, color = interaction(TestPhase, BodyPart)),
-    width = 0.2, linewidth = 0.7
+  stat_summary(
+    fun.data = function(x) {
+      return(c(y = mean(x), ymin = mean(x) - sd(x)/sqrt(length(x)), 
+               ymax = mean(x) + sd(x)/sqrt(length(x))))
+    },
+    geom = "errorbar", 
+    width = 0.1, 
+    linewidth = 0.8,
+    aes(group = interaction(Measurement, BodyPart, Phase)),
+    position = position_dodge(width = 0.05)
   ) +
-  # Customize aesthetics
-  scale_fill_manual(values = c(
-    "Baseline.Original" = "#7f7f7f",
-    "Reinstatement.Head" = "#FF8C00", 
-    "Reinstatement.Tail" = "#159090"
-  )) +
+  # Facet by body part and phase
+  facet_grid(BodyPart ~ Phase) +
+  # Custom colors
   scale_color_manual(values = c(
-    "Baseline.Original" = "#7f7f7f",
-    "Reinstatement.Head" = "#FF8C00", 
-    "Reinstatement.Tail" = "#159090"
+    "Head.Regeneration" = "#FF8C00", 
+    "Tail.Regeneration" = "#159090",
+    "Head.Reinstatement" = "#FF5733", 
+    "Tail.Reinstatement" = "#44D7D7"
   )) +
-  # Custom shape scale
-  scale_shape_manual(
-    name = "Test Phase",
-    values = c(
-      "Baseline.Original" = 21,  # Circle for baseline
-      "Reinstatement.Original" = 21,  # Circle for baseline (should not appear)
-      "Reinstatement.Head" = 24,  # Triangle pointing up for heads
-      "Reinstatement.Tail" = 25,  # Triangle pointing down for tails
-      "Baseline.Head" = 24,      # Should not appear
-      "Baseline.Tail" = 25       # Should not appear
-    ),
-    labels = c(
-      "Baseline.Original" = "Intact Baseline",
-      "Reinstatement.Head" = "Head Regenerates",
-      "Reinstatement.Tail" = "Tail Regenerates"
-    )
-  ) +
   # Labels and titles
   labs(
-    title = "Reinstatement Active Arm Preference Compared to Baseline",
+    title = "Memory Retention Across Conditions",
+    subtitle = "Comparison between Original and Regenerated/Reinstated Body Parts",
     y = "Proportion of Active Arm Choices",
-    x = "Body Status"
+    x = "Measurement"
   ) +
-  ylim(0, 1) +
-  # Use consistent theme
+  # Consistent theme with modifications for facets
   consistent_theme() +
   theme(
-    legend.position = "right",
-  ) +
-  guides(
-    shape = guide_legend(title = "Legend", override.aes = list(stroke = 0.7)),
-    fill = "none",  # Hide fill legend since it's redundant
-    color = "none"  # Hide color legend since it's redundant
+    strip.background = element_rect(fill = "lightgray"),
+    strip.text = element_text(size = 12, face = "bold"),
+    legend.position = "none"
   )
 
-# Remove legend from learning_plot and intact_plot
-learning_plot_no_legend <- learning_plot + 
-  theme(legend.position = "none")
+# Print final plot
+print(final_plot)
 
-intact_plot_no_legend <- intact_plot + 
-  theme(legend.position = "none")
-
-# Remove legend from regeneration_plot
-regeneration_plot_no_legend <- regeneration_plot + 
-  theme(legend.position = "none")
-
-# Combined figure with ordered legends
-combined_figure <- (learning_plot_no_legend + intact_plot_no_legend) / 
-  (regeneration_plot_no_legend + reinstatement_plot) +
-  plot_layout(
-    guides = "collect",
-    widths = c(1, 1),
-    heights = c(0.7, 0.7)
-  ) +
+# Optional: Create a combined figure using patchwork
+library(patchwork)
+combined_figure <- (head_regeneration_viz + tail_regeneration_viz) / 
+  (head_reinstatement_viz + tail_reinstatement_viz) +
   plot_annotation(
-    tag_levels = 'A',
-    theme = theme(
-      plot.tag = element_text(face = "bold", size = 16, family = "Times New Roman"),
-      plot.margin = margin(t = 20, r = 20, b = 20, l = 20)
-    )
+    title = "Memory Retention in Regenerated Planarians",
+    subtitle = "Comparing baseline to regeneration and reinstatement performance",
+    tag_levels = "A"
   )
 
 print(combined_figure)
@@ -944,7 +1087,237 @@ print(combined_figure)
 ggsave(
   "Exp4_combined_figure.pdf", 
   combined_figure, 
-  width = 16,
-  height = 14,
+  width = 16, 
+  height = 14, 
   dpi = 300
 )
+
+
+
+# Create a more visually appealing theme that matches the desired output
+publication_theme <- function() {
+  theme_classic() +
+    theme(
+      text = element_text(family = "Times New Roman", size = 14),
+      axis.title = element_text(size = 16, face = "bold"),
+      axis.title.y = element_text(margin = margin(r = 20)),
+      axis.text = element_text(size = 12, color = "black"),
+      legend.position = c(0.85, 0.85),
+      legend.background = element_rect(fill = "white", color = NA),
+      legend.key = element_rect(fill = "white", color = NA),
+      legend.title = element_text(size = 14, face = "bold"),
+      legend.text = element_text(size = 12),
+      axis.line = element_line(color = "black", linewidth = 0.8),
+      panel.grid.major.x = element_blank(),
+      panel.grid.major.y = element_line(color = "lightgray", linetype = "dashed"),
+      panel.grid.minor = element_blank(),
+      panel.background = element_rect(fill = "white"),
+      panel.border = element_blank(),
+      plot.title = element_text(hjust = 0.5, size = 16, face = "bold")
+    )
+}
+
+
+# Create an improved version of the regeneration plot
+# Create an improved version of the regeneration plot
+improved_regeneration_plot <- ggplot(regen_summary, aes(x = BodyStatus, y = mean_prop)) +
+  # Add error bars
+  geom_errorbar(
+    aes(ymin = mean_prop - se, ymax = mean_prop + se, color = BodyStatus),
+    width = 0.2, 
+    linewidth = 1.2,
+    position = position_dodge(0.9)
+  ) +
+  # Add points with custom shapes - ADD FILL AESTHETIC
+  geom_point(
+    aes(shape = BodyStatus, color = BodyStatus, fill = BodyStatus),  # Added fill aesthetic
+    size = 7,
+    stroke = 1.2
+  ) +
+  # Set shapes manually
+  scale_shape_manual(
+    name = "Body Status",
+    values = c(
+      "Original" = 16,  # Circle
+      "Head" = 17,      # Triangle
+      "Tail" = 24       # CHANGED to 24 (filled triangle down) instead of 25
+    ),
+    labels = c(
+      "Original" = "Intact Baseline",
+      "Head" = "Head Regenerates",
+      "Tail" = "Tail Regenerates"
+    )
+  ) +
+  # Set colors manually
+  scale_color_manual(
+    name = "Body Status",
+    values = c(
+      "Original" = "#FF8C00", 
+      "Head" = "#FF8C00",
+      "Tail" = "#FF8C00"
+    ),
+    labels = c(
+      "Original" = "Intact Baseline",
+      "Head" = "Head Regenerates",
+      "Tail" = "Tail Regenerates"
+    )
+  ) +
+  # Add fill scale with the same colors
+  scale_fill_manual(
+    name = "Body Status",
+    values = c(
+      "Original" = "#FF8C00", 
+      "Head" = "#FF8C00",
+      "Tail" = "#FF8C00"
+    ),
+    labels = c(
+      "Original" = "Intact Baseline",
+      "Head" = "Head Regenerates",
+      "Tail" = "Tail Regenerates"
+    )
+  ) +
+  # Labels
+  labs(
+    title = "Regeneration Active Arm Preference",
+    y = "Proportion of Active Arm Choices",
+    x = "Body Status"
+  ) +
+  # Y-axis limits
+  scale_y_continuous(
+    limits = c(0, 1),
+    breaks = seq(0, 1, 0.25)
+  ) +
+  # Apply publication theme
+  theme_classic() +
+  theme(
+    text = element_text(family = "Times New Roman", size = 14),
+    axis.title = element_text(size = 16, face = "bold"),
+    axis.title.y = element_text(margin = margin(r = 20)),
+    axis.text = element_text(size = 12, color = "black"),
+    legend.position = "right",
+    legend.background = element_rect(fill = "white", color = NA),
+    legend.key = element_rect(fill = "white", color = NA),
+    legend.title = element_text(size = 14, face = "bold"),
+    legend.text = element_text(size = 12),
+    axis.line = element_line(color = "black", linewidth = 0.8),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    panel.border = element_blank(),
+    plot.title = element_text(hjust = 0.5, size = 16, face = "bold")
+  ) +
+  # Combine duplicate legends (color, fill, and shape) into one
+  guides(
+    color = guide_legend(title = "Body Status", override.aes = list(size = 5)),
+    fill = "none",  # Hide duplicate legend
+    shape = "none"  # Hide duplicate legend
+  )
+
+# Create an improved version of the reinstatement plot
+improved_reinstatement_plot <- ggplot(reinstate_summary, aes(x = BodyStatus, y = mean_prop)) +
+  # Add error bars
+  geom_errorbar(
+    aes(ymin = mean_prop - se, ymax = mean_prop + se, color = BodyStatus),
+    width = 0.2, 
+    linewidth = 1.2,
+    position = position_dodge(0.9)
+  ) +
+  # Add points with custom shapes - ADD FILL AESTHETIC
+  geom_point(
+    aes(shape = BodyStatus, color = BodyStatus, fill = BodyStatus),  # Added fill aesthetic
+    size = 7,
+    stroke = 1.2
+  ) +
+  # Set shapes manually
+  scale_shape_manual(
+    name = "Body Status",
+    values = c(
+      "Original" = 16,  # Circle
+      "Head" = 17,      # Triangle
+      "Tail" = 24       # CHANGED to 24 (filled triangle down) instead of 25
+    ),
+    labels = c(
+      "Original" = "Intact Baseline",
+      "Head" = "Head Regenerates",
+      "Tail" = "Tail Regenerates"
+    )
+  ) +
+  # Set colors manually
+  scale_color_manual(
+    name = "Body Status",
+    values = c(
+      "Original" = "#FF8C00", 
+      "Head" = "#FF8C00",
+      "Tail" = "#FF8C00"
+    ),
+    labels = c(
+      "Original" = "Intact Baseline",
+      "Head" = "Head Regenerates",
+      "Tail" = "Tail Regenerates"
+    )
+  ) +
+  # Add fill scale with the same colors
+  scale_fill_manual(
+    name = "Body Status",
+    values = c(
+      "Original" = "#FF8C00", 
+      "Head" = "#FF8C00",
+      "Tail" = "#FF8C00"
+    ),
+    labels = c(
+      "Original" = "Intact Baseline",
+      "Head" = "Head Regenerates",
+      "Tail" = "Tail Regenerates"
+    )
+  ) +
+  # Labels
+  labs(
+    title = "Reinstatement Active Arm Preference",
+    y = "Proportion of Active Arm Choices",
+    x = "Body Status"
+  ) +
+  # Y-axis limits
+  scale_y_continuous(
+    limits = c(0, 1),
+    breaks = seq(0, 1, 0.25)
+  ) +
+  # Apply publication theme
+  theme_classic() +
+  theme(
+    text = element_text(family = "Times New Roman", size = 14),
+    axis.title = element_text(size = 16, face = "bold"),
+    axis.title.y = element_text(margin = margin(r = 20)),
+    axis.text = element_text(size = 12, color = "black"),
+    legend.position = "right",
+    legend.background = element_rect(fill = "white", color = NA),
+    legend.key = element_rect(fill = "white", color = NA),
+    legend.title = element_text(size = 14, face = "bold"),
+    legend.text = element_text(size = 12),
+    axis.line = element_line(color = "black", linewidth = 0.8),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    panel.border = element_blank(),
+    plot.title = element_text(hjust = 0.5, size = 16, face = "bold")
+  ) +
+  # Combine duplicate legends (color, fill, and shape) into one
+  guides(
+    color = guide_legend(title = "Body Status", override.aes = list(size = 5)),
+    fill = "none",  # Hide duplicate legend
+    shape = "none"  # Hide duplicate legend
+  )
+
+# Combine the plots using patchwork
+combined_plots <- improved_regeneration_plot + improved_reinstatement_plot +
+  plot_layout(ncol = 2) +
+  plot_annotation(
+    title = "Memory Retention in Regenerated Planarians",
+    theme = theme(
+      plot.title = element_text(family = "Times New Roman", size = 18, face = "bold", hjust = 0.5)
+    )
+  )
+
+# Print the plots
+print(improved_regeneration_plot)
+print(improved_reinstatement_plot)
+print(combined_plots)
