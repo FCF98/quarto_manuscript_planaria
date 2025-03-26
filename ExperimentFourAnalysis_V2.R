@@ -103,23 +103,25 @@ paired_ttest_model <- t.test(
 
 # Calculate Cohen's d for paired t-test
 t_value <- paired_ttest_model$statistic
+df <- paired_ttest_model$parameter  # Extract degrees of freedom
 n <- length(Exp4_wide_format$Baseline)
 cohens_d <- t_value / sqrt(n)
 
 # Format p-value according to APA style
-p_formatted <- ifelse(paired_ttest_model$p.value < .001, 
-                      "< .001", 
+p_formatted <- ifelse(paired_ttest_model$p.value < .001, "< .001", 
                       paste0("= ", gsub("0\\.", ".", round(paired_ttest_model$p.value, 3))))
 
-# Create ttest_results dataframe
+# Create ttest_results dataframe with test statistic and degrees of freedom
 ttest_results <- data.frame(
   contrast = "Baseline / Endpoint",
+  t_statistic = t_value,
+  df = df,
   cohens_d = abs(cohens_d),
   p.value = paired_ttest_model$p.value,
-  apa_result = paste0("*d* = ", round(abs(cohens_d), 2), 
+  apa_result = paste0("*t*(", round(df, 2), ") = ", round(t_value, 2), 
+                      ", *d* = ", round(abs(cohens_d), 2), 
                       ", *p* ", p_formatted)
 )
-
 
 print(ttest_results)
 
