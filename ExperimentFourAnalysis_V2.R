@@ -520,6 +520,89 @@ print(head_reinstatement_d)
 print("Tail Reinstatement (Cohen's d):")
 print(tail_reinstatement_d)
 
+
+# Create a function to format t-test results in APA style
+format_apa_results <- function(test_name, t_test_result, paired_data) {
+  # Extract t-value and degrees of freedom
+  t_value <- t_test_result$statistic
+  df <- t_test_result$parameter
+  
+  # Calculate Cohen's d for paired data
+  n <- nrow(paired_data)
+  mean_diff <- mean(paired_data$ActiveProportion - paired_data$BaselineProportion, na.rm = TRUE)
+  sd_diff <- sd(paired_data$ActiveProportion - paired_data$BaselineProportion, na.rm = TRUE)
+  cohens_d <- mean_diff / sd_diff
+  
+  # Format p-value according to APA style
+  p_value <- t_test_result$p.value
+  p_formatted <- ifelse(p_value < .001, "< .001", 
+                        paste0("= ", gsub("0\\.", ".", round(p_value, 3))))
+  
+  # Create results dataframe
+  result_df <- data.frame(
+    contrast = test_name,
+    t_statistic = t_value,
+    df = df,
+    cohens_d = abs(cohens_d),
+    p.value = p_value,
+    apa_result = paste0("*t*(", round(df, 2), ") = ", round(t_value, 2), 
+                        ", *d* = ", round(abs(cohens_d), 2), 
+                        ", *p* ", p_formatted)
+  )
+  
+  return(result_df)
+}
+
+# Create APA-formatted results for each test
+head_regen_apa <- format_apa_results(
+  "Head Regeneration vs Baseline", 
+  head_regeneration_test, 
+  head_regeneration_paired
+)
+
+tail_regen_apa <- format_apa_results(
+  "Tail Regeneration vs Baseline", 
+  tail_regeneration_test, 
+  tail_regeneration_paired
+)
+
+head_reinstate_apa <- format_apa_results(
+  "Head Reinstatement vs Baseline", 
+  head_reinstatement_test, 
+  head_reinstatement_paired
+)
+
+tail_reinstate_apa <- format_apa_results(
+  "Tail Reinstatement vs Baseline", 
+  tail_reinstatement_test, 
+  tail_reinstatement_paired
+)
+
+# Combine all results into a single dataframe
+regen_reinstate_results <- rbind(
+  head_regen_apa,
+  tail_regen_apa,
+  head_reinstate_apa,
+  tail_reinstate_apa
+)
+
+# Print the combined results
+print(regen_reinstate_results)
+
+# For easy referencing in inline code within Quarto
+# These variables can be used with `r head_regen_result` etc. in your Quarto document
+head_regen_result <- head_regen_apa$apa_result
+tail_regen_result <- tail_regen_apa$apa_result
+head_reinstate_result <- head_reinstate_apa$apa_result
+tail_reinstate_result <- tail_reinstate_apa$apa_result
+
+# Also save detailed result objects that you can reference for specific values
+head_regen_details <- head_regen_apa
+tail_regen_details <- tail_regen_apa
+head_reinstate_details <- head_reinstate_apa
+tail_reinstate_details <- tail_reinstate_apa
+
+
 #=================================================================
 # PART 8: VISUALIZATIONS FOR PAIRED COMPARISONS
 #=================================================================
