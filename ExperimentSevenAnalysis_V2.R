@@ -1326,13 +1326,8 @@ combined_figure <- (learning_plot_no_legend + intact_plot_no_legend) /
 
 
 print(combined_figure)
-# Save with larger dimensions and explicit device
-# Try using a larger canvas size and the Cairo PDF device for better rendering
-ggsave(
-  "Exp7_combined_figure.pdf", 
-  combined_figure, 
-  width = 16,          # Increased width
-  height = 14,         # Increased height
-  dpi = 300,
-  device = cairo_pdf   # Using Cairo PDF device for better handling of complex graphics
-)
+
+
+# Save the panel
+ggsave("Exp7_combined_figure.png", combined_figure, 
+       width = 16, height = 14, dpi = 300) 
