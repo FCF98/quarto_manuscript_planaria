@@ -89,6 +89,11 @@ Exp4_wide_format <- Exp4_full_data_long %>%
 print("Wide format data structure:")
 print(str(Exp4_wide_format))
 
+
+#=================================
+#apa formatted results
+#================================
+
 # Perform paired t-test
 paired_ttest_model <- t.test(
   Exp4_wide_format$Baseline,
@@ -96,15 +101,28 @@ paired_ttest_model <- t.test(
   paired = TRUE
 )
 
-# Print t-test results
-print("Paired t-test results:")
-print(paired_ttest_model)
+# Calculate Cohen's d for paired t-test
+t_value <- paired_ttest_model$statistic
+n <- length(Exp4_wide_format$Baseline)
+cohens_d <- t_value / sqrt(n)
 
-# Calculate effect size (Cohen's d for paired data)
-mean_diff <- mean(Exp4_wide_format$Endpoint - Exp4_wide_format$Baseline, na.rm = TRUE)
-sd_diff <- sd(Exp4_wide_format$Endpoint - Exp4_wide_format$Baseline, na.rm = TRUE)
-cohen_d <- mean_diff / sd_diff
-print(paste("Cohen's d:", cohen_d))
+# Format p-value according to APA style
+p_formatted <- ifelse(paired_ttest_model$p.value < .001, 
+                      "< .001", 
+                      paste0("= ", gsub("0\\.", ".", round(paired_ttest_model$p.value, 3))))
+
+# Create ttest_results dataframe
+ttest_results <- data.frame(
+  contrast = "Baseline / Endpoint",
+  cohens_d = abs(cohens_d),
+  p.value = paired_ttest_model$p.value,
+  apa_result = paste0("*d* = ", round(abs(cohens_d), 2), 
+                      ", *p* ", p_formatted)
+)
+
+
+print(ttest_results)
+
 
 # Convert wide format back to long for plotting
 Exp4_plot_data <- Exp4_wide_format %>%
@@ -1086,14 +1104,8 @@ combined_figure <- (learning_plot_no_legend + intact_plot_no_legend) /
 
 
 print(combined_figure)
-# Save with larger dimensions and explicit device
-# Try using a larger canvas size and the Cairo PDF device for better rendering
 
-ggsave(
-  "Exp4_combined_figure.pdf", 
-  combined_figure, 
-  width = 16,          # Increased width
-  height = 14,         # Increased height
-  dpi = 300,
-  device = cairo_pdf   # Using Cairo PDF device for better handling of complex graphics
-)
+
+# Save the panel
+ggsave("Exp4_combined_figure.png", combined_figure, 
+       width = 18, height = 16, dpi = 300) 
