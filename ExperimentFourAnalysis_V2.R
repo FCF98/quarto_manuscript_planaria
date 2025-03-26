@@ -1,6 +1,7 @@
 # Planaria Y-Maze Analysis for Experiment 4
 # Load required libraries
 library(readr)
+library(dplyr)
 library(tidyverse)
 library(ggsignif)
 library(lme4)
@@ -14,6 +15,7 @@ library(patchwork) # For combining plots
 
 # Read in the data
 Exp4_full_data <- read_csv("Datasets/ExperimentFourFullData.csv")
+
 
 #=================================================================
 # Creating theme for all plots
@@ -775,11 +777,7 @@ tail_reinstatement_viz <- tail_reinstatement_paired %>%
   ylim(0, 1) +
   consistent_theme()
 
-# Print the visualizations
-print(head_regeneration_viz)
-print(tail_regeneration_viz)
-print(head_reinstatement_viz)
-print(tail_reinstatement_viz)
+
 
 #=================================================================
 # PART 9: FINAL COMBINED VISUALIZATION
@@ -1149,3 +1147,22 @@ print(combined_figure)
 # Save the panel
 ggsave("Exp4_combined_figure.png", combined_figure, 
        width = 18, height = 16, dpi = 300) 
+
+
+#=======================================================================
+# PART 10: Extra descriptive information
+#=======================================================================
+
+
+# Looking for the spread of initial baseline preferences. 
+
+#first rename Active arm column to Active_arm
+
+Prefered_arm_count <- Exp4_full_data %>% filter(Subject %in% (1:42)) %>% count(Prefered_arm)
+
+Active_arm_count <- Exp4_full_data %>% filter(Subject %in% (1:42)) %>% count(`Active arm`)
+
+Left_active_arm_count <- Active_arm_count %>% filter(`Active arm` == "L") %>% pull(n)
+Right_active_arm_count <- Active_arm_count %>% filter(`Active arm` == "R") %>% pull(n)
+
+
