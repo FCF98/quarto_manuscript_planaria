@@ -401,51 +401,6 @@ reinstate_summary <- reinstate_plot_data %>%
 
 
 
-# Statistical tests - comparing to the SAME baseline
-# For Regeneration
-head_regen_ttest <- t.test(
-  Memory_test_comparison %>% filter(BodyPart == "Head" & !is.na(RegeneratedProportion)) %>% pull(RegeneratedProportion),
-  cut_subjects_baseline$BaselineProportion,
-  paired = FALSE  # Using unpaired because we might have different numbers
-)
-
-tail_regen_ttest <- t.test(
-  Memory_test_comparison %>% filter(BodyPart == "Tail" & !is.na(RegeneratedProportion)) %>% pull(RegeneratedProportion),
-  cut_subjects_baseline$BaselineProportion,
-  paired = FALSE
-)
-
-# For Reinstatement
-head_reinst_ttest <- t.test(
-  Reinstatement_comparison %>% filter(BodyPart == "Head" & !is.na(ReinstatedProportion)) %>% pull(ReinstatedProportion),
-  cut_subjects_baseline$BaselineProportion,
-  paired = FALSE
-)
-
-tail_reinst_ttest <- t.test(
-  Reinstatement_comparison %>% filter(BodyPart == "Tail" & !is.na(ReinstatedProportion)) %>% pull(ReinstatedProportion),
-  cut_subjects_baseline$BaselineProportion,
-  paired = FALSE
-)
-
-# Print test results
-print("REGENERATION T-TESTS:")
-print("Head vs Original Baseline:")
-print(head_regen_ttest)
-
-print("Tail vs Original Baseline:")
-print(tail_regen_ttest)
-
-print("REINSTATEMENT T-TESTS:")
-print("Head vs Original Baseline:")
-print(head_reinst_ttest)
-
-print("Tail vs Original Baseline:")
-print(tail_reinst_ttest)
-
-#=================================================================
-# PART 7: PAIRED COMPARISON BETWEEN BASELINE AND REGENERATION/REINSTATEMENT
-#=================================================================
 
 # Create baseline data frame
 Baseline_scores <- cut_subjects_baseline %>%
