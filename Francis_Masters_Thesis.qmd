@@ -677,7 +677,7 @@ The decision latency data do not support our hypothesis. Rather than decision la
 
 # Experiment 3 {#sec-experiment-3}
 
-The y-maze experiment carried out in @sec-experiment-2 suffered from several procedural issues. First, the y-maze contained a divot at the end of the runway where planaria would often swim into and begin circling – likely disturbing any sense of direction relative to the start of the maze. Second, due to handling planaria primarily with a paint brush, the death rate was rather high. Third, the number of trials where no arm was entered was high, perhaps due to fatigue from too many trials per day. A third experiment was carried out which aimed to improve on both of these limitations of [@sec-experiment-2]. Moreover, due to preliminary success by other researchers in our lab using methamphetamine to condition planaria, it was decided that this project would also use methamphetamine – a psychoactive compound which also increases synaptic dopamine levels.
+The y-maze experiment carried out in @sec-experiment-2 suffered from several procedural issues. First, the y-maze contained a divot at the end of the runway where planaria would often swim into and begin circling – likely disturbing any sense of direction relative to the start of the maze. Second, due to handling planaria primarily with a paint brush, the death rate was rather high. Third, the number of trials where no arm was entered was high, perhaps due to fatigue from too many trials per day. Despite these limitations, there was some indication that planaria are able to learn and retain a conditioned response and that this may endure for at least two weeks. A third experiment was carried out which aimed to improve on both of these limitations of [@sec-experiment-2], and move on to test the ability for memories to be retained through bisection and regeneration. Due to preliminary success by other researchers in our lab using methamphetamine to condition planaria (data not shown), this project also adopted methamphetamine as the renforcing stimulus – a psychoactive compound similar to cocaine in that it also increases synaptic dopamine levels.
 
 ### Materials and Methods {#sec-exp-3-materials-and-methods}
 
@@ -689,11 +689,59 @@ Forty two planaria were used (treatment, *n* = 42 [^3]). This experiment had fou
 
 When treatment subjects entered the active arm, 29.35μL of methamphetamine (in distilled water) was pipetted throughout the arm to achieve a 10μM concentration. Nothing was added if the inactive arm was selected. After administration, the timer was restarted and three minutes were given for absorption. The runway light was turned on after placing the subject in the maze and turned off once the subject entered an arm. At the end of a trial, planaria were washed thoroughly in a bath of planaria water before being transferred back to their 12-well dish.
 
-The memory retention test took place 14 days after conditioning. At test, multiple planaria were run simultaneously in sepeate y-mazes. Planaria were given five minutes to enter an arm. Once a decision was made, the plug was inserted and planaria were left for approximately 60 seconds before being moved back to the holding dish. No additional liquid was added during test trials. The inter trial interval was approximately 90 minutes. A reinstatement procedure was carried out the following day. For the reinstatement phase, the procedure was identical to the test stage with the only additional step being drug exposure before each trial. At the start of a run, the planaria were placed in a 10μM solution of methamphetamine diluted in planaria water for five minutes. At the end of the exposure interval, planaria were moved individually into a Y-maze to begin their first trial.
+Panaria which exhibited evidence of learning at the end of conditioning were bisected on the day following their last conditioning trail. For the purposes of this experiment, a planarian was considered to have learned if it entered the active arm on 4 or more out of the last 6 conditioning trials (*n* = 10). For bisection, planaria were placed individually onto a plastic block with some planaria water and cut transversely using a flat edge blade. The cut was made above the pharynx and below the start of the head. This resulted in two subjects: a tailless head fragment and a headless tail fragment. Subjects were placed into 12-well plates with labels to track the original subject number and whether they are a head or tail fragment. Bisected subjects were not fed throughout the duration of the experiment.
+
+To enable sufficient time for regeneration of the head and tail [see @fig-regeneration-timeline], the memory retention test took place 14 days after bisection. For the memory retention test, multiple planaria were run simultaneously in separate y-mazes. Planaria were given five minutes to enter an arm. Once a decision was made, the plug was inserted and planaria were left for approximately 60 seconds before being moved back to the holding dish. No additional liquid was added during test trials. The inter trial interval was approximately 90 minutes. A reinstatement procedure was carried out the following day. For the reinstatement phase, the procedure was identical to the test stage with the only additional step being drug exposure before each trial. At the start of a run, the planaria were placed in a 10μM solution of methamphetamine diluted in planaria water for five minutes. At the end of the exposure interval, planaria were moved individually into a Y-maze to begin their first trial.
 
 Four improved 3D printed Y-mazes were used for this experiment [For dimensions see @fig-exp3_maze_dimensions]. Mazes were printed using Siraya Tech professional UV resin. Similar to the mazes used in @sec-experiment-2, the improved mazes also contained an LED light embedded in the resin after printing to induce negative phototaxis.
 
 As described in [@sec-2-materials-and-methods], three exclusion criteria were used. The exclusion criteria were: A) failing to complete at least four of the six baseline trials; B) failing to complete at least two trials on consecutive conditioning days; C) failing to complete at least four of the last six trials. None of the subjects were excluded based on those criteria. No subjects died during the experiment.
+
+```{r}
+#| label: Experiment three Results
+#| include: False
+
+
+# Source the scripts
+#Note experiment 4 below is the third experiment in this series of experiments
+source("ExperimentFourAnalysis_V2.R")
+
+```
+
+```{r}
+#| label: fig-regeneration-timeline
+#| include: True
+#| fig-cap: "Planaria regeneration timeline"
+#| fig-width: 15
+#| fig-height: 10
+#| fig-align: "center"
+
+library(png)
+library(grid)
+regeneration_timeline <- readPNG("Figures/Planaria_regeneration_timeline.png") 
+grid.raster(regeneration_timeline)
+
+```
+
+### Results and discussion {#sec-results-and-discussion}
+
+[@fig-Exp4_conditioning_results_panel]A shows the change in active arm preference across conditioning days for all subjects (*n* = 42). There apepars to be a increase in preference for the actie arm preference which is visible even on the first day of conditioning. This change in preference persists across the five conditioning days, although there is a downard trend as the conditioning proceeds. A paired t-test was used to test whether there was a significant difference in the proportion of active arm entreis between baseline and endpoint. At the end of conditioning, planaria entered the active arm significantly more often that before conditioning (`r ttest_results %>% filter(contrast == "Baseline / Endpoint") %>% pull(apa_result) `).
+
+Paired t-tests were used to assess whether the active arm preference after regeneration and during reinstatmeemnt differed from baseline.  
+
+```{r}
+#| label: fig-Exp4_conditioning_results_panel
+#| include: True
+#| fig-cap: "Planaria conditining and memory retention through decapitation"
+#| fig-width: 18
+#| fig-height: 16
+#| fig-align: "center"
+
+Exp4_combined_figure <- readPNG("Exp4_combined_figure.png") 
+grid.raster(Exp4_combined_figure)
+
+
+```
 
 # Experiment 4 {#sec-experiment-4}
 
