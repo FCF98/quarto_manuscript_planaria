@@ -1331,3 +1331,22 @@ print(combined_figure)
 # Save the panel
 ggsave("Exp7_combined_figure.png", combined_figure, 
        width = 16, height = 14, dpi = 300) 
+
+
+#=======================================================================
+# PART 11: descriptives
+#=======================================================================
+
+#Pulling baseline arm preference descriptives
+
+Exp7_prefered_arm_count <- Exp7_data %>% filter(Subject %in% (1:30)) %>% count(Prefered_arm)
+
+Exp7_active_arm_count <- Exp7_data %>% filter(Subject %in% (1:30)) %>% count(`Active arm`)
+
+Exp7_left_active_arm_count <- Exp7_active_arm_count %>% filter(`Active arm` == "L") %>% pull(n)
+
+Exp7_right_active_arm_count <- Exp7_active_arm_count %>% filter(`Active arm` == "R") %>% pull(n)
+
+#Pulling active arm descriptives
+
+Left_active_arm_count <- Exp7_prefered_arm_count
