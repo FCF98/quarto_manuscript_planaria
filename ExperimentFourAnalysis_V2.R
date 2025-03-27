@@ -1156,8 +1156,6 @@ ggsave("Exp4_combined_figure.png", combined_figure,
 
 # Looking for the spread of initial baseline preferences. 
 
-#first rename Active arm column to Active_arm
-
 Prefered_arm_count <- Exp4_full_data %>% filter(Subject %in% (1:42)) %>% count(Prefered_arm)
 
 Active_arm_count <- Exp4_full_data %>% filter(Subject %in% (1:42)) %>% count(`Active arm`)
@@ -1165,4 +1163,8 @@ Active_arm_count <- Exp4_full_data %>% filter(Subject %in% (1:42)) %>% count(`Ac
 Left_active_arm_count <- Active_arm_count %>% filter(`Active arm` == "L") %>% pull(n)
 Right_active_arm_count <- Active_arm_count %>% filter(`Active arm` == "R") %>% pull(n)
 
+
+# Finding endpoint group mean
+
+exp4_endpoint_mean <- Exp4_full_data_long %>% filter(Time %in% "Endpoint") %>% summarize(mean_entries = mean(ActiveArmProportion))
 
