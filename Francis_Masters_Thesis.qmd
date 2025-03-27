@@ -36,7 +36,7 @@ floatsintext: true
 
 #Use to set position of footnotes
 reference-location: margin
-
+      
 # Numbered lines (.pdf and .docx only)
 numbered-lines: false
 # File with references
@@ -312,6 +312,7 @@ set_here() #sets the working directory
 conflicts_prefer(dplyr::filter, .quiet = TRUE)
 conflicts_prefer(flextable::separate_header, .quiet = TRUE)
 conflicts_prefer(lme4::lmer, .quiet = TRUE)
+conflicts_prefer(cowplot::get_legend, .quiet = TRUE)
 
 ```
 
@@ -698,6 +699,22 @@ Four improved 3D printed Y-mazes were used for this experiment [For dimensions s
 As described in [@sec-2-materials-and-methods], three exclusion criteria were used. The exclusion criteria were: A) failing to complete at least four of the six baseline trials; B) failing to complete at least two trials on consecutive conditioning days; C) failing to complete at least four of the last six trials. None of the subjects were excluded based on those criteria. No subjects died during the experiment.
 
 ```{r}
+#| label: fig-exp3_maze_dimensions
+#| include: True
+#| fig-cap: "Modified 3D printed y-maze"
+#| apa-note: "The y-maze depicted was printed using Siraya Tech professional UV resin. A white LED was drilled into the resin at the start of the runway to induce negative phototaxis. The light was powered by a single 9V battery. A silicone plug was molded to block liquid transfer after a planarian entered one of the arms."
+#| fig-width: 15
+#| fig-height: 10
+#| fig-align: "center"
+
+library(png)
+library(grid)
+exp3_maze_dimensions <- readPNG("Figures/y-maze_v2_dimensions.png") 
+grid.raster(exp3_maze_dimensions)
+
+```
+
+```{r}
 #| label: Experiment three Results
 #| include: False
 
@@ -725,7 +742,9 @@ grid.raster(regeneration_timeline)
 
 ### Results and discussion {#sec-results-and-discussion}
 
-The majority of subjects had an initial preference towards the right arm (*n* = `r Prefered_arm_count %>% filter(Prefered_arm == "R") %>%  pull(n)`), with just over a quarter favouring the left arm (*n* = `r Prefered_arm_count %>% filter(Prefered_arm == "L") %>%  pull(n)`) and a few having no preference (*n* = `r Prefered_arm_count %>% filter(is.na(Prefered_arm)) %>%  pull(n)`). This experiment employed a biased design, such that the active arm to be reinforced was the opposite of the initial preference or randomly assigned for those with no initial preference. The left arm was active for `r Left_active_arm_count` subejcts, and the right arm was active for `r Right_active_arm_count` subjects. [@fig-Exp4_conditioning_results_panel]A shows the change in active arm preference across conditioning days for all subjects (*n* = 42). There apepars to be a increase in preference for the actie arm preference which is visible even on the first day of conditioning. This change in preference persists across the five conditioning days, although there is a downard trend as the conditioning proceeds. A paired t-test was used to test whether there was a significant difference in the proportion of active arm entreis between baseline and endpoint. At the end of conditioning, planaria entered the active arm significantly more often that before conditioning (`r ttest_results %>% filter(contrast == "Baseline / Endpoint") %>% pull(apa_result)`). This change in preference between baseline and endpoint (final six conditioning trials) can be seen in [@fig-Exp4_conditioning_results_panel]B.
+The majority of subjects had an initial preference towards the right arm (*n* = `r Prefered_arm_count %>% filter(Prefered_arm == "R") %>%  pull(n)`), with just over a quarter favouring the left arm (*n* = `r Prefered_arm_count %>% filter(Prefered_arm == "L") %>%  pull(n)`) and a few having no preference (*n* = `r Prefered_arm_count %>% filter(is.na(Prefered_arm)) %>%  pull(n)`). This experiment employed a biased design, such that the active arm to be reinforced was the opposite of the initial preference or randomly assigned for those with no initial preference. The left arm was active for `r Left_active_arm_count` subejcts, and the right arm was active for `r Right_active_arm_count` subjects.
+
+[@fig-Exp4_conditioning_results_panel]A shows the change in active arm preference across conditioning days for all subjects (*n* = 42). There apepars to be a increase in preference for the actie arm preference which is visible even on the first day of conditioning. This change in preference persists across the five conditioning days, although there is a downard trend as the conditioning proceeds. A paired t-test was used to test whether there was a significant difference in the proportion of active arm entreis between baseline and endpoint. At the end of conditioning, planaria entered the active arm significantly more often that before conditioning (`r ttest_results %>% filter(contrast == "Baseline / Endpoint") %>% pull(apa_result)`). This change in preference between baseline and endpoint (final six conditioning trials) can be seen in [@fig-Exp4_conditioning_results_panel]B.
 
 [@fig-Exp4_conditioning_results_panel]C and D show the memory retention and reisntatememnt test after the bisected planaria (*n* = 10) were given 14 days to regenerate. Paired t-tests were used to assess whether the active arm preference after regeneration and during reinstatmeemnt were significantly different from baseline. For the initial regeneration memory test, we failed to find a difference between the heads (`r head_regen_apa$apa_result`) or tails (`r tail_regen_apa$apa_result`) compared to the baseline active arm preference. Similarly, the reinstatememnt results failed to demonstrate a significant difference between the heads (`r head_reinstate_apa$apa_result`) or tails (`r tail_reinstate_apa$apa_result`) compared to the baseline active arm preference.
 
@@ -751,33 +770,59 @@ The regeneration data indicate some interen patterns in the results. Although ne
 
 # Experiment 4 {#sec-experiment-4}
 
-The y-maze experiment carried out in @sec-experiment-2 suffered from several procedural issues. First, the y-maze contained a divot at the end of the runway where planaria would often swim into and begin circling – likely disturbing any sense of direction relative to the start of the maze. Second, due to handling planaria primarily with a paint brush, the death rate was rather high. Third, the number of trials where no arm was entered was high, perhaps due to fatigue from too many trials per day. A third experiment was carried out which aimed to improve on both of these limitations of [@sec-experiment-2]. Moreover, due to preliminary success by other researchers in our lab using methamphetamine to condition planaria, it was decided that this project would also use methamphetamine – a psychoactive compound which also increases synaptic dopamine levels.
+```{r}
+#| label: Experiment four Results
+#| include: False
+
+
+# Source the scripts
+#Note experiment 7 below is the fourth experiment in this series of experiments
+source("ExperimentSevenAnalysis_V2.R")
+
+```
+
+The y-maze experiment carried out in @sec-experiment-3 made several improvements on the procedure from @sec-experiment-2, but its main limitations were that it did not employ a control group. Additionally, the number of subejcts used for the regeneration tests was small. To address these limitations, this experiment had both a treatment group and control group, included more subjects in the regeneration analyses, and used a higher dose of methamphetamine for reinforcement.
 
 ### Materials and Methods
 
-Thirty planaria were used (treatment, *n* = 15; vehicle, *n* = 15). This experiment had four stages: baseline, conditioning, test, and reinstatement \[*insert timeline graphic\]*. During baseline and conditioning trials multiple planaria were run concurrently in separate Y-mazes \[\*photo to be inserted later\*\]. Each maze was filled with 2ml of planaria water. Planaria completed three trials per day with an intertrial interval of approximately 60 minutes. At the start of a trial, planaria were transferred to the start of the maze runway using a plastic pasteur pipette with the tip cut off. A timer was stared once the planarian was placed in the runway. Planaria were given up to five minutes to enter one of the arms. Once a planarian had entered an arm, the plug was inserted to stop liquid moving between compartments, after which approximately 0.675ml remained in each arm \^\[Measured by extracting and weighing the volume of distilled water trapped in each arm, assuming a density of 1g/ml. Small deviations are inevitable, but this was the most common value seen during our tests\]. A planarian was considered to have entered the arm when the plug could be safely inserted without touching the planarian.
+Thirty planaria were used (treatment, *n* = 15; vehicle, *n* = 15). This experiment had four stages: baseline, conditioning, test, and reinstatement \[*insert timeline graphic\]*. During baseline and conditioning trials multiple planaria were run concurrently in separate Y-mazes. Each maze was filled with 2ml of planaria water. Planaria completed three trials per day with an intertrial interval of approximately 60 minutes. At the start of a trial, planaria were transferred to the start of the maze runway using a plastic pasteur pipette with the tip cut off. A timer was stared once the planarian was placed in the runway. Planaria were given up to five minutes to enter one of the arms. Once a planarian had entered an arm, the plug was inserted to stop liquid moving between compartments, after which approximately 0.675ml remained in each arm \^\[Measured by extracting and weighing the volume of distilled water trapped in each arm, assuming a density of 1g/ml. Small deviations are inevitable, but this was the most common value seen during our tests\]. A planarian was considered to have entered the arm when the plug could be safely inserted without touching the planarian.
 
 When treatment subjects entered the active arm, 58.7μL of methamphetamine (in distilled water) was pipetted throughout the arm to achieve a 20μM concentration. Nothing was added if the inactive arm was selected. After administration, the timer was restarted and three minutes were given for absorption. For control subjects, entry into either arm resulted in pipetting 58.7μL of distilled water into the arm. If a subject failed to enter an arm, the subject was moved back to its 12-well dish. The runway light was turned on after placing the subject in the maze and turned off once the subject entered an arm. At the end of a trial, planaria were washed thoroughly in a bath of planaria water before being transferred back to their 12-well dish.
 
-The memory retention test took place 14 days after conditioning. At test, multiple planaria were run simultaneously in sepeate y-mazes. Planaria were given five minutes to enter an arm. Once a decision was made, the plug was inserted and planaria were left for approximately 60 seconds before being moved back to the holding dish. No additional liquid was added during test trials. The inter trial interval was approximately 90 minutes. A reinstatement procedure was carried out the following day. For the reinstatement phase, the procedure was identical to the test stage with the only additional step being drug exposure before each trial. At the start of a run, the planaria were placed in a 20μM solution of methamphetamine diluted in planaria water for five minutes. At the end of the exposure interval, planaria were moved individually into a Y-maze to begin their first trial.
+All planaria were bisected on the day following the final day of conditioning. For bisection, planaria were placed individually onto a plastic block with some planaria water and cut transversely using a flat edge blade. The cut was made above the pharynx and below the start of the head. This resulted in two subjects: a tailless head fragment and a headless tail fragment. Subjects were placed into 12-well plates with labels to track the original subject number and whether they are a head or tail fragment. Bisected subjects were not fed throughout the duration of the experiment.
 
-Four custom 3D printed Y-mazes were used for this experiment. Mazes were printed using made of Siraya Tech professional UV resin.
+To enable sufficient time for regeneration of the head and tail [see @fig-regeneration-timeline], the memory retention test took place 14 days after bisection. For the memory retention test, multiple planaria were run simultaneously in separate y-mazes. Planaria were given five minutes to enter an arm. Once a decision was made, the plug was inserted and planaria were left for approximately 60 seconds before being moved back to the holding dish. No additional liquid was added during test trials. The inter trial interval was approximately 90 minutes. A reinstatement procedure was carried out the following day. For the reinstatement phase, the procedure was identical to the test stage with the only additional step being drug exposure before each trial. At the start of a run, the planaria were placed in a 20μM solution of methamphetamine diluted in planaria water for five minutes. At the end of the exposure interval, planaria were moved individually into a Y-maze to begin their trial. All planaria, including control subjects, were exposed to methamphetamine during reinstatement.
+
+Four 3D printed Y-mazes were used for this experiment [as described in @sec-experiment-3, see @fig-exp3_maze_dimensions for dimensions]. Mazes were printed using Siraya Tech professional UV resin. The mazes contained an LED light embedded in the resin after printing to induce negative phototaxis.
 
 As described in [@sec-2-materials-and-methods], three exclusion criteria were used. The exclusion criteria were: A) failing to complete at least four of the six baseline trials; B) failing to complete at least two trials on consecutive conditioning days; C) failing to complete at least four of the last six trials. None of the subjects were excluded based on those criteria. No subjects died during the experiment.
 
+### Results and discussion
+
+There was a slight bias in baseline arm preference with `r Exp7_prefered_arm_count %>% filter(Prefered_arm == "R") %>%  pull(n)` subjects fouvouring the right arm, `r Exp7_prefered_arm_count %>% filter(Prefered_arm == "L") %>%  pull(n)` favouring the left arm, and `r Exp7_prefered_arm_count %>% filter(Prefered_arm == "NA") %>%  pull(n)` having no preference. This experiment employed a biased design, such that the active arm to be reinforced was the opposite of the initial preference or randomly assigned for those with no initial preference. The left arm was active for `r Exp7_left_active_arm_count` subejcts, and the right arm was active for `r Exp7_right_active_arm_count` subjects.
+
+[@fig-Exp7_conditioning_results_panel]A shows the change in active arm preference across conditioning days for both treatment (*n* = 15) and control (*n* = 15) subjects. The treatment group exhibits a steady increase in active arm entries over the first three conditioning days. However, this starts to decrease sharply after day three. The control group shows little variation across conditioning. To assess whether the endpoint active arm preference differed from baseline, a generalised linear mixed effects model with family set to binomial was fitted in R using the lme4 package [@bates_fitting_2015]. Subject ID was set as a random effect, with condition, time point and the interaction term as fixed effects. The model analysed the proportion of entries into the active arm out of six total trials at each time point. Pairwise comparisons with a Bonferroni correction were carried out using the emmeans package in R [@lenth_emmeans_2024]. A Type III ANOVA was conducted using the using the car package [@fox_r_2019] to identify whether there was a significant effect of condition or time, or an interaction effect.
+
+There was a significant main effect of time [] and a significant main effect of condition []. We did not detect a significant condition * time interaction []. Post-hoc pairwise comparisons were carried out using estimated marginal means with a Bonferroni corrections applied to account for multiple comparisons. Comparisons looked at within group differences in response probability over time and between group differences at each time point. The within group comparison showed that endpoint differed significantly from baseline for treatment subejcts []. Despite a significant main effect of condition, we failed to detect any significant between-group differences. 
+
+
+
+
+
+
+
 ```{r}
-#| label: fig-exp3_maze_dimensions
+#| label: fig-Exp7_conditioning_results_panel
 #| include: True
-#| fig-cap: "Modified 3D printed y-maze"
-#| apa-note: "The y-maze depicted was printed using Siraya Tech professional UV resin. A white LED was drilled into the resin at the start of the runway to induce negative phototaxis. The light was powered by a single 9V battery. A silicone plug was molded to block liquid transfer after a planarian entered one of the arms."
-#| fig-width: 15
-#| fig-height: 10
+#| fig-cap: "Planaria conditining and memory retention through decapitation"
+#| fig-width: 18
+#| fig-height: 16
 #| fig-align: "center"
 
-library(png)
-library(grid)
-exp3_maze_dimensions <- readPNG("Figures/y-maze_v2_dimensions.png") 
-grid.raster(exp3_maze_dimensions)
+#Note, this refers to experiment 7, which is the fourth in this particular sequence of Y maze experiments 
+Exp7_combined_figure <- readPNG("Exp7_combined_figure.png") 
+grid.raster(Exp7_combined_figure)
+
 
 ```
 
