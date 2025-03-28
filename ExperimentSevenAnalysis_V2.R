@@ -9,6 +9,7 @@ library(gridExtra)
 library(car)
 library(ggplot2)
 library(readxl)
+library(ggsignif)
 library(patchwork) # For combining plots
 library(cowplot) # For get_legend and plot_grid functions
 
@@ -134,7 +135,247 @@ print(summary(intact_within_group_comparisons$contrasts))
 print(summary(intact_between_group_comparisons$emmeans))
 print(summary(intact_between_group_comparisons$contrasts))
 
-# Visualization for intact subjects
+########################################
+#formatting results in apa7 
+######################################
+
+
+# Format p-value according to APA style
+format_p_value <- function(p) {
+  if (p < .001) {
+    return("< .001")
+  } else {
+    return(paste0("= ", gsub("0\\.", ".", round(p, 3))))
+  }
+}
+
+# Create formatted results for the intact GLMM analysis
+format_intact_glmm_results <- function(model, anova_output) {
+  # Extract model summary
+  model_summary <- summary(model)
+  
+  # Create a dataframe for the main effects and interaction
+  anova_df <- as.data.frame(anova_output)
+  
+  # Format the results for Condition, Time and their interaction
+  formatted_results <- data.frame(
+    effect = rownames(anova_df),
+    chisq = anova_df$Chisq,
+    df = anova_df$Df,
+    p.value = anova_df$`Pr(>Chisq)`,
+    apa_result = paste0(
+      "χ²(", anova_df$Df, ") = ", round(anova_df$Chisq, 3),
+      ", *p* ", sapply(anova_df$`Pr(>Chisq)`, format_p_value)
+    )
+  )
+  
+  return(formatted_results)
+}
+
+# Format emmeans pairwise comparisons for within-group effects
+format_within_group_comparisons <- function(emmeans_object) {
+  # Extract contrasts
+  contrasts_df <- as.data.frame(emmeans_object$contrasts)
+  
+  # Create formatted results dataframe
+  formatted_results <- data.frame(
+    contrast = contrasts_df$contrast,
+    condition = sub(":.*", "", rownames(contrasts_df)),
+    odds_ratio = contrasts_df$odds.ratio,
+    p.value = contrasts_df$p.value,
+    apa_result = paste0(
+      "OR = ", round(contrasts_df$odds.ratio, 2),
+      ", *z* = ", round(contrasts_df$z.ratio, 2),
+      ", *p* ", sapply(contrasts_df$p.value, format_p_value)
+    )
+  )
+  
+  return(formatted_results)
+}
+
+# Format emmeans pairwise comparisons for between-group effects
+format_between_group_comparisons <- function(emmeans_object) {
+  # Extract contrasts
+  contrasts_df <- as.data.frame(emmeans_object$contrasts)
+  
+  # Create formatted results dataframe
+  formatted_results <- data.frame(
+    contrast = contrasts_df$contrast,
+    time_point = sub(":.*", "", rownames(contrasts_df)),
+    odds_ratio = contrasts_df$odds.ratio,
+    p.value = contrasts_df$p.value,
+    apa_result = paste0(
+      "OR = ", round(contrasts_df$odds.ratio, 2),
+      ", *z* = ", round(contrasts_df$z.ratio, 2),
+      ", *p* ", sapply(contrasts_df$p.value, format_p_value)
+    )
+  )
+  
+  return(formatted_results)
+}
+
+# Format coefficients from the model
+format_model_coefficients <- function(model) {
+  # Extract coefficient table
+  coef_table <- as.data.frame(summary(model)$coefficients)
+  
+  # Create formatted results dataframe
+  formatted_results <- data.frame(
+    term = rownames(coef_table),
+    estimate = coef_table$Estimate,
+    se = coef_table$`Std. Error`,
+    z_value = coef_table$`z value`,
+    p.value = coef_table$`Pr(>|z|)`,
+    apa_result = paste0(
+      "β = ", round(coef_table$Estimate, 2),
+      ", SE = ", round(coef_table$`Std. Error`, 2),
+      ", *z* = ", round(coef_table$`z value`, 2),
+      ", *p* ", sapply(coef_table$`Pr(>|z|)`, format_p_value)
+    )
+  )
+  
+  return(formatted_results)
+}
+
+# Format estimated means for reporting
+format_estimated_means <- function(emmeans_object) {
+  # Extract emmeans
+  means_df <- as.data.frame(emmeans_object$emmeans)
+  
+  # Create formatted results dataframe
+  formatted_results <- data.frame(
+    group = rownames(means_df),
+    condition = means_df$Condition,
+    time = means_df$Time,
+    probability = means_df$prob,
+    se = means_df$SE,
+    lcl = means_df$asymp.LCL,
+    ucl = means_df$asymp.UCL,
+    apa_result = paste0(
+      "*M* = ", round(means_df$prob, 2),
+      ", *SE* = ", round(means_df$SE, 2),
+      ", 95% CI [", round(means_df$asymp.LCL, 2), ", ", round(means_df$asymp.UCL, 2), "]"
+    )
+  )
+  
+  return(formatted_results)
+}
+
+# Run all formatting functions to create results tables
+# This is the main function you'll call
+format_all_glmm_results <- function(model, anova_output, within_comparisons, between_comparisons) {
+  # Create a list to store all formatted results
+  results <- list()
+  
+  # Format all the different result components
+  results$anova <- format_intact_glmm_results(model, anova_output)
+  results$coefficients <- format_model_coefficients(model)
+  results$within_comparisons <- format_within_group_comparisons(within_comparisons)
+  results$between_comparisons <- format_between_group_comparisons(between_comparisons)
+  results$estimated_means <- format_estimated_means(within_comparisons)
+  
+  return(results)
+}
+
+# Helper function to make retrieving results easier for inline code
+get_result <- function(results, type, filter_value = NULL, filter_col = NULL, 
+                       condition = NULL, time = NULL) {
+  
+  # Handle main effects and interactions (anova)
+  if (type == "anova") {
+    # Get specific effect (Condition, Time, or Condition:Time)
+    if (!is.null(filter_value)) {
+      return(results$anova$apa_result[results$anova$effect == filter_value])
+    } else {
+      # Return all effects as a named vector
+      effects <- results$anova$apa_result
+      names(effects) <- results$anova$effect
+      return(effects)
+    }
+  }
+  
+  # Handle within-group comparisons
+  if (type == "within") {
+    # If condition specified, filter by it
+    if (!is.null(condition)) {
+      cond_filter <- paste0("Condition = ", condition)
+      return(results$within_comparisons$apa_result[
+        results$within_comparisons$condition == cond_filter])
+    } else {
+      # Return all as named vector
+      comps <- results$within_comparisons$apa_result
+      names(comps) <- results$within_comparisons$condition
+      return(comps)
+    }
+  }
+  
+  # Handle between-group comparisons
+  if (type == "between") {
+    # If time specified, filter by it
+    if (!is.null(time)) {
+      time_filter <- paste0("Time = ", time)
+      return(results$between_comparisons$apa_result[
+        results$between_comparisons$time_point == time_filter])
+    } else {
+      # Return all as named vector
+      comps <- results$between_comparisons$apa_result
+      names(comps) <- results$between_comparisons$time_point
+      return(comps)
+    }
+  }
+  
+  # Handle estimated means
+  if (type == "means") {
+    # Filter by condition and/or time if specified
+    if (!is.null(condition) && !is.null(time)) {
+      return(results$estimated_means$apa_result[
+        results$estimated_means$condition == condition & 
+          results$estimated_means$time == time])
+    } else if (!is.null(condition)) {
+      return(results$estimated_means$apa_result[
+        results$estimated_means$condition == condition])
+    } else if (!is.null(time)) {
+      return(results$estimated_means$apa_result[
+        results$estimated_means$time == time])
+    } else {
+      # Return all as named vector
+      means <- results$estimated_means$apa_result
+      names(means) <- paste0(results$estimated_means$condition, " - ", 
+                             results$estimated_means$time)
+      return(means)
+    }
+  }
+  
+  # Handle model coefficients
+  if (type == "coef") {
+    if (!is.null(filter_value)) {
+      return(results$coefficients$apa_result[
+        results$coefficients$term == filter_value])
+    } else {
+      # Return all as named vector
+      coefs <- results$coefficients$apa_result
+      names(coefs) <- results$coefficients$term
+      return(coefs)
+    }
+  }
+  
+  # Return NULL if no match
+  return(NULL)
+}
+
+# Apply the formatting to your existing analysis
+# Just run this after your model and emmeans calculations
+glmm_results <- format_all_glmm_results(
+  Intact_model,
+  intact_model_output,
+  intact_within_group_comparisons,
+  intact_between_group_comparisons
+)
+
+
+######### creating plot of baseline vs endpoint ###########
+
+
 intact_plot <- Exp7_data_long %>%
   group_by(Condition, Time) %>%
   summarise(
@@ -620,6 +861,63 @@ print("Effect sizes (Cohen's d):")
 print(control_d)
 print(treatment_d)
 
+
+# Create a paired data structure for tails similar to what you did for heads
+tail_paired_data <- Individual_comparison %>%
+  filter(BodyPart %in% c("Original", "Tail")) %>%
+  select(OrigSubject, Condition, BodyPart, ActiveProportion) %>%
+  pivot_wider(
+    names_from = BodyPart,
+    values_from = ActiveProportion
+  )
+
+# Check the structure of the paired data
+print(head(tail_paired_data, 10))
+
+# Perform paired t-tests for each condition (Tail vs Original)
+# Control condition
+control_tail_test <- tail_paired_data %>%
+  filter(Condition == "Control") %>%
+  with(t.test(Tail, Original, paired = TRUE))
+
+# Treatment condition
+treatment_tail_test <- tail_paired_data %>%
+  filter(Condition == "Treatment") %>%
+  with(t.test(Tail, Original, paired = TRUE))
+
+# Print results
+print("Control Condition: Tail vs Original Baseline (Paired t-test)")
+print(control_tail_test)
+
+print("Treatment Condition: Tail vs Original Baseline (Paired t-test)")
+print(treatment_tail_test)
+
+# Calculate effect sizes (Cohen's d for paired data)
+# Control effect size
+control_tail_d <- tail_paired_data %>%
+  filter(Condition == "Control") %>%
+  summarise(
+    mean_diff = mean(Tail - Original, na.rm = TRUE),
+    sd_diff = sd(Tail - Original, na.rm = TRUE),
+    cohen_d = mean_diff / sd_diff,
+    n = n()
+  )
+
+# Treatment effect size
+treatment_tail_d <- tail_paired_data %>%
+  filter(Condition == "Treatment") %>%
+  summarise(
+    mean_diff = mean(Tail - Original, na.rm = TRUE),
+    sd_diff = sd(Tail - Original, na.rm = TRUE),
+    cohen_d = mean_diff / sd_diff,
+    n = n()
+  )
+
+print("Effect sizes for Tail Memory Test (Cohen's d):")
+print(control_tail_d)
+print(treatment_tail_d)
+
+
 # Create a paired data visualization that shows the individual connections
 paired_viz <- Individual_comparison %>%
   filter(BodyPart %in% c("Original", "Head")) %>%
@@ -906,7 +1204,456 @@ print("Effect sizes for Tail Reinstatement (Cohen's d):")
 print(control_tail_d)
 print(treatment_tail_d)
 
-# Create visualizations
+
+###################################################################
+# formatting results in apa7
+#################################################################
+
+# Format p-value according to APA style
+format_p_value <- function(p) {
+  if (p < .001) {
+    return("< .001")
+  } else {
+    return(paste0("= ", gsub("0\\.", ".", round(p, 3))))
+  }
+}
+
+# Function to format a t-test result in APA style
+format_t_test <- function(t_test_result, d_value) {
+  # Extract values from t.test object
+  t_value <- t_test_result$statistic
+  df <- t_test_result$parameter
+  p_value <- t_test_result$p.value
+  
+  # Format the APA style result
+  formatted_result <- paste0(
+    "*t*(", round(df, 2), ") = ", round(t_value, 2),
+    ", *d* = ", round(abs(d_value), 2),
+    ", *p* ", format_p_value(p_value)
+  )
+  
+  return(formatted_result)
+}
+
+# Function to format means and SDs in APA style
+format_descriptives <- function(mean_value, se_value, n_value = NULL) {
+  if (is.null(n_value)) {
+    return(paste0("*M* = ", round(mean_value, 2), ", *SE* = ", round(se_value, 2)))
+  } else {
+    return(paste0("*M* = ", round(mean_value, 2), ", *SE* = ", round(se_value, 2), ", *n* = ", n_value))
+  }
+}
+
+# Function to format memory retention results for both head and tail
+format_memory_retention_results <- function(
+    control_head_test, treatment_head_test,
+    control_tail_test, treatment_tail_test,
+    control_head_d, treatment_head_d,
+    control_tail_d, treatment_tail_d,
+    head_paired_data, tail_paired_data) {
+  
+  # Calculate descriptive statistics for head
+  head_descriptives <- head_paired_data %>%
+    group_by(Condition) %>%
+    summarise(
+      n = n(),
+      Original_Mean = mean(Original, na.rm = TRUE),
+      Original_SD = sd(Original, na.rm = TRUE),
+      Original_SE = Original_SD / sqrt(n),
+      Head_Mean = mean(Head, na.rm = TRUE),
+      Head_SD = sd(Head, na.rm = TRUE),
+      Head_SE = Head_SD / sqrt(n),
+      .groups = 'drop'
+    )
+  
+  # Calculate descriptive statistics for tail if tail data exists
+  if(!is.null(tail_paired_data) && nrow(tail_paired_data) > 0) {
+    tail_descriptives <- tail_paired_data %>%
+      group_by(Condition) %>%
+      summarise(
+        n = n(),
+        Original_Mean = mean(Original, na.rm = TRUE),
+        Original_SD = sd(Original, na.rm = TRUE),
+        Original_SE = Original_SD / sqrt(n),
+        Tail_Mean = mean(Tail, na.rm = TRUE),
+        Tail_SD = sd(Tail, na.rm = TRUE),
+        Tail_SE = Tail_SD / sqrt(n),
+        .groups = 'drop'
+      )
+  } else {
+    tail_descriptives <- NULL
+  }
+  
+  # Format t-test results for head
+  control_head_result <- format_t_test(control_head_test, control_head_d$cohen_d)
+  treatment_head_result <- format_t_test(treatment_head_test, treatment_head_d$cohen_d)
+  
+  # Format t-test results for tail if tail tests exist
+  if(!is.null(control_tail_test) && !is.null(treatment_tail_test) && 
+     !is.null(control_tail_d) && !is.null(treatment_tail_d)) {
+    control_tail_result <- format_t_test(control_tail_test, control_tail_d$cohen_d)
+    treatment_tail_result <- format_t_test(treatment_tail_test, treatment_tail_d$cohen_d)
+  } else {
+    control_tail_result <- NULL
+    treatment_tail_result <- NULL
+  }
+  
+  # Format descriptive statistics for head
+  control_original_head_desc <- format_descriptives(
+    head_descriptives$Original_Mean[head_descriptives$Condition == "Control"],
+    head_descriptives$Original_SE[head_descriptives$Condition == "Control"],
+    head_descriptives$n[head_descriptives$Condition == "Control"]
+  )
+  
+  control_head_desc <- format_descriptives(
+    head_descriptives$Head_Mean[head_descriptives$Condition == "Control"],
+    head_descriptives$Head_SE[head_descriptives$Condition == "Control"]
+  )
+  
+  treatment_original_head_desc <- format_descriptives(
+    head_descriptives$Original_Mean[head_descriptives$Condition == "Treatment"],
+    head_descriptives$Original_SE[head_descriptives$Condition == "Treatment"],
+    head_descriptives$n[head_descriptives$Condition == "Treatment"]
+  )
+  
+  treatment_head_desc <- format_descriptives(
+    head_descriptives$Head_Mean[head_descriptives$Condition == "Treatment"],
+    head_descriptives$Head_SE[head_descriptives$Condition == "Treatment"]
+  )
+  
+  # Format descriptive statistics for tail if tail data exists
+  if(!is.null(tail_descriptives)) {
+    control_original_tail_desc <- format_descriptives(
+      tail_descriptives$Original_Mean[tail_descriptives$Condition == "Control"],
+      tail_descriptives$Original_SE[tail_descriptives$Condition == "Control"],
+      tail_descriptives$n[tail_descriptives$Condition == "Control"]
+    )
+    
+    control_tail_desc <- format_descriptives(
+      tail_descriptives$Tail_Mean[tail_descriptives$Condition == "Control"],
+      tail_descriptives$Tail_SE[tail_descriptives$Condition == "Control"]
+    )
+    
+    treatment_original_tail_desc <- format_descriptives(
+      tail_descriptives$Original_Mean[tail_descriptives$Condition == "Treatment"],
+      tail_descriptives$Original_SE[tail_descriptives$Condition == "Treatment"],
+      tail_descriptives$n[tail_descriptives$Condition == "Treatment"]
+    )
+    
+    treatment_tail_desc <- format_descriptives(
+      tail_descriptives$Tail_Mean[tail_descriptives$Condition == "Treatment"],
+      tail_descriptives$Tail_SE[tail_descriptives$Condition == "Treatment"]
+    )
+  } else {
+    control_original_tail_desc <- NULL
+    control_tail_desc <- NULL
+    treatment_original_tail_desc <- NULL
+    treatment_tail_desc <- NULL
+  }
+  
+  # Create a list of all formatted results
+  results <- list(
+    # Head retention results
+    control_head_t_test = control_head_result,
+    treatment_head_t_test = treatment_head_result,
+    control_original_head_desc = control_original_head_desc,
+    control_head_desc = control_head_desc,
+    treatment_original_head_desc = treatment_original_head_desc,
+    treatment_head_desc = treatment_head_desc
+  )
+  
+  # Add tail results if they exist
+  if(!is.null(control_tail_result)) {
+    results$control_tail_t_test <- control_tail_result
+    results$treatment_tail_t_test <- treatment_tail_result
+    results$control_original_tail_desc <- control_original_tail_desc
+    results$control_tail_desc <- control_tail_desc
+    results$treatment_original_tail_desc <- treatment_original_tail_desc
+    results$treatment_tail_desc <- treatment_tail_desc
+  }
+  
+  return(results)
+}
+
+# Function to format the planaria reinstatement results
+format_reinstatement_results <- function(control_head_test, treatment_head_test, 
+                                         control_tail_test, treatment_tail_test,
+                                         control_head_d, treatment_head_d,
+                                         control_tail_d, treatment_tail_d,
+                                         head_paired_data, tail_paired_data) {
+  
+  # Calculate descriptive statistics for head
+  head_descriptives <- head_paired_data %>%
+    group_by(Condition) %>%
+    summarise(
+      n = n(),
+      Original_Mean = mean(Original, na.rm = TRUE),
+      Original_SD = sd(Original, na.rm = TRUE),
+      Original_SE = Original_SD / sqrt(n),
+      Head_Mean = mean(Head, na.rm = TRUE),
+      Head_SD = sd(Head, na.rm = TRUE),
+      Head_SE = Head_SD / sqrt(n),
+      .groups = 'drop'
+    )
+  
+  # Calculate descriptive statistics for tail
+  tail_descriptives <- tail_paired_data %>%
+    group_by(Condition) %>%
+    summarise(
+      n = n(),
+      Original_Mean = mean(Original, na.rm = TRUE),
+      Original_SD = sd(Original, na.rm = TRUE),
+      Original_SE = Original_SD / sqrt(n),
+      Tail_Mean = mean(Tail, na.rm = TRUE),
+      Tail_SD = sd(Tail, na.rm = TRUE),
+      Tail_SE = Tail_SD / sqrt(n),
+      .groups = 'drop'
+    )
+  
+  # Format t-test results for head
+  control_head_result <- format_t_test(control_head_test, control_head_d$cohen_d)
+  treatment_head_result <- format_t_test(treatment_head_test, treatment_head_d$cohen_d)
+  
+  # Format t-test results for tail
+  control_tail_result <- format_t_test(control_tail_test, control_tail_d$cohen_d)
+  treatment_tail_result <- format_t_test(treatment_tail_test, treatment_tail_d$cohen_d)
+  
+  # Format descriptive statistics for head
+  control_original_head_desc <- format_descriptives(
+    head_descriptives$Original_Mean[head_descriptives$Condition == "Control"],
+    head_descriptives$Original_SE[head_descriptives$Condition == "Control"],
+    head_descriptives$n[head_descriptives$Condition == "Control"]
+  )
+  
+  control_head_desc <- format_descriptives(
+    head_descriptives$Head_Mean[head_descriptives$Condition == "Control"],
+    head_descriptives$Head_SE[head_descriptives$Condition == "Control"]
+  )
+  
+  treatment_original_head_desc <- format_descriptives(
+    head_descriptives$Original_Mean[head_descriptives$Condition == "Treatment"],
+    head_descriptives$Original_SE[head_descriptives$Condition == "Treatment"],
+    head_descriptives$n[head_descriptives$Condition == "Treatment"]
+  )
+  
+  treatment_head_desc <- format_descriptives(
+    head_descriptives$Head_Mean[head_descriptives$Condition == "Treatment"],
+    head_descriptives$Head_SE[head_descriptives$Condition == "Treatment"]
+  )
+  
+  # Format descriptive statistics for tail
+  control_original_tail_desc <- format_descriptives(
+    tail_descriptives$Original_Mean[tail_descriptives$Condition == "Control"],
+    tail_descriptives$Original_SE[tail_descriptives$Condition == "Control"],
+    tail_descriptives$n[tail_descriptives$Condition == "Control"]
+  )
+  
+  control_tail_desc <- format_descriptives(
+    tail_descriptives$Tail_Mean[tail_descriptives$Condition == "Control"],
+    tail_descriptives$Tail_SE[tail_descriptives$Condition == "Control"]
+  )
+  
+  treatment_original_tail_desc <- format_descriptives(
+    tail_descriptives$Original_Mean[tail_descriptives$Condition == "Treatment"],
+    tail_descriptives$Original_SE[tail_descriptives$Condition == "Treatment"],
+    tail_descriptives$n[tail_descriptives$Condition == "Treatment"]
+  )
+  
+  treatment_tail_desc <- format_descriptives(
+    tail_descriptives$Tail_Mean[tail_descriptives$Condition == "Treatment"],
+    tail_descriptives$Tail_SE[tail_descriptives$Condition == "Treatment"]
+  )
+  
+  # Create a list of all formatted results
+  results <- list(
+    # Head reinstatement results
+    control_head_t_test = control_head_result,
+    treatment_head_t_test = treatment_head_result,
+    control_original_head_desc = control_original_head_desc,
+    control_head_desc = control_head_desc,
+    treatment_original_head_desc = treatment_original_head_desc,
+    treatment_head_desc = treatment_head_desc,
+    
+    # Tail reinstatement results
+    control_tail_t_test = control_tail_result,
+    treatment_tail_t_test = treatment_tail_result,
+    control_original_tail_desc = control_original_tail_desc,
+    control_tail_desc = control_tail_desc,
+    treatment_original_tail_desc = treatment_original_tail_desc,
+    treatment_tail_desc = treatment_tail_desc
+  )
+  
+  return(results)
+}
+
+# Helper function to make getting results easier
+get_planaria_result <- function(results, part = NULL, condition = NULL, measurement = NULL, bodypart = NULL) {
+  # For memory retention results
+  if (is.null(part) || part == "memory") {
+    if (!is.null(condition) && !is.null(measurement)) {
+      # For head measurements
+      if (is.null(bodypart) || bodypart == "head") {
+        # Return specific descriptive
+        if (condition == "Control" && measurement == "Original") {
+          return(results$memory$control_original_head_desc)
+        } else if (condition == "Control" && measurement == "Head") {
+          return(results$memory$control_head_desc)
+        } else if (condition == "Treatment" && measurement == "Original") {
+          return(results$memory$treatment_original_head_desc)
+        } else if (condition == "Treatment" && measurement == "Head") {
+          return(results$memory$treatment_head_desc)
+        }
+      }
+      # For tail measurements, if they exist
+      else if (bodypart == "tail" && !is.null(results$memory$control_tail_t_test)) {
+        if (condition == "Control" && measurement == "Original") {
+          return(results$memory$control_original_tail_desc)
+        } else if (condition == "Control" && measurement == "Tail") {
+          return(results$memory$control_tail_desc)
+        } else if (condition == "Treatment" && measurement == "Original") {
+          return(results$memory$treatment_original_tail_desc)
+        } else if (condition == "Treatment" && measurement == "Tail") {
+          return(results$memory$treatment_tail_desc)
+        }
+      }
+    } else if (!is.null(condition) && is.null(measurement)) {
+      # Return t-test result
+      if (is.null(bodypart) || bodypart == "head") {
+        if (condition == "Control") {
+          return(results$memory$control_head_t_test)
+        } else if (condition == "Treatment") {
+          return(results$memory$treatment_head_t_test)
+        }
+      } else if (bodypart == "tail" && !is.null(results$memory$control_tail_t_test)) {
+        if (condition == "Control") {
+          return(results$memory$control_tail_t_test)
+        } else if (condition == "Treatment") {
+          return(results$memory$treatment_tail_t_test)
+        }
+      }
+    }
+  }
+  
+  # For reinstatement results
+  else if (part == "reinstatement") {
+    if (!is.null(condition) && !is.null(measurement)) {
+      # Return specific descriptive for head
+      if (is.null(bodypart) || bodypart == "head") {
+        if (condition == "Control" && measurement == "Original") {
+          return(results$reinstatement$control_original_head_desc)
+        } else if (condition == "Control" && measurement == "Head") {
+          return(results$reinstatement$control_head_desc)
+        } else if (condition == "Treatment" && measurement == "Original") {
+          return(results$reinstatement$treatment_original_head_desc)
+        } else if (condition == "Treatment" && measurement == "Head") {
+          return(results$reinstatement$treatment_head_desc)
+        }
+      }
+      # Return specific descriptive for tail
+      else if (bodypart == "tail") {
+        if (condition == "Control" && measurement == "Original") {
+          return(results$reinstatement$control_original_tail_desc)
+        } else if (condition == "Control" && measurement == "Tail") {
+          return(results$reinstatement$control_tail_desc)
+        } else if (condition == "Treatment" && measurement == "Original") {
+          return(results$reinstatement$treatment_original_tail_desc)
+        } else if (condition == "Treatment" && measurement == "Tail") {
+          return(results$reinstatement$treatment_tail_desc)
+        }
+      }
+    } else if (!is.null(condition) && is.null(measurement)) {
+      # Return t-test result
+      if (is.null(bodypart) || bodypart == "head") {
+        if (condition == "Control") {
+          return(results$reinstatement$control_head_t_test)
+        } else if (condition == "Treatment") {
+          return(results$reinstatement$treatment_head_t_test)
+        }
+      } else if (bodypart == "tail") {
+        if (condition == "Control") {
+          return(results$reinstatement$control_tail_t_test)
+        } else if (condition == "Treatment") {
+          return(results$reinstatement$treatment_tail_t_test)
+        }
+      }
+    }
+  }
+  
+  # Return NULL if no match
+  return(NULL)
+}
+
+# Main function to run all the formatting
+format_planaria_analyses <- function(
+    # Memory retention t-tests and data
+  control_head_memory_test, treatment_head_memory_test, 
+  control_head_memory_d, treatment_head_memory_d, 
+  head_memory_paired_data,
+  
+  # Optional: tail memory retention tests (may be NULL if not available)
+  control_tail_memory_test = NULL, treatment_tail_memory_test = NULL,
+  control_tail_memory_d = NULL, treatment_tail_memory_d = NULL,
+  tail_memory_paired_data = NULL,
+  
+  # Reinstatement t-tests and data
+  control_head_reinstatement, treatment_head_reinstatement,
+  control_tail_reinstatement, treatment_tail_reinstatement,
+  control_head_reinstatement_d, treatment_head_reinstatement_d,
+  control_tail_reinstatement_d, treatment_tail_reinstatement_d,
+  head_reinstatement_paired, tail_reinstatement_paired
+) {
+  
+  # Format memory retention results (for both head and tail if available)
+  memory_results <- format_memory_retention_results(
+    control_head_memory_test, treatment_head_memory_test,
+    control_tail_memory_test, treatment_tail_memory_test,
+    control_head_memory_d, treatment_head_memory_d,
+    control_tail_memory_d, treatment_tail_memory_d,
+    head_memory_paired_data, tail_memory_paired_data
+  )
+  
+  # Format reinstatement results
+  reinstatement_results <- format_memory_retention_results(
+    control_head_reinstatement, treatment_head_reinstatement,
+    control_tail_reinstatement, treatment_tail_reinstatement,
+    control_head_reinstatement_d, treatment_head_reinstatement_d,
+    control_tail_reinstatement_d, treatment_tail_reinstatement_d,
+    head_reinstatement_paired, tail_reinstatement_paired
+  )
+  
+  # Combine all results
+  results <- list(
+    memory = memory_results,
+    reinstatement = reinstatement_results
+  )
+  
+  return(results)
+}
+
+
+Exp7_regen_reinstate_results <- format_planaria_analyses(
+  # Memory tests (head)
+  control_paired_test, treatment_paired_test,
+  control_d, treatment_d, paired_data,
+  
+  # Memory tests (tail) - now we have these variables
+  control_tail_test, treatment_tail_test,
+  control_tail_d, treatment_tail_d, tail_paired_data,
+  
+  # Reinstatement tests (both head and tail)
+  control_head_reinstatement, treatment_head_reinstatement,
+  control_tail_reinstatement, treatment_tail_reinstatement,
+  control_head_d, treatment_head_d,
+  control_tail_d, treatment_tail_d,
+  head_reinstatement_paired, tail_reinstatement_paired
+)
+
+
+############################################################
+#Create visualizations
+############################################################
+
+
 
 # 1. Head Reinstatement Paired Visualization
 head_reinstatement_viz <- Reinstatement_comparison %>%
