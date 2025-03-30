@@ -199,3 +199,20 @@ Exp8_conditioning_plot <- Exp8_data_long_days %>%
   )
 
 print(Exp8_conditioning_plot)
+
+#=================================================================
+# PART 3: Combinig figures for presentation
+#=================================================================
+
+Exp8_combined_figure <- Exp8_Baseline_endpoint_comparison / Exp8_conditioning_plot +
+  plot_layout(
+    widths = c(1, 1), 
+    guides = "collect",
+    ncol = 2) +
+  plot_annotation(tag_levels = "A") &
+  theme(
+    plot.tag = element_text(face = "bold", size = 16, family = "Times New Roman"),
+    plot.margin = margin(t = 20, r = 20, b = 20, l = 20)
+  ) 
+
+print(Exp8_combined_figure)
