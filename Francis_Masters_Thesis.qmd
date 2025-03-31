@@ -617,7 +617,7 @@ source("ExperimentTwoTimeAnalysis.R")
 
 ### Results and discussion
 
-@fig-exp2decisions shows the average percentage of trials where subjects entered the active arm across four time points: baseline, endpoint, test, and reinstatement. A generalised linear mixed effects model with family set to binomial was fitted in R using the lme4 package [@bates_fitting_2015]. Subject ID was set as a random effect, with condition, time point and the interaction term as fixed effects. Pairwise comparisons with a Bonferroni correction were carried out using the emmeans package in R [@lenth_emmeans_2024]. A Type III ANOVA was conducted using the using the car package [@fox_r_2019] to identify whether there was a significant effect of condition or time, or an interaction effect.
+@fig-exp2decisions shows the average percentage of trials where subjects entered the active arm across four time points: baseline, endpoint, test, and reinstatement. A generalised linear mixed effects model with family set to binomial was fitted in R using the lme4 package [@bates_fitting_2015]. Subject ID was set as a random effect, with condition, time point and the interaction term as fixed effects. Pairwise comparisons with a Bonferroni correction were carried out using the emmeans package in R [@lenth_emmeans_2024]. A Type III ANOVA was conducted using the car package [@fox_r_2019] to identify whether there was a significant effect of condition or time, or an interaction effect.
 
 We did not detect a significant effect of condition (χ2 (`r (exp2_decisions_model_output$Df[2])`) = `r format(exp2_decisions_model_output$Chisq[2], digits = 3)`, `r format_pvalue(exp2_decisions_model_output$"Pr(>Chisq)"[2])`). The results indicated a significant effect of time (χ2 (`r (exp2_decisions_model_output$Df[3])`) = `r format(exp2_decisions_model_output$Chisq[3], digits = 3)`, `r format_pvalue(exp2_decisions_model_output$"Pr(>Chisq)"[3])`) and a significant time\*condition interaction (χ2 (`r (exp2_decisions_model_output$Df[4])`) = `r format(exp2_decisions_model_output$Chisq[4], digits = 3)`, `r format_pvalue(exp2_decisions_model_output$"Pr(>Chisq)"[4])`).
 
@@ -817,7 +817,7 @@ As described in [@sec-2-materials-and-methods], three exclusion criteria were us
 
 There was a slight bias in baseline arm preference with `r Exp7_prefered_arm_count %>% filter(Prefered_arm == "R") %>%  pull(n)` subjects fouvouring the right arm, `r Exp7_prefered_arm_count %>% filter(Prefered_arm == "L") %>%  pull(n)` favouring the left arm, and `r Exp7_prefered_arm_count %>% filter(Prefered_arm == "NA") %>%  pull(n)` having no preference. This experiment employed a biased design, such that the active arm to be reinforced was the opposite of the initial preference or randomly assigned for those with no initial preference. The left arm was active for `r Exp7_left_active_arm_count` subejcts, and the right arm was active for `r Exp7_right_active_arm_count` subjects.
 
-[@fig-Exp7_conditioning_results_panel]A shows the change in active arm preference across conditioning days for both treatment (*n* = 15) and control (*n* = 15) subjects. The treatment group exhibits a steady increase in active arm entries over the first three conditioning days. However, this starts to decrease sharply after day three. The control group shows little variation across conditioning. To assess whether the endpoint active arm preference differed from baseline, a generalised linear mixed effects model with family set to binomial was fitted in R using the lme4 package [@bates_fitting_2015]. Subject ID was set as a random effect, with condition, time point and the interaction term as fixed effects. The model analysed the proportion of entries into the active arm out of six total trials at each time point. Pairwise comparisons with a Bonferroni correction were carried out using the emmeans package in R [@lenth_emmeans_2024]. A Type III ANOVA was conducted using the using the car package [@fox_r_2019] to identify whether there was a significant effect of condition or time, or an interaction effect.
+[@fig-Exp7_conditioning_results_panel]A shows the change in active arm preference across conditioning days for both treatment (*n* = 15) and control (*n* = 15) subjects. The treatment group exhibits a steady increase in active arm entries over the first three conditioning days. However, this starts to decrease sharply after day three. The control group shows little variation across conditioning. To assess whether the endpoint active arm preference differed from baseline, a generalised linear mixed effects model with family set to binomial was fitted in R using the lme4 package [@bates_fitting_2015]. Subject ID was set as a random effect, with condition, time point and the interaction term as fixed effects. The model analysed the proportion of entries into the active arm out of six total trials at each time point. Pairwise comparisons with a Bonferroni correction were carried out using the emmeans package in R [@lenth_emmeans_2024]. A Type III ANOVA was conducted using the car package [@fox_r_2019] to identify whether there was a significant effect of condition or time, or an interaction effect.
 
 There was a significant main effect of time (`r get_result(glmm_results, "anova", "Time")`). and a significant main effect of condition (`r get_result(glmm_results, "anova", "Condition")`). We did not detect a significant condition \* time interaction (`r get_result(glmm_results, "anova", "Condition:Time")`). Post-hoc pairwise comparisons were carried out using estimated marginal means with a Bonferroni corrections applied to account for multiple comparisons. Comparisons looked at within group differences in response probability over time and between group differences at each time point. The within group comparison showed that endpoint differed significantly from baseline for treatment subejcts only (`r get_result(glmm_results, "within", condition = "Treatment")`). Despite a significant main effect of condition, we failed to detect any significant between-group differences.
 
@@ -842,7 +842,7 @@ grid.raster(Exp7_combined_figure)
 
 # Experiment 5
 
-The sequence of experiments above, provide support for the claim that planaria can obtain a complex operantly conditioned response. Yet, as can be seen from @fig-exp2decisions, @fig-Exp4_conditioning_results_panel @fig-Exp7_conditioning_results_panel @fig, the expression of the learned behaviour is not stable. The conditioned response appeared to peak early on in the conditioning process before subsequently diminishing towards baseline despite still being actively reinforced. To properly test the retention of memory through regeneration, it is important to have a high success rate just prior to bisection. A final y-maze experiment was therefore conducted. Rather than having a pre-determined conditioning period, the data would be inspected each day for evidence of learning. A mean proportion of active arm entries above 0.6 for the treatment group would trigger an end of the conditioning period. This was to ensure the active arm was strongly preferred by planaria so as to give the greatest chance of retaining the preference over the regeneration period.
+The sequence of experiments above, provide support for the claim that planaria can obtain a complex operantly conditioned response. Yet, as can be seen from @fig-exp2decisions, @fig-Exp4_conditioning_results_panel @fig-Exp7_conditioning_results_panel, the expression of the learned response was unstable. The response reached its peal early in the conditioning process before subsequently diminishing towards baseline despite still being actively reinforced. To properly test the retention of memory through regeneration, it is important to have a high success rate just prior to bisection. A final y-maze experiment was therefore conducted. Rather than having a pre-determined conditioning period, the data would be inspected each day for evidence of learning. A mean proportion of active arm entries above 0.6 for the treatment group would trigger an end of the conditioning period. This was to ensure the active arm was strongly preferred by planaria so as to give the greatest chance of retaining the preference over the regeneration period.
 
 ### Materials and Methods
 
@@ -855,6 +855,41 @@ Four 3D printed Y-mazes were used for this experiment (as described in @sec-expe
 Three exclusion criteria were used. The exclusion criteria were: A) failing to complete at least four of the six baseline trials; B) failing to complete at least two trials on consecutive conditioning days; C) failing to complete at least four of the last six trials. None of the subjects were excluded based on those criteria. No subjects died during the experiment.
 
 The mean proportion of active arm entries for treatment and control subjects was monitored each day. The data were graphed to show learning compared to baseline. No statistical analysis was carried out during the conditioning period. On day four of conditioning, the experiment was stopped due to a consistent decrease in active arm entries among the treatment group.
+
+### Results and discussion
+
+```{r}
+#| label: Experiment eight Results
+#| include: False
+
+
+# Source the scripts
+#Note experiment 8 below is the fifth experiment in this series of experiments
+source("ExperimentEightAnalysis.R")
+
+```
+
+An approximately equal number of subjects preferred the right arm ( `r Exp8_prefered_arm_count %>% filter(Prefered_arm == "R") %>%  pull(n)`) and left arm ( `r Exp8_prefered_arm_count %>% filter(Prefered_arm == "L") %>%  pull(n)`), with a small number of subjects having no preference (`r Exp8_prefered_arm_count %>% filter(Prefered_arm == "NA") %>%  pull(n)`) at baseline. This experiment employed a biased design, such that the active arm to be reinforced was the opposite of the initial preference, or randomly assigned for those with no initial preference. The left arm was active for `r Exp8_left_active_arm_count` subejcts, and the right arm was active for `r Exp8_right_active_arm_count` subjects.
+
+[@fig-Exp8_conditioning_results_panel]A shows the change in active arm preference across conditioning days for both treatment (*n* = 24) and control (*n* = 24) subjects. The treatment group demonstrates a sudden jump on the first day of conditioning. This change remains stable for one day before declining towards baseline. The control group shows a steady increase across days, with a slight decrease on the last day of conditioning. To assess whether the endpoint active arm preference differed from baseline, a generalised linear mixed effects model with family set to binomial was fitted in R using the lme4 package [@bates_fitting_2015]. Subject ID was set as a random effect, with condition, time point and the interaction term as fixed effects. The model analysed the proportion of entries into the active arm out of six total trials at each time point. Pairwise comparisons with a Bonferroni correction were carried out using the emmeans package in R [@lenth_emmeans_2024]. A Type III ANOVA was conducted using the car package [@fox_r_2019] to identify whether there was a significant effect of condition or time, or an interaction effect.
+
+There was a significant main effect of time ()
+
+```{r}
+#| label: fig-Exp8_conditioning_results_panel
+#| include: False
+#| fig-cap: "Change in preference from baseline to endpoint"
+#| fig-width: 14
+#| fig-height: 10
+#| fig-align: "center"
+
+Exp8_results_panel <- readPNG("Exp8_combined_figure")
+grid.raster(Exp8_results_panel)
+
+
+```
+
+
 
 \newpage
 

@@ -110,6 +110,55 @@ print(summary(conditioning_between_groups_comparisons$emmeans))
 print(summary(conditioning_between_groups_comparisons$contrasts))
 
 
+#=================================
+#apa formatted results
+#================================
+
+format_p_value <- function(p) {
+  if (p <.001) {
+    return ("<.001")
+    else {
+      return(paste0("= ", gsub("0\\.", ", ", round(p, 3))))
+    }
+  }
+}
+
+#Formatting results for glmm analysis
+format_conditioning_results <- function(model, anova_output) {
+  Exp8_model_summary <- summary(learning_model)
+  Exp8_anova_df <- as.data.frame(anova_output)
+  
+  formatted_results <- data.frame(
+    effect = rownames(Exp8_anova_df),
+    chisq = Exp8_anova_df$chisq,
+    df = Exp8_anova_df$Df,
+    p.value = Exp8_anova_df$`Pr(>Chisq)`,
+    apa_results = paste0(
+      "χ²(", Exp8_anova_df, ") = ", round(Exp8_anova_df$Chisq, 3),
+      ", *p* ", sapply(Exp8_anova_df$`Pr(>Chisq`), format_p_value 
+    )
+  )
+  return(formatted_results)
+  }
+
+#Format within-group emmeans comparisons
+
+format_within_group_comparisons <- function(emmeans_object) {
+  Exp8_contrasts_df <- as.data.frame(emmeans_object$contrasts)
+  
+  formatted_results <- data.frame(
+    contrast = Exp8_contrasts_df$contrast,
+    condition = sub(":.*", "", rownames(Exp8_contrasts_df)),
+    odds_ratio = Exp8_contrasts_df$odds.ratio,
+    p.value = Exp8_contrasts_df$p.value,
+    apa_result = paste0(
+      "OR = ", round(Exp8_contrasts_df$odds.ratio, 2),
+      ", *z* = ", round(Exp8_contrasts_df$z.ratio, 2),
+      ", *p* = ", sapply(Exp8_contrasts_df$p.value, format_p_value)
+    )
+  )
+  return(formatted_results)
+}
 
 
 
@@ -186,7 +235,7 @@ Exp8_conditioning_plot <- Exp8_data_long_days %>%
                 width = 0.2, linewidth = 0.8) +
   scale_color_manual(values = c("Treatment" = "#FF8C00", "Control" = "#159090")) +
   labs(
-    title = "Active Arm Choices During Conditioning",
+    title = "Active Arm Choices Across Days",
     y = "Proportion of Active Arm Choices",
     x = "Day"
   ) +
@@ -204,7 +253,7 @@ print(Exp8_conditioning_plot)
 # PART 3: Combinig figures for presentation
 #=================================================================
 
-Exp8_combined_figure <- Exp8_Baseline_endpoint_comparison / Exp8_conditioning_plot +
+Exp8_combined_figure <- Exp8_conditioning_plot / Exp8_Baseline_endpoint_comparison +
   plot_layout(
     widths = c(1, 1), 
     guides = "collect",
@@ -216,3 +265,24 @@ Exp8_combined_figure <- Exp8_Baseline_endpoint_comparison / Exp8_conditioning_pl
   ) 
 
 print(Exp8_combined_figure)
+
+ggsave("Exp8_combined_figure.png", Exp8_combined_figure, 
+       width = 14, 
+       height = 7, 
+       dpi = 300)
+
+#=================================================================
+# PART 4: Descriptives
+#=================================================================
+
+Exp8_prefered_arm_count <- Exp8_full_data %>% count(Prefered_arm)
+
+Exp8_active_arm_count <- Exp8_full_data %>% count(`Active arm`)
+
+Exp8_left_active_arm_count = Exp8_active_arm_count %>% filter(`Active arm` == "L") %>% pull(n)
+
+Exp8_right_active_arm_count = Exp8_active_arm_count %>% filter(`Active arm` == "R") %>% pull(n)
+
+print(Exp8_left_active_arm_count)
+print(Exp8_right_active_arm_count)
+
