@@ -116,12 +116,12 @@ print(summary(conditioning_between_groups_comparisons$contrasts))
 
 format_p_value <- function(p) {
   if (p <.001) {
-    return ("<.001")
-    else {
-      return(paste0("= ", gsub("0\\.", ", ", round(p, 3))))
+    return ("< .001")
+  }  else {
+      return(paste0("= ", gsub("0\\.", ". ", round(p, 3))))
     }
-  }
 }
+
 
 #Formatting results for glmm analysis
 format_conditioning_results <- function(model, anova_output) {
@@ -130,12 +130,12 @@ format_conditioning_results <- function(model, anova_output) {
   
   formatted_results <- data.frame(
     effect = rownames(Exp8_anova_df),
-    chisq = Exp8_anova_df$chisq,
+    chisq = Exp8_anova_df$Chisq,
     df = Exp8_anova_df$Df,
     p.value = Exp8_anova_df$`Pr(>Chisq)`,
     apa_results = paste0(
-      "χ²(", Exp8_anova_df, ") = ", round(Exp8_anova_df$Chisq, 3),
-      ", *p* ", sapply(Exp8_anova_df$`Pr(>Chisq`), format_p_value 
+      "χ²(", Exp8_anova_df$Df, ") = ", round(Exp8_anova_df$Chisq, 3),
+      ", *p* ", sapply(Exp8_anova_df$`Pr(>Chisq)`, format_p_value) 
     )
   )
   return(formatted_results)
@@ -144,25 +144,228 @@ format_conditioning_results <- function(model, anova_output) {
 #Format within-group emmeans comparisons
 
 format_within_group_comparisons <- function(emmeans_object) {
-  Exp8_contrasts_df <- as.data.frame(emmeans_object$contrasts)
+  # Extract contrasts
+  contrasts_df <- as.data.frame(emmeans_object$contrasts)
+  
+  # Extract condition more reliably, or set explicit condition labels
+  # Make sure they're in the correct order based on your graph
+  condition_labels <- c("Control", "Treatment")  # Assuming this order matches your data
+  condition_index <- 1:length(contrasts_df$contrast)
+  
+  # Create formatted results dataframe with INVERTED odds ratios
+  formatted_results <- data.frame(
+    contrast = contrasts_df$contrast,
+    condition = condition_labels[condition_index],
+    # Invert the odds ratio
+    odds_ratio = 1/contrasts_df$odds.ratio,  # This inverts baseline→endpoint to endpoint→baseline
+    p.value = contrasts_df$p.value,
+    apa_result = paste0(
+      "OR = ", round(1/contrasts_df$odds.ratio, 2),  # Invert odds ratio
+      ", *z* = ", round(-contrasts_df$z.ratio, 2),   # Flip sign of z-ratio
+      ", *p* ", sapply(contrasts_df$p.value, format_p_value)
+    )
+  )
+  
+  return(formatted_results)
+}
+
+#format estimated means for my manuscript
+
+format_estimated_means <- function(emmeans_object) {
+  exp8_means_df <- as.data.frame(emmeans_object$emmeans)
   
   formatted_results <- data.frame(
-    contrast = Exp8_contrasts_df$contrast,
-    condition = sub(":.*", "", rownames(Exp8_contrasts_df)),
-    odds_ratio = Exp8_contrasts_df$odds.ratio,
-    p.value = Exp8_contrasts_df$p.value,
-    apa_result = paste0(
-      "OR = ", round(Exp8_contrasts_df$odds.ratio, 2),
-      ", *z* = ", round(Exp8_contrasts_df$z.ratio, 2),
-      ", *p* = ", sapply(Exp8_contrasts_df$p.value, format_p_value)
+    group = rownames(exp8_means_df),
+    condition = exp8_means_df$Condition,
+    time = exp8_means_df$Time,
+    probablity = exp8_means_df$prob,
+    se = exp8_means_df$SE,
+    lcl = exp8_means_df$asymp.LCL,
+    ucl = exp8_means_df$asymp.UCL,
+    apa_results = paste0(
+      "*M* = ", round(exp8_means_df$prob, 2),
+      ", *SE* = ", round(exp8_means_df$SE, 2),
+      ", 95% CI [", round(exp8_means_df$asymp.LCL, 2), ", ", round(exp8_means_df$asymp.UCL, 2), "]"
     )
   )
   return(formatted_results)
 }
 
 
+# Format emmeans pairwise comparisons for between-group effects
+# Format emmeans pairwise comparisons for between-group effects
+format_between_group_comparisons <- function(emmeans_object) {
+  # Extract contrasts
+  contrasts_df <- as.data.frame(emmeans_object$contrasts)
+  
+  # Use explicit time point labels
+  time_labels <- c("Baseline", "Endpoint")
+  time_index <- 1:length(contrasts_df$contrast)
+  
+  # Create formatted results dataframe
+  formatted_results <- data.frame(
+    contrast = contrasts_df$contrast,
+    time_point = time_labels[time_index],  # Use explicit labels
+    odds_ratio = contrasts_df$odds.ratio,
+    p.value = contrasts_df$p.value,
+    apa_result = paste0(
+      "OR = ", round(contrasts_df$odds.ratio, 2),
+      ", *z* = ", round(contrasts_df$z.ratio, 2),
+      ", *p* ", sapply(contrasts_df$p.value, format_p_value)
+    )
+  )
+  
+  return(formatted_results)
+}
 
-#Plotting abseline to endpoint comparison
+# Formating coefficients from our comparison model
+
+format_model_coefficients <- function(model) {
+  coef_table <- as.data.frame(summary(model)$coefficients)
+  
+  formatted_results <- data.frame(
+    term = rownames(coef_table),
+    estimate = coef_table$Estimate,
+    se = coef_table$`Std. Error`,
+    z_value = coef_table$`z value`,
+    p.value = coef_table$`Pr(>|z|)`,
+    apa_result = paste0(
+      "β = ", round(coef_table$Estimate, 2),
+      ", SE = ", round(coef_table$`Std. Error`, 2),
+      ", *z* = ", round(coef_table$`z value`, 2),
+      ", *p* = ", sapply(coef_table$`Pr(>|z|)`, format_p_value)
+    )
+  )
+  
+  return(formatted_results)
+}
+
+
+#primary function for inline code
+
+format_all_glmm_results <- function(model, anova_output, within_comparisons, between_comparisons) {
+  results <- list()
+  
+  results$anova <- format_conditioning_results(model, anova_output)
+  results$coefficients <- format_model_coefficients(model)
+  results$within_comparisons <- format_within_group_comparisons(within_comparisons)
+  results$between_comparisons <- format_between_group_comparisons(between_comparisons)
+  results$estimated_means <- format_estimated_means(within_comparisons)
+  
+  return(results)
+  
+}
+
+# Helper function to make retrieving results easier for inline code
+get_result <- function(results, type, filter_value = NULL, filter_col = NULL, 
+                       condition = NULL, time = NULL) {
+  
+  # Handle main effects and interactions (anova)
+  if (type == "anova") {
+    # Get specific effect (Condition, Time, or Condition:Time)
+    if (!is.null(filter_value)) {
+      return(results$anova$apa_result[results$anova$effect == filter_value])
+    } else {
+      # Return all effects as a named vector
+      effects <- results$anova$apa_result
+      names(effects) <- results$anova$effect
+      return(effects)
+    }
+  }
+  
+  # Handle within-group comparisons
+  if (type == "within") {
+    # If condition specified, filter by it
+    if (!is.null(condition)) {
+      # Direct match with condition label
+      match_idx <- which(results$within_comparisons$condition == condition)
+      
+      if (length(match_idx) > 0) {
+        return(results$within_comparisons$apa_result[match_idx[1]])
+      } else {
+        return(paste0("(no match found for condition '", condition, "')"))
+      }
+    } else {
+      # Return all as named vector
+      comps <- results$within_comparisons$apa_result
+      names(comps) <- results$within_comparisons$condition
+      return(comps)
+    }
+  }
+  
+  # Handle between-group comparisons
+  if (type == "between") {
+    # If time specified, filter by it
+    if (!is.null(time)) {
+      # Direct match with time label
+      match_idx <- which(results$between_comparisons$time_point == time)
+      
+      if (length(match_idx) > 0) {
+        return(results$between_comparisons$apa_result[match_idx[1]])
+      } else {
+        return(paste0("(no match found for time '", time, "')"))
+      }
+    } else {
+      # Return all as named vector
+      comps <- results$between_comparisons$apa_result
+      names(comps) <- results$between_comparisons$time_point
+      return(comps)
+    }
+  }
+  
+  # Handle estimated means
+  if (type == "means") {
+    # Filter by condition and/or time if specified
+    if (!is.null(condition) && !is.null(time)) {
+      return(results$estimated_means$apa_result[
+        results$estimated_means$condition == condition & 
+          results$estimated_means$time == time])
+    } else if (!is.null(condition)) {
+      return(results$estimated_means$apa_result[
+        results$estimated_means$condition == condition])
+    } else if (!is.null(time)) {
+      return(results$estimated_means$apa_result[
+        results$estimated_means$time == time])
+    } else {
+      # Return all as named vector
+      means <- results$estimated_means$apa_result
+      names(means) <- paste0(results$estimated_means$condition, " - ", 
+                             results$estimated_means$time)
+      return(means)
+    }
+  }
+  
+  # Handle model coefficients
+  if (type == "coef") {
+    if (!is.null(filter_value)) {
+      return(results$coefficients$apa_result[
+        results$coefficients$term == filter_value])
+    } else {
+      # Return all as named vector
+      coefs <- results$coefficients$apa_result
+      names(coefs) <- results$coefficients$term
+      return(coefs)
+    }
+  }
+  
+  # Return informative message if no match
+  return("(function type not recognized)")
+}
+
+# Apply the formatting to your existing analysis
+glmm_results <- format_all_glmm_results(
+  learning_model,
+  learning_model_output,
+  conditioning_within_groups_comparisons,
+  conditioning_between_groups_comparisons
+)
+
+
+
+
+####################################################################
+#Plotting baseline to endpoint comparison
+####################################################################
 
 Exp8_Baseline_endpoint_comparison <- Exp8_data_long %>%
   group_by(Condition, Time) %>%
@@ -285,4 +488,6 @@ Exp8_right_active_arm_count = Exp8_active_arm_count %>% filter(`Active arm` == "
 
 print(Exp8_left_active_arm_count)
 print(Exp8_right_active_arm_count)
+
+
 
