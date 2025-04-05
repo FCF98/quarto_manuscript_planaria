@@ -2097,3 +2097,4 @@ Exp7_right_active_arm_count <- Exp7_active_arm_count %>% filter(`Active arm` == 
 #Pulling active arm descriptives
 
 Left_active_arm_count <- Exp7_prefered_arm_count
+
