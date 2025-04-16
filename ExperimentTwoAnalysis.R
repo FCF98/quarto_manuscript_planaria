@@ -1,14 +1,14 @@
-# library(readxl)
-# library(tidyr)
-# library(dplyr)
-# library(lme4)
-# library(ggplot2)
-# library(hrbrthemes)
-# library(effectsize)
-# library(emmeans)
-# library(DHARMa)
-# library(ggsignif)
-# library(patchwork)
+ library(readxl)
+ library(tidyr)
+ library(dplyr)
+ library(lme4)
+ library(ggplot2)
+ library(hrbrthemes)
+ library(effectsize)
+ library(emmeans)
+ library(DHARMa)
+ library(ggsignif)
+ library(patchwork)
 
 data <- read_excel("Datasets/ExperimentTwoSummaryData.xlsx")
 
@@ -485,15 +485,14 @@ ggplot(lollipop_chart_data, aes(x = as.factor(Subject), y = change, color = Cond
 
 ######### Plotting learning across conditioning days ##########
 
-#Ctr + Shft + c to uncomment
 
 Exp2_fulldata <- read_excel("Datasets/ExperimentTwoFullData.xlsx", sheet = "Data for analysis")
 
-Exp2_fulldata <- Exp2_fulldata %>%
+Exp2_data_w_exclusions <- Exp2_fulldata %>%
   filter(!Subject %in% c(3, 4, 14, 22, 27, 35, 40, 44, 47, 50, 52, 55, 56))
 
 
-Data_long_days <- Exp2_fulldata %>%
+Data_long_days <- Exp2_data_w_exclusions %>%
   select(Subject, Condition,
          Baseline = `Baseline%`,
          Day1 = `Day1%`,
@@ -548,4 +547,26 @@ ggplot(Data_long_days, aes(x = TimePoint, y = mean_prop,
 
 
 
+###############################################
+# Descriptives
+###############################################
 
+Exp2_data_w_exclusions <- Exp2_fulldata %>%
+  filter(!Subject %in% c(3, 4, 14, 22, 27, 35, 40, 44, 47, 50, 52, 55, 56))
+
+#Pulling baseline arm preference descriptives
+
+Exp2_prefered_arm_count <- Exp2_data_w_exclusions %>% filter(Subject %in% (1:60)) %>% count(Prefered_arm)
+
+Exp2_active_arm_count <- Exp2_data_w_exclusions %>% filter(Subject %in% (1:60)) %>% count(active_arm)
+
+Exp2_left_active_arm_count <- Exp2_active_arm_count %>% filter(active_arm == "L") %>% pull(n)
+
+Exp2_right_active_arm_count <- Exp2_active_arm_count %>% filter(active_arm == "R") %>% pull(n)
+
+############## descriptives for excluded subjects ######################
+
+Exp2_excluded_subjects_data <- Exp2_fulldata %>%
+  filter(Subject %in% c(3, 4, 14, 22, 27, 35, 40, 44, 47, 50, 52, 55, 56))
+
+Exp2_excluded_subjects_prefered_arm <- Exp2_excluded_subjects_data %>% count(Prefered_arm)
