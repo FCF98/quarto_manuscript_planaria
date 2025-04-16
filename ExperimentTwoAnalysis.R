@@ -570,3 +570,17 @@ Exp2_excluded_subjects_data <- Exp2_fulldata %>%
   filter(Subject %in% c(3, 4, 14, 22, 27, 35, 40, 44, 47, 50, 52, 55, 56))
 
 Exp2_excluded_subjects_prefered_arm <- Exp2_excluded_subjects_data %>% count(Prefered_arm)
+
+
+
+
+# Calculate summary statistics for plotting
+Exp2_summary_Stats <- data_long %>% filter(Time == "Test") %>%
+  group_by(Condition) %>%
+  summarise(
+    mean_prop = mean(ActiveArmProportion, na.rm = TRUE),
+    sd = sd(ActiveArmProportion, na.rm = TRUE)
+  )
+
+
+
