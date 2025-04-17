@@ -571,16 +571,97 @@ Exp2_excluded_subjects_data <- Exp2_fulldata %>%
 
 Exp2_excluded_subjects_prefered_arm <- Exp2_excluded_subjects_data %>% count(Prefered_arm)
 
+############ checking subjects avaliable for between groups comparisons
 
-
-
-# Calculate summary statistics for plotting
-Exp2_summary_Stats <- data_long %>% filter(Time == "Test") %>%
-  group_by(Condition) %>%
+active_arm_sample_sizes <- data_long %>%
+  group_by(Condition, Time) %>%
   summarise(
-    mean_prop = mean(ActiveArmProportion, na.rm = TRUE),
-    sd = sd(ActiveArmProportion, na.rm = TRUE)
+    n = sum(!is.na(ActiveArmProportion)),
+    .groups = 'drop'
   )
 
+print(active_arm_sample_sizes)
 
 
+############ checking subjects available for within subjects comparisons
+
+# Create a data frame showing which subjects have data at each timepoint
+active_arm_availability <- data_long %>%
+  group_by(Subject, Condition, Time) %>%
+  summarize(has_data = !is.na(ActiveArmProportion), .groups = "drop") %>%
+  pivot_wider(
+    id_cols = c(Subject, Condition),
+    names_from = Time,
+    values_from = has_data
+  )
+
+# Count subjects with data at specific pairs of timepoints
+baseline_test_subjects <- active_arm_availability %>%
+  filter(Baseline == TRUE & Test == TRUE) %>%
+  group_by(Condition) %>%
+  summarize(count = n())
+
+baseline_endpoint_subjects <- active_arm_availability %>%
+  filter(Baseline == TRUE & Endpoint == TRUE) %>%
+  group_by(Condition) %>%
+  summarize(count = n())
+
+endpoint_test_subjects <- active_arm_availability %>%
+  filter(Endpoint == TRUE & Test == TRUE) %>%
+  group_by(Condition) %>%
+  summarize(count = n())
+
+test_reinstatement_subjects <- active_arm_availability %>%
+  filter(Test == TRUE & Reinstatement == TRUE) %>%
+  group_by(Condition) %>%
+  summarize(count = n())
+
+# Print counts for each comparison
+print("Subjects available for Baseline vs Test comparison:")
+print(baseline_test_subjects)
+
+print("Subjects available for Baseline vs Endpoint comparison:")
+print(baseline_endpoint_subjects)
+
+print("Subjects available for Endpoint vs Test comparison:")
+print(endpoint_test_subjects)
+
+print("Subjects available for Test vs Reinstatement comparison:")
+print(test_reinstatement_subjects)
+
+# For the most accurate view of which subjects were used in the GLMER model's
+# pairwise comparisons via emmeans:
+# Define the pairs you want to check
+time_pairs <- list(
+  c("Baseline", "Endpoint"),
+  c("Baseline", "Test"),
+  c("Baseline", "Reinstatement"),
+  c("Endpoint", "Test"),
+  c("Endpoint", "Reinstatement"),
+  c("Test", "Reinstatement")
+)
+
+# Get reference grid from the model
+ref_grid <- ref_grid(m1)
+print(summary(ref_grid))
+
+# Check samples used in each emmeans comparison
+for (pair in time_pairs) {
+  emm_pair <- emmeans(m1, specs = "Time", at = list(Time = pair))
+  # Attempt to get subjects used in this comparison
+  subjects_used <- tryCatch({
+    recover_data(m1, specs = emm_pair)$Subject
+  }, error = function(e) {
+    # Handle the case where recover_data might not work as expected
+    return(NULL)
+  })
+  
+  if (!is.null(subjects_used)) {
+    unique_subjects <- unique(subjects_used)
+    cat(sprintf("\nFor %s vs %s comparison, %d unique subjects were used\n", 
+                pair[1], pair[2], length(unique_subjects)))
+  } else {
+    cat(sprintf("\nCouldn't extract subjects for %s vs %s comparison\n", 
+                pair[1], pair[2]))
+  }
+}
