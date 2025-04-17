@@ -224,7 +224,7 @@ summary_data_w_sample <- data_long %>%
 
 # Create APA-style plots, and arranging in a panel of 3 plots
 
-# 1. Control Group Plot
+# 1. Control Group Plot with colored sample sizes
 control_plot <- summary_data_w_sample %>%
   filter(Condition == "Control") %>%
   ggplot(aes(x = Time, y = mean_proportion, group = 1)) +
@@ -233,6 +233,8 @@ control_plot <- summary_data_w_sample %>%
   geom_errorbar(aes(ymin = mean_proportion - se_proportion, 
                     ymax = mean_proportion + se_proportion), 
                 width = 0.2, linewidth = 1, color = "#159090") +
+  # Add sample size labels just above the x-axis with matching color
+  geom_text(aes(label = label, y = 0.03), color = "#159090", size = 3.5) +
   # Control group within comparisons
   geom_signif(
     annotations = "***",
@@ -257,14 +259,14 @@ control_plot <- summary_data_w_sample %>%
   ) +
   theme_classic() +
   theme(
-    text = element_text(family = "Times New Roman", size = 14),  # Reduced from 16
-    axis.title = element_text(size = 16, face = "bold"),  # Reduced from 18
+    text = element_text(family = "Times New Roman", size = 14),
+    axis.title = element_text(size = 16, face = "bold"),
     axis.title.y = element_text(margin = margin(r = 20)),
-    axis.text = element_text(size = 12, color = "black"),  # Reduced from 14
+    axis.text = element_text(size = 12, color = "black"),
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "bottom",
-    legend.title = element_text(size = 14, face = "bold"),  # Reduced from 16
-    legend.text = element_text(size = 12),  # Reduced from 14
+    legend.title = element_text(size = 14, face = "bold"),
+    legend.text = element_text(size = 12),
     axis.line = element_line(color = "black", linewidth = 0.8),
     panel.grid = element_blank(),
     panel.background = element_rect(fill = "white"),
@@ -277,8 +279,7 @@ control_plot <- summary_data_w_sample %>%
   ) +
   scale_color_manual(values = c("Control" = "#159090", "Treatment" = "#FF8C00"))
 
-
-# 2. Treatment Group Plot
+# 2. Treatment Group Plot with colored sample sizes
 treatment_plot <- summary_data_w_sample %>%
   filter(Condition == "Treatment") %>%
   ggplot(aes(x = Time, y = mean_proportion, group = 1)) +
@@ -287,6 +288,8 @@ treatment_plot <- summary_data_w_sample %>%
   geom_errorbar(aes(ymin = mean_proportion - se_proportion, 
                     ymax = mean_proportion + se_proportion), 
                 width = 0.2, linewidth = 1, color = "#FF8C00") +
+  # Add sample size labels just above the x-axis with matching color
+  geom_text(aes(label = label, y = 0.03), color = "#FF8C00", size = 3.5) +
   # Treatment group within comparisons
   geom_signif(
     annotations = "**",
@@ -307,7 +310,7 @@ treatment_plot <- summary_data_w_sample %>%
   geom_signif(
     annotations = "*",
     xmin = 2, xmax = 4,
-    y_position = 0.8,
+    y_position = 0.85,
     color = "black",
     size = 0.6,
     textsize = 6
@@ -319,14 +322,14 @@ treatment_plot <- summary_data_w_sample %>%
   ) +
   theme_classic() +
   theme(
-    text = element_text(family = "Times New Roman", size = 14),  # Reduced from 16
-    axis.title = element_text(size = 16, face = "bold"),  # Reduced from 18
+    text = element_text(family = "Times New Roman", size = 14),
+    axis.title = element_text(size = 16, face = "bold"),
     axis.title.y = element_text(margin = margin(r = 20)),
-    axis.text = element_text(size = 12, color = "black"),  # Reduced from 14
+    axis.text = element_text(size = 12, color = "black"),
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "bottom",
-    legend.title = element_text(size = 14, face = "bold"),  # Reduced from 16
-    legend.text = element_text(size = 12),  # Reduced from 14
+    legend.title = element_text(size = 14, face = "bold"),
+    legend.text = element_text(size = 12),
     axis.line = element_line(color = "black", linewidth = 0.8),
     panel.grid = element_blank(),
     panel.background = element_rect(fill = "white"),
@@ -339,7 +342,15 @@ treatment_plot <- summary_data_w_sample %>%
   ) +
   scale_color_manual(values = c("Control" = "#159090", "Treatment" = "#FF8C00"))
 
-# 3. Combined Plot (modify your original plot to show only between-group differences)
+# 3. Combined Plot with closer-spaced sample sizes
+# Create a data frame for label positioning in the combined plot with smaller offsets
+combined_labels <- summary_data_w_sample %>%
+  # Calculate small x-offsets to keep labels closer together
+  mutate(
+    x_pos = as.numeric(Time) + ifelse(Condition == "Control", -0.1, 0.1),
+    y_pos = 0.03
+  )
+
 combined_plot <- ggplot(summary_data_w_sample, 
                         aes(x = Time, y = mean_proportion, 
                             color = Condition, group = Condition)) +
@@ -348,6 +359,12 @@ combined_plot <- ggplot(summary_data_w_sample,
   geom_errorbar(aes(ymin = mean_proportion - se_proportion, 
                     ymax = mean_proportion + se_proportion), 
                 width = 0.1, linewidth = 1) +
+  # Add sample size labels for each condition at each time point with smaller offset
+  geom_text(
+    data = combined_labels,
+    aes(x = x_pos, y = y_pos, label = label, color = Condition),
+    size = 3.5
+  ) +
   # Only between group comparison
   annotate("text", 
            x = 3, 
@@ -363,14 +380,14 @@ combined_plot <- ggplot(summary_data_w_sample,
   ) +
   theme_classic() +
   theme(
-    text = element_text(family = "Times New Roman", size = 14),  # Reduced from 16
-    axis.title = element_text(size = 16, face = "bold"),  # Reduced from 18
+    text = element_text(family = "Times New Roman", size = 14),
+    axis.title = element_text(size = 16, face = "bold"),
     axis.title.y = element_text(margin = margin(r = 20)),
-    axis.text = element_text(size = 12, color = "black"),  # Reduced from 14
+    axis.text = element_text(size = 12, color = "black"),
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "bottom",
-    legend.title = element_text(size = 14, face = "bold"),  # Reduced from 16
-    legend.text = element_text(size = 12),  # Reduced from 14
+    legend.title = element_text(size = 14, face = "bold"),
+    legend.text = element_text(size = 12),
     axis.line = element_line(color = "black", linewidth = 0.8),
     panel.grid = element_blank(),
     panel.background = element_rect(fill = "white"),
@@ -388,14 +405,16 @@ combined_panel <- (control_plot + treatment_plot) / (combined_plot) +
   plot_layout(heights = c(1.2, 1.2)) +
   plot_annotation(tag_levels = 'A')
 
+# Display the panel
+combined_panel
+
 # Save the panel
 ggsave("panel_plot.png", combined_panel, 
        width = 12, height = 12, dpi = 300) 
 
 
 
-
-############ Creating individual plots  #########
+########### Creating individual plots  #########
 
 
 # First, create an ordered factor for subjects based on their condition
@@ -563,6 +582,14 @@ Exp2_active_arm_count <- Exp2_data_w_exclusions %>% filter(Subject %in% (1:60)) 
 Exp2_left_active_arm_count <- Exp2_active_arm_count %>% filter(active_arm == "L") %>% pull(n)
 
 Exp2_right_active_arm_count <- Exp2_active_arm_count %>% filter(active_arm == "R") %>% pull(n)
+
+# Calculate summary statistics for plotting
+Exp2_summary_Stats <- data_long %>% filter(Time == "Test") %>%
+  group_by(Condition) %>%
+  summarise(
+    mean_prop = mean(ActiveArmProportion, na.rm = TRUE),
+    sd = sd(ActiveArmProportion, na.rm = TRUE)
+  )
 
 ############## descriptives for excluded subjects ######################
 
