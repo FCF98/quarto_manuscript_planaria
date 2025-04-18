@@ -177,6 +177,8 @@ format_within_group_comparisons <- function(emmeans_object) {
   # Extract contrasts
   contrasts_df <- as.data.frame(emmeans_object$contrasts)
   
+  condition_names <- c("1" = "Control", "2" = "Treatment")
+  
   # Create formatted results dataframe
   formatted_results <- data.frame(
     contrast = contrasts_df$contrast,
@@ -189,6 +191,9 @@ format_within_group_comparisons <- function(emmeans_object) {
       ", *p* ", sapply(contrasts_df$p.value, format_p_value)
     )
   )
+  
+  # Apply the condition mapping to transform numeric codes to names
+  formatted_results$condition <- condition_names[formatted_results$condition]
   
   return(formatted_results)
 }
@@ -298,9 +303,16 @@ get_result <- function(results, type, filter_value = NULL, filter_col = NULL,
   if (type == "within") {
     # If condition specified, filter by it
     if (!is.null(condition)) {
-      cond_filter <- paste0("Condition = ", condition)
-      return(results$within_comparisons$apa_result[
-        results$within_comparisons$condition == cond_filter])
+      # Find the row that matches the condition
+      matching_row <- which(results$within_comparisons$condition == condition)
+      
+      # Check if we found a match
+      if (length(matching_row) > 0) {
+        return(results$within_comparisons$apa_result[matching_row])
+      } else {
+        # For debugging - you can remove this in the final version
+        return(paste0("(No match for '", condition, "')"))
+      }
     } else {
       # Return all as named vector
       comps <- results$within_comparisons$apa_result
