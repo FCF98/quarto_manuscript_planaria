@@ -607,8 +607,6 @@ active_arm_sample_sizes <- data_long %>%
     .groups = 'drop'
   )
 
-print(active_arm_sample_sizes)
-
 
 ############ checking subjects available for within subjects comparisons
 
@@ -643,18 +641,6 @@ test_reinstatement_subjects <- active_arm_availability %>%
   group_by(Condition) %>%
   summarize(count = n())
 
-# Print counts for each comparison
-print("Subjects available for Baseline vs Test comparison:")
-print(baseline_test_subjects)
-
-print("Subjects available for Baseline vs Endpoint comparison:")
-print(baseline_endpoint_subjects)
-
-print("Subjects available for Endpoint vs Test comparison:")
-print(endpoint_test_subjects)
-
-print("Subjects available for Test vs Reinstatement comparison:")
-print(test_reinstatement_subjects)
 
 # For the most accurate view of which subjects were used in the GLMER model's
 # pairwise comparisons via emmeans:
@@ -670,25 +656,4 @@ time_pairs <- list(
 
 # Get reference grid from the model
 ref_grid <- ref_grid(m1)
-print(summary(ref_grid))
 
-# Check samples used in each emmeans comparison
-for (pair in time_pairs) {
-  emm_pair <- emmeans(m1, specs = "Time", at = list(Time = pair))
-  # Attempt to get subjects used in this comparison
-  subjects_used <- tryCatch({
-    recover_data(m1, specs = emm_pair)$Subject
-  }, error = function(e) {
-    # Handle the case where recover_data might not work as expected
-    return(NULL)
-  })
-  
-  if (!is.null(subjects_used)) {
-    unique_subjects <- unique(subjects_used)
-    cat(sprintf("\nFor %s vs %s comparison, %d unique subjects were used\n", 
-                pair[1], pair[2], length(unique_subjects)))
-  } else {
-    cat(sprintf("\nCouldn't extract subjects for %s vs %s comparison\n", 
-                pair[1], pair[2]))
-  }
-}
