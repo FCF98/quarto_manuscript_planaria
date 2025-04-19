@@ -1999,16 +1999,6 @@ reinstatement_plot <- ggplot(
 # Print the reinstatement plot
 print(reinstatement_plot)
 
-# Save the reinstatement plot
-ggsave(
-  "Reinstatement_memory_retention.pdf", 
-  reinstatement_plot, 
-  width = 12,
-  height = 8,
-  dpi = 300,
-  device = cairo_pdf
-)
-
 
 
 ###### the retention and reinstatement plots for regenerates
