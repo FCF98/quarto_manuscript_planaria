@@ -144,6 +144,8 @@ contributes:
           path: docxstyler.lua
         - at: post-render
           path: docxlinenumber.lua
+        - at: post-render
+          path: docx-toc-placement.lua
       knitr: 
         opts_chunk: 
           dev: ragg_png
