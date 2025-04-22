@@ -125,7 +125,7 @@ format:
     
   # Typst output
   apaquarto-typst: 
-    # Include table of contents
+    # table of contents blocked, lua file used to insert under #toc section
     toc: false
     # Depth of headings to include in TOC
     toc-depth: 2
@@ -391,7 +391,7 @@ Thanks is owed to my supervisors, Dr. [Name] and
 
 \newpage
 
-<!-- need to manually click update Table once rendered to word doc -->
+<!-- need to manually click update Table once rendered to word doc - uses docx-toc-placement.lua file -->
 ::: {#toc}
 # Table of Contents {.unnumbered}
 :::
