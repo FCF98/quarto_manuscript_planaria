@@ -1,6 +1,6 @@
 ---
-title: "Probing the Limits of Memory: Retention of a Learned Response Through Decapitation and Regeneration in Planaria"
-blank-lines-above-title: 2
+# Document Metadata
+title: "Probing the Limits of Memory: Can A Learned Response Persist Through Decapitation and Regeneration in Planaria?"
 shorttitle: "Persistance of Memory Through Regeneration in Planaria"
 author: 
   - name: Francis Forde
@@ -11,45 +11,67 @@ author:
         address: PO Box 600, Easterfield Building, Kelburn Pde, Kelburn
         city: Wellington
         region: New Zealand
-author-note:
-  blank-lines-above-author-note: 4
-  disclosures:
-    study-registration: ~
-    # Acknowledge and cite data/materials to be shared.
-    data-sharing: ~
-    # Example: This article is based on data published in [Reference].
-    # Example: This article is based on the dissertation completed by [citation].  
-    related-report: ~
-    # Example: [Author name] has been a paid consultant for Corporation X, which funded this study.
-    conflict-of-interest: The authors have no conflicts of interest to disclose.
-    # Example: This study was supported by Grant [Grant Number] from [Funding Source].
-    financial-support: This Thesis was supported by a Wellington Masters by Thesis Scholarship provided by Victoria University of Wellington.
-    # Example: The authors are grateful to [Person] for [Reason].
-    gratitude: ~
-    # Example. Because the authors are equal contributors, order of authorship was determined by a fair coin toss.
-    authorship-agreements: ~
 abstract: "XX"
-# Put as many keywords at you like, separated by commmas (e.g., [reliability, validity, generalizability])
+# Put as many keywords as you like, separated by commas (e.g., [reliability, validity, generalizability])
 keywords: [Memory, Learning, Planaria, Reinstatement, Cocaine, Methamphetamine, Behaviour]
-# If true, tables and figures are mingled with the text instead of listed at the end of the document.
+
+# Author Note Configuration
+author-note:
+  blank-lines-above-author-note: 15
+  disclosures:
+    # Information about study registration
+    study-registration: ~
+    
+    # Acknowledge and cite data/materials to be shared
+    data-sharing: ~
+    
+    # Example: This article is based on data published in [Reference].
+    # Example: This article is based on the dissertation completed by [citation].
+    related-report: ~
+    
+    # Example: [Author name] has been a paid consultant for Corporation X, which funded this study.
+    conflict-of-interest: "The author has no conflicts of interest to disclose."
+    
+    # Example: This study was supported by Grant [Grant Number] from [Funding Source].
+    financial-support: "This Thesis was supported by a Wellington Masters by Thesis Scholarship provided by Victoria University of Wellington."
+    
+    # Example: The authors are grateful to [Person] for [Reason].
+    gratitude: "Thanks is owed to . . . "
+    
+    # Example: Because the authors are equal contributors, order of authorship was determined by a fair coin toss.
+    authorship-agreements: ~
+
+# Document Structure
+# If true, sections will be numbered (1, 1.1, 1.2, etc.)
+number-sections: true
+
+# Use to set position of footnotes
+reference-location: margin
+
+# If true, tables and figures are mingled with the text instead of listed at the end of the document
 floatsintext: true
 
-#Use to set position of footnotes
-reference-location: margin
-      
-# Numbered lines (.pdf and .docx only)
-numbered-lines: false
+# Suppress the title above the introduction
+donotrepeattitle: true
+
+suppress-title-introduction: true
+
+# Number of blank lines to add above the title
+blank-lines-above-title: 2
+
+# Bibliography Settings
 # File with references
-number-sections: true
 bibliography: bibliography.bib
 bibliographystyle: apa
-# Suppress title page
-suppress-title-page: false
+
 # Link citations to references
 link-citations: true
+
 # Masks references that appear in the masked-citations list
 mask: false
 masked-citations: ~
+
+# Language Settings
 # Language options. See https://quarto.org/docs/authoring/language.html
 lang: en
 language:
@@ -63,36 +85,80 @@ language:
   title-block-role-introduction: "Author roles were classified using the Contributor Role Taxonomy (CRediT; https://credit.niso.org/) as follows:"
   references-meta-analysis: "References marked with an asterisk indicate studies included in the meta-analysis."
 
+# Global Format Settings
+# DPI (dots per inch) for figures
+fig-dpi: 300
+
+# Format for figures (png, jpg, etc.)
+fig-format: png
+
+# Code execution options
+execute: 
+  # Don't show code in output
+  echo: false
+  # Don't show warnings
+  warning: false
+  # Don't show errors
+  error: false
+
+# Output Format Settings
 format:
-  apaquarto-docx: default
+  # DOCX output
+  apaquarto-docx: 
+    # Include table of contents
+    toc: false
+    toc-depth: 2
+    donotrepeattitle: true
+    #below doc allows me to change figure heading style to remove from TOC
+    reference-doc: "custom-style-reference.docx" 
+    #below supresses repeating thesis title before intro
+    suppress-title-introduction: true
+    
+  # HTML output  
   apaquarto-html: 
+    # Include table of contents
+    toc: true
+    # Depth of headings to include in TOC
+    toc-depth: 2
+    # CSS file for styling
     css: styles.css
+    
+  # Typst output
   apaquarto-typst: 
+    # Include table of contents
+    toc: false
+    # Depth of headings to include in TOC
+    toc-depth: 2
+    # Keep the Typst source file
     keep-typ: true
-  
-#format:
-  #html:
-    #css: styles.css
-  #apaquarto-docx: default
-  #apaquarto-typst: 
-    #keep-typ: true
+    list-of-figures: true
+    list-of-tables: true
+    
+  # PDF output
   apaquarto-pdf:
+    # Include table of contents
+    toc: true
+    # Depth of headings to include in TOC
+    toc-depth: 2
+    lof: true
     # Can be jou (journal), man (manuscript), stu (student), or doc (document)
-    documentmode: man
+    documentmode: stu
+    # Font size for document
     fontsize: "12pt"
+    mainfont: "Times New Roman"
     # a4 paper if true, letter size if false
     a4paper: false
-    # suppresses loading of the lmodern font package
+    # Suppress the title above the introduction
+    donotrepeattitle: true
+    # Suppresses loading of the lmodern font package
     nolmodern: false
     # Suppresses loading of the fontenc package
     nofontenc: false
-    # Suppress the title above the introduction
-    donotrepeattitle: false
     # In jou mode, use times or pslatex instead of txfonts
     notxfonts: false
     # In jou mode, use Computer Modern font instead of times
     notimes: false
-    # In jou mode, cancels automatic stretching of tables to column width 
+    # In jou mode, cancels automatic stretching of tables to column width
     notab: false
     # Uses Helvetica font in stu and man mode
     helv: false
@@ -106,18 +172,21 @@ format:
     draftall: false
     # Masks references that are marked as the author's own
     mask: false
-    journal: ~t
+    # Journal name (for journal mode)
+    journal: ~
+    # Volume number (for journal mode)
     volume: ~
+    # Course name (for student mode)
     course: ~
+
+# Editor type
 editor: visual
-fig-dpi: 300
-fig-format: png
-toc: true
-toc-location: "body"
-execute: 
-  echo: false
-  warning: false
-  error: false
+
+# Numbered lines (.pdf and .docx only)
+numbered-lines: false
+
+# Suppress title page
+suppress-title-page: false
 ---
 
 ```{r}
@@ -316,7 +385,20 @@ conflicts_prefer(cowplot::get_legend, .quiet = TRUE)
 
 ```
 
-# Introduction
+# Acknowledgements {.unnumbered}
+
+Thanks is owed to my supervisors, Dr. [Name] and
+
+\newpage
+
+<!-- need to manually click update Table once rendered to word doc -->
+::: {#toc}
+# Table of Contents {.unnumbered}
+:::
+
+\newpage
+
+# Introduction {#sec-introduction}
 
 A brain in isolation is just a clump of extravagant cells. A brain earns its keep by liaising with the body and the external world. It is among these brain-environment interactions that an organism can set and achieve goals and, ultimately, carve a pathway to survival. But brains operate in the dark. Their only insight into the on-goings of the world is through delicately placed sensory organs such as the eyes, nose and ears.
 
@@ -345,6 +427,7 @@ While non-associative memories such as sensitisation may be stored outside of ne
 #| fig-width: 8
 #| fig-height: 5
 #| fig-align: "center"
+#| include-in-header: false
 
 library(png)
 library(grid)
@@ -396,12 +479,12 @@ The study of invertebrates revealed that even complex behaviour can arise from a
 
 ### Planaria as a Model Organism {#sec-planaria-as-a-model-organism}
 
-Planaria are a broad group of invertebrates which have become a key part of several areas of research [see @fig-Planaria_phenotypes]. Planaria are being used to investigate questions in regenerative biology [@karami_planarians_2015], toxicology [@li_effects_2008; @hagstrom_comparative_2019], radioprotective materials [@ermakov_planarians_2021] addiction [@raffa_planaria_2008], and the effect of zero gravity environments on morphology [@vista_ssep_mission_11_team_studying_2018]. Planaria have built niches across many ecological contexts and can be found in salt-water and fresh-water environments, and also on land. Land dwelling planaria span up to half a meter long [@esser_land_1981], whereas freshwater planaria, which are more commonly used in behavioural research, are typically less than a centimeter in length [@vasquez-doorman_current_2022].
+Planaria are a broad group of invertebrates which have become a key part of several areas of research [see @fig-Planaria-phenotypes]. Planaria are being used to investigate questions in regenerative biology [@karami_planarians_2015], toxicology [@li_effects_2008; @hagstrom_comparative_2019], radioprotective materials [@ermakov_planarians_2021] addiction [@raffa_planaria_2008], and the effect of zero gravity environments on morphology [@vista_ssep_mission_11_team_studying_2018]. Planaria have built niches across many ecological contexts and can be found in salt-water and fresh-water environments, and also on land. Land dwelling planaria span up to half a meter long [@esser_land_1981], whereas freshwater planaria, which are more commonly used in behavioural research, are typically less than a centimeter in length [@vasquez-doorman_current_2022].
 
 Planaria are bilaterians. They display bilateral symmetry across their left and right sides [@sluys_planarian_2018]. Planaria exhibit anterior-posterior polarity, such that their head can be distinguished from the tail in both its structure and its behavioural repertoire. While the tail end of a planarian is rather uninteresting, the head has many intriguing features. Auricles are what give the head of many planarian species a triangular shape. Auricles are thought to support the detection of food and noxious chemicals in the immediate environment [@asano_rhodopsin-like_1998]. Eyespots, which are the most discernible feature of planaria, sit atop the dorsal surface of the head. These light-sensitive cell clusters allow planaria to detect light intensity and direction [@shettigar_hierarchies_2017].
 
 ```{r, eval = TRUE}
-#| label: fig-Planaria_phenotypes
+#| label: fig-Planaria-phenotypes
 #| fig-cap: "Image of two planaria from our breeding colony (species unknown)"
 #| apa-note: "There were two phenotypes among the planaria collected from the river which suppled our breeding colony. The left image shows the brown coloured planaria, while the right image shows the darker black coloured planaria. The contrast and brightness of the images were enhanced to make the differences more visible."
 #| fig-width: 4.2
@@ -498,7 +581,7 @@ The results of @shomrat_automated_2013 suggested the memory trace lay dormant an
 
 With respect to both phenomena, the memory is either not accessible or is not acted upon and requires exposure to the right stimulus to be reactivated. Although extinction and reinstatement of drug seeking behaviour has been modeled in planaria [@amaning-kwarteng_relapse_2017], no experiments have explored whether a reinstatement procedure can also be used to reactivate memories which are dormant after decapitation and regeneration. The phenomena of memory saving among regenerates demonstrate that some memory trace is retained in the brainless tail half. Perhaps this trace can be reactivated without the need for retraining by instead exposing the tail regenerates to the reinforcing stimulus. This project will therefore investigate whether memory stored outside the brain behaves like an extinguished memory such that exposure to the reinforcing stimulus is sufficient to reinstate the memory trace.
 
-# Experiment 1
+# Experiment 1 {#sec-experiment-1}
 
 Experiment 1 aimed to determine an appropriate dose of cocaine that would be rewarding to planaria while not drastically altering their locomotive behaviour. Cocaine has been frequently used to classically condition planaria and to investigate its toxicity [@amaning-kwarteng_relapse_2017; @raffa_description_2005; @tallarida_ethanol_2014; @hutchinson_persistent_2015; @palladini_pharmacological_1996]. Conditioning studies have used doses ranging from 1μM [@hutchinson_persistent_2015] to 80μM [@raffa_cocaine_2005].
 
@@ -910,7 +993,7 @@ grid.raster(Exp7_combined_figure)
 
 ```
 
-# Experiment 5
+# Experiment 5 {#sec-experiment-5}
 
 The experiments described above support the claim that planaria can obtain an operantly conditioned response. Yet, as can be seen from @fig-exp2decisions, @fig-Exp4_conditioning_results_panel and @fig-Exp7_conditioning_results_panel, the response was not stable. The conditioned response tended to reach its peak early during conditioning and then diminished towards baseline values despite still being actively reinforced. It is not clear whether the reversion to baseline behaviour is a sign of forgetting, drug tolerance, or active rejection of a reinforced direction [described in @best_maze_1962, pp. 565-566]. To properly test memory retention through regeneration, it is important to have a high rate of successful responses just prior to bisection. Otherwise, what appears to be a lack of retention in regenerates may just be a continuation of an already declining response rate. An additional Y-maze experiment was therefore carried out.
 
@@ -961,6 +1044,7 @@ The results presented here conflict with those presented in Experiment 4. As can
 #| label: fig-Exp8_conditioning_results_panel
 #| include: True
 #| fig-cap: "Failure to Find Evidence of Learning Among Meth Exposed Planaria "
+#| apa-note: "Changes in Y-maze active arm preference across experimental phases. The baseline phase included 6 trials, conditioning endpoint included the final 6 trials of conditioning. A) shows the mean proportion of active arm entries for baseline and conditioning. B) Both methamphetamine treated subjects and control subjects treated with vehicle only showed a significant difference in their active arm entries between baseline and endpoint. Error bars represent standard error of the mean."
 #| fig-width: 14
 #| fig-height: 10
 #| fig-align: "center"
@@ -972,7 +1056,9 @@ grid.raster(Exp8_results_panel)
 
 \newpage
 
-# Discussion
+# Discussion {#sec-discussion}
+
+## Review of Findings {#sec-review-of-findings}
 
 Planaria have gained attraction as a model organism in several areas of science ranging from drug addiction to limb regeneration. But it must be said that the most interesting aspect of planaria research involves the study of memory retention through decapitation and head regeneration. Despite a pockmarked past in the 20th century, recent experiments suggest that, even after losing their brain, planaria can maintain previously acquired associative memories which can then be acted upon once a new brain is regenerated [@shomrat_automated_2013; @samuel_addiction-related_2021].
 
@@ -1002,7 +1088,7 @@ Although the planaria used by @abbott_conditioning_2008 may not exhibit a direct
 
 Moving now to the behaviour of control subjects, it is difficult to know whether such dramatic shifts in behaviour are expected because there are few studies available for comparison. The modern literature on planaria behaviour in general conveys stable behaviour of the control group in paradigms such as CPP [@hutchinson_persistent_2015; @jordan_conditioned_2023]. However, early planaria conditioning work by @corning_retention_1966 exhibited a similar level of variability of directional preference in a T-maze paradigm. In fact, the control group in @corning_retention_1966 demonstrated a noticeable increase in active arm preference across the first ten trials, with the active arm preference remaining between 0.45 and 0.5 for the remaining 70 trials. In the case of @corning_retention_1966, despite this increase for the control group, the treatment groups entered the active arm between 60--65% of the time. In line with our observations from Experiment 3, @corning_retention_1966 saw a spike in active arm entries for treatment subjects within the first ten trials.
 
-Two recent projects which aimed to shape directional preferences also found high variability among the control group. @read_reinforcing_2021 observed that the percentage of entries into the active arm varied from \~25% at baseline to \~50% at the end of conditioning for the control group. Another investigation (unpublished data, Canales Laboratory), observed similar variation in active arm entries when subjects were treated with cocaine alongside compounds known to prevent cocaine seeking in rodents. All groups experienced a large jump in active arm entries on the first day of conditioning, hovering around 50% and then declining towards baseline levels. This resembles the behaviour seen in the control group within the current project and, to some extent, matches the decline in active arm entries seen in the treatment groups.
+Two recent projects which aimed to shape directional preferences also found high variability among the control group. @read_reinforcing_2021 observed that the percentage of entries into the active arm varied from \~25% at baseline to \~50% at the end of conditioning for the control group. Another investigation (unpublished data, Canales Laboratory) observed similar variation in active arm entries when subjects were treated with cocaine alongside compounds known to prevent cocaine seeking in rodents. All groups experienced a large jump in active arm entries on the first day of conditioning, hovering around 50% and then declining towards baseline levels. This resembles the behaviour seen in the control group within the current project and, to some extent, matches the decline in active arm entries seen in the treatment groups.
 
 The intertrial interval is one factor that may affect the extent of learning among planaria. It has been suggested elsewhere that planaria learn mazes most effectively when a 30-minute intertrial interval is used [@warren_comparative_1965, p.100]. Moreover, larger intertrial intervals have been reported to mitigate the effects of fatigue from repeated trials[@lee_conditioning_1963; @best_maze_1962]. But the optimal intertrial interval may differ largely between tasks. Some classical conditioning procedures have had success when using an intertrial interval of one minute. @crawford_distribution_1966 found that spaced trials (at least one minute between) were more effective than massed trials (only 30 seconds between).
 
@@ -1034,7 +1120,7 @@ Although the exact molecular cascades differ between forms of memory, both class
 
 This project investigated the scope of memory persistence through regeneration among planaria. Since a number of experiments failed to show clear evidence of learning, the verdict is still out as to whether complex operantly conditioned behaviours can survive regeneration. Viewed in isolation, it would be easy to take these failures as indirect support for the synaptic trace theory -- of course memories cannot be retained if the substrate of their storage is removed. The wider empirical evidence of retention through regeneration, however, demands that we provide an explanation of how even simple associative information can survive in the tail halves of planaria. That a particular piece of exploratory work comes up empty handed should not detract from the mounting evidence suggesting there is more to the story of information storage in biological systems. Rather, any existing studies showing planaria may learn and retain memories, be they complex or simple, should spur us on in the search for other mechanisms that may act as repositories or facilitators of memory storage. But what other mechanisms could play such a role?
 
-## Challenging Prevailing Theory - Is Hebbian learning the Only Game in Town?
+## Challenging Prevailing Theory - Is Hebbian learning the Only Game in Town? {#sec-challenging-prevailing-theory}
 
 The synaptic trace theory, introduced in part by Donald Hebb [@hebb_organisation_1949], proposed that memory is forged among networks of neurons. To be specific, in the weights of their synaptic connections. There is a lot of empirical work which supports the idea that memories are stored among neurons. One clear demonstration comes from a study whereby @han_selective_2009 selectively extinguished a fear memory by destroying the neurons active during fear acquisition. This shows that the neurons in the amygdala which were engaged when a new fear memory was formed can be tagged and selectively destroyed. Rodents which have undergone this procedure can be compared to control subjects in which the same number of neurons are destroyed at random. This comparison reveals that forgetting of the fear memory only occurs in the targeted ablation group but not the control group, such that these rodents no longer freeze in response to the conditioned stimulus. A relatively clear demonstration that neurons must be the storehouse of memory.
 
@@ -1082,7 +1168,7 @@ If it was discovered that the body uses macromolecules as a storage mechanism, w
 
 Current efforts to improve rehabilitation after damage focus on task specific training and factors such as exercise which have been linked to improved patient outcomes [@paris_stroke_2007; @han_clinical_2017]. But a greater understanding of non-synaptic storage mechanisms could improve recovery rates by facilitating the restoration of this knowledge. Our current view of memory storage suggests that we should be trying to maximise neurogenesis and structural reorganisation of neural tissue to improve recovery rates for patients with brain damage. But another route to recovery may lie in directing the movements of macromolecular storage components. This may also open up new avenues for peer assisted therapeutics. Just as microbiota can be transferred between individuals to enhance health outcomes [@mazzawi_kinetics_2018], so to molecular transfusions may enable information to be moved between individuals to enhance cognitive outcomes. This is admittedly highly speculative, but the work of @moore_role_2021 provides preliminary evidence that molecules such as RNAs can be transferred between organisms to confer the recipient with adaptive information that affects its behaviour.
 
-## Limitations
+## Limitations {#sec-limitations}
 
 This project suffered from a number of limitations, some of which have been highlighted throughout. One major issue which needs to be highlighted is that we have not carried out species level identification of the planaria used here. Given there were two phenotypes apparent in our breeding colony, these may represent two separate species. This limits the comparability of the results presented here with others in the literature, and may even limit comparability between studies carried out within our lab. This is especially true given inter-species differences have been described for a number of behaviours and conditioning paradigms [@rejo_optimization_2023; @mueller_use_2002; @samuel_addiction-related_2021; @cochet-escartin_scrunching_2015; @debold_differences_1965].
 
@@ -1100,7 +1186,7 @@ This matter of drug uptake is further complicated as the location of drug action
 
 A theoretical limitation of the current approach stems from the fact that even tail halves of planaria are thought to contain neural tissue. While the majority of the central nervous system is contained within the head in the form of a centralised brain, there are ventral nerve cords which are thought to contain neurons that form neural networks independent of the brain [@okamoto_neural_2005]. The bisection should have successfully removed all of the brain tissue from the tail fragments, but would have left some of these posterior neural networks intact. A proponent of the synaptic trace theory could argue that the memories are still being stored synaptically in the tail halves of bisected planaria. For a clearer test of whether memories can be stored non-synaptically, which is to say outside of neural tissue, one would need to cut planaria in such a way that the target fragments lack any tissue from the nerve cords. It has been previously suggested that a planarian fragment around 1/279th the weight of the original worm can survive and regenerate [@morgan_experimental_1898]. With some others reporting that just 10,000 cells are required for complete cephalic regeneration [@montgomery_minimal_1974]. This may enable smaller sections from the side of the body to be used for regeneration. This would test memory retention while ensuring synaptic storage mechanisms are ruled out.
 
-## Summary and Future Directions
+## Summary and Future Directions {#sec-summary-and-future-directions}
 
 Memory research performed using popular model organisms such as rodents, birds and apes, allow for straightforward inferences to how human memory operates. However, research using these animals suffers from many restrictions on the kinds of manipulations that can be performed. Other limitations arise due to the high cost of housing and maintaining these animals. Planaria present a unique opportunity to investigate the nature of memory, as they provide a means for investigating learning and memory phenomena with high-throughput, low cost and a wide scope for exploratory investigations. Given their regenerative abilities, planaria can be used to answer questions unavailable when working with typical model organisms, such as whether memory can be retained outside of the brain.
 
@@ -1114,9 +1200,7 @@ As an alternative approach, one could search for another viable operant conditio
 
 Once a method for establishing effective operant conditioning has been reached, future experiments should consider whether it is viable to use a small fragment of trained planaria to test for memory retention. This will allow for a stronger test of the hypothesis that memories can be stored non-synaptically, as the neural tissue in the fragment can be minimised. Small fragments can be compared to tail fragments and or head fragments. If learning can persist in head and tail fragments but not the smaller fragments, then one may conclude that memory is stored outside of the centralised brain, but still maintained among synaptic connections in the ventral nerve cords.
 
-\newpage
-
-# References
+# References {#sec-references}
 
 ::: {#refs}
 :::
