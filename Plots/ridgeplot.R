@@ -1,8 +1,6 @@
 time_binned_dose_response_data <- read.csv('Datasets/dose_response_time_binned.csv')
 
 
-
-
 ######### ridgeplot of average distance across time for whole sample ############
 
 
@@ -37,6 +35,14 @@ ridgeplot <- ggplot(time_binned_dose_response_data, aes(x = Distance, y = Minute
        fill = "Minute",
        color = "Minute") +
   theme_minimal() +
-  theme(legend.position = "right",  # Position legend on the right
-        axis.title.y = element_text(margin = margin(r = 10), size = 16),  # Add space to the right of the y-axis label
-        axis.title.x = element_text(margin = margin(t = 10), size = 16))  # Add space above the x-axis label
+  theme(
+    # Increase axis titles size
+    axis.title.y = element_text(margin = margin(r = 10), size = 18),
+    axis.title.x = element_text(margin = margin(t = 10), size = 18),
+    # Increase axis text (tick labels) size
+    axis.text.y = element_text(size = 16, face = "bold"),  # Y-axis minute numbers
+    axis.text.x = element_text(size = 16, face = "bold"),  # X-axis distance numbers
+    # Other theme elements you might want to adjust
+    legend.title = element_text(size = 16),
+    legend.text = element_text(size = 14)
+  )  # Add space above the x-axis label

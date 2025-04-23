@@ -1,13 +1,13 @@
-#library(ggplot2)
-#library(RColorBrewer)
-#library(dplyr)
-#library(ggpubr)
-#library(tidyr)
-#library(ggridges)
-#library(viridis)
-#library(ggdist)
-#library(ghibli)
-#library(agridat)
+library(ggplot2)
+library(RColorBrewer)
+library(dplyr)
+library(ggpubr)
+library(tidyr)
+library(ggridges)
+library(viridis)
+library(ggdist)
+library(ghibli)
+library(agridat)
 
 dose_rainplot_data <- read.csv('Datasets/dose_response_50subjects_trial.csv')
 
@@ -38,7 +38,5 @@ rainplot <- ggplot(dose_rainplot_data, aes(x = Condition, y = Distance, fill = C
   scale_y_continuous(breaks = seq(0, 180, by = 20), limits = c(0, 180), expand = c(0, 0)) +
   # Line below adds dot plots from {ggdist} package
   stat_dots(side = "left", justification = 1.12, binwidth = 1.9)  
-# Line below adds half-violin from {ggdist} package 
-# stat_halfeye(adjust = .5, width = .6, justification = -.2, .width = 0, point_colour = NA)
 
 
