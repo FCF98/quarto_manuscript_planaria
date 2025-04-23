@@ -234,7 +234,7 @@ control_plot <- summary_data_w_sample %>%
                     ymax = mean_proportion + se_proportion), 
                 width = 0.2, linewidth = 1, color = "#159090") +
   # Add sample size labels just above the x-axis with matching color
-  geom_text(aes(label = label, y = 0.03), color = "#159090", size = 3.5) +
+  geom_text(aes(label = label, y = 0.03), color = "#159090", size = 4.5) +
   # Control group within comparisons
   geom_signif(
     annotations = "***",
@@ -255,14 +255,14 @@ control_plot <- summary_data_w_sample %>%
   labs(
     title = "Control Group",
     x = "Time Point",
-    y = "Mean Proportion of Active Arm Choices"
+    y = "Mean Proportion of Active Arm Entries"
   ) +
   theme_classic() +
   theme(
     text = element_text(family = "Times New Roman", size = 14),
     axis.title = element_text(size = 16, face = "bold"),
-    axis.title.y = element_text(margin = margin(r = 20)),
-    axis.text = element_text(size = 12, color = "black"),
+    axis.title.y = element_text(margin = margin(r = 16)),
+    axis.text = element_text(size = 16, color = "black"),
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "bottom",
     legend.title = element_text(size = 14, face = "bold"),
@@ -289,7 +289,7 @@ treatment_plot <- summary_data_w_sample %>%
                     ymax = mean_proportion + se_proportion), 
                 width = 0.2, linewidth = 1, color = "#FF8C00") +
   # Add sample size labels just above the x-axis with matching color
-  geom_text(aes(label = label, y = 0.03), color = "#FF8C00", size = 3.5) +
+  geom_text(aes(label = label, y = 0.03), color = "#FF8C00", size = 4.5) +
   # Treatment group within comparisons
   geom_signif(
     annotations = "**",
@@ -318,14 +318,14 @@ treatment_plot <- summary_data_w_sample %>%
   labs(
     title = "Treatment Group",
     x = "Time Point",
-    y = "Mean Proportion of Active Arm Choices"
+    y = "Mean Proportion of Active Arm Enties"
   ) +
   theme_classic() +
   theme(
     text = element_text(family = "Times New Roman", size = 14),
     axis.title = element_text(size = 16, face = "bold"),
-    axis.title.y = element_text(margin = margin(r = 20)),
-    axis.text = element_text(size = 12, color = "black"),
+    axis.title.y = element_text(margin = margin(r = 16)),
+    axis.text = element_text(size = 16, color = "black"),
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "bottom",
     legend.title = element_text(size = 14, face = "bold"),
@@ -363,7 +363,7 @@ combined_plot <- ggplot(summary_data_w_sample,
   geom_text(
     data = combined_labels,
     aes(x = x_pos, y = y_pos, label = label, color = Condition),
-    size = 3.5
+    size = 4.5
   ) +
   # Only between group comparison
   annotate("text", 
@@ -375,15 +375,15 @@ combined_plot <- ggplot(summary_data_w_sample,
   labs(
     title = "Between-Group Comparison",
     x = "Time Point",
-    y = "Mean Proportion of Active Arm Choices",
+    y = "Mean Proportion of Active Arm Entries",
     color = "Condition"
   ) +
   theme_classic() +
   theme(
     text = element_text(family = "Times New Roman", size = 14),
     axis.title = element_text(size = 16, face = "bold"),
-    axis.title.y = element_text(margin = margin(r = 20)),
-    axis.text = element_text(size = 12, color = "black"),
+    axis.title.y = element_text(margin = margin(r = 16)),
+    axis.text = element_text(size = 16, color = "black"),
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "bottom",
     legend.title = element_text(size = 14, face = "bold"),
@@ -432,9 +432,9 @@ individual_plots <- ggplot(data_long, aes(x = Time, y = ActiveArmProportion, gro
   geom_point(size = 2.5) +
   facet_wrap(~Subject_ordered, ncol = 6) +  # Use Subject_ordered instead of Subject
   labs(
-    title = "Individual Subject Active Arm Choices Over Time",
+    title = "Individual Subject Active Arm Entries Over Time",
     x = "Time Point",
-    y = "Proportion of Active Arm Choices"
+    y = "Proportion of Entries"
   ) +
   theme_bw() +
   theme(
@@ -457,48 +457,6 @@ individual_plots <- ggplot(data_long, aes(x = Time, y = ActiveArmProportion, gro
   scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
   scale_color_manual(values = c("Control" = "#159090", "Treatment" = "#FF8C00"))
 
-individual_plots
-
-# Save the plot
-ggsave("individual_subject_plots.png", individual_plots, 
-       width = 20, height = 24, dpi = 300, units = "in",
-       bg = "white")
-
-
-
-
-
-
-###### lollipop chart ######
-
-
-# Prepare the data for the lollipop chart
-lollipop_chart_data <- data_long %>%
-  filter(Time %in% c("Baseline", "Endpoint")) %>%
-  group_by(Subject, Condition) %>%
-  summarize(change = ActiveArmProportion[Time == "Endpoint"] - ActiveArmProportion[Time == "Baseline"],
-            .groups = "drop")
-
-# Create the lollipop chart
-ggplot(lollipop_chart_data, aes(x = as.factor(Subject), y = change, color = Condition)) +
-  geom_segment(aes(x = as.factor(Subject), xend = as.factor(Subject), y = 0, yend = change), 
-               color = "grey") +
-  geom_point(size = 3) +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
-  scale_color_manual(values = c("Treatment" = rgb(0.2,0.7,0.1,0.5), "Control" = rgb(0.7,0.2,0.1,0.5))) +
-  theme_light() +
-  theme(
-    panel.grid.major.x = element_blank(),
-    panel.border = element_blank(),
-    axis.ticks.x = element_blank(),
-    legend.position = "bottom"
-  ) +
-  labs(
-    x = "Subject",
-    y = "Change in proportion for active arm (Endpoint - Baseline)",
-    title = "Change active arm preference from Baseline to Endpoint",
-    subtitle = "Positive values indicate an increase, negative values indicate a decrease"
-  )
 
 
 
@@ -538,7 +496,7 @@ Data_long_days <- Exp2_data_w_exclusions %>%
   )
 
 # Create the visualization
-ggplot(Data_long_days, aes(x = TimePoint, y = mean_prop,
+Exp2_Conditioning_days <- ggplot(Data_long_days, aes(x = TimePoint, y = mean_prop,
                       color = Condition, group = Condition)) +
   # Add mean lines
   geom_line(linewidth = 1.5) +
