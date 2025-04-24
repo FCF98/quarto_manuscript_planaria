@@ -1,0 +1,12 @@
+\babel@toc {english}{}\relax 
+\contentsline {section}{Introduction}{1}{section*.3}%
+\contentsline {section}{Acknowledgements}{1}{section*.4}%
+\contentsline {section}{Table of Contents}{2}{section*.6}%
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Overview of Key Concepts in the Field of Learning and Memory}{3}{subsection.1.1}%
+\contentsline {subsubsection}{\numberline {1.1.1}Categories of Memory}{3}{subsubsection.1.1.1}%
+\contentsline {subsubsection}{\numberline {1.1.2}Associative and Non-associative Learning}{3}{subsubsection.1.1.2}%
+\contentsline {subsubsection}{\numberline {1.1.3}Maladaptive Learning}{4}{subsubsection.1.1.3}%
+\contentsline {subsection}{\numberline {1.2}Mechanisms of Memory Storage}{4}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}Memory Research in Animals and Invertebrates}{5}{subsection.1.3}%
+\contentsline {subsubsection}{\numberline {1.3.1}Planaria as a Model Organism}{6}{subsubsection.1.3.1}%
