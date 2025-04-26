@@ -159,7 +159,7 @@ return {
         for i=1,intabovetitle do 
           body:extend({newline})
         end
-        documenttitle = pandoc.Header(1, meta.apatitledisplay)
+        documenttitle = pandoc.Header(5, meta.apatitledisplay)
         documenttitle.classes = {"title", "unnumbered", "unlisted"}
         documenttitle.identifier="title"
         if not meta["suppress-title"] then
@@ -272,7 +272,7 @@ return {
         emailword = stringify(meta.language.email)
       end 
       
-      local authornoteheader = pandoc.Header(1, authornoteheadertext)
+      local authornoteheader = pandoc.Header(5, authornoteheadertext)
       authornoteheader.classes = {"unnumbered", "unlisted", "AuthorNote"}
       authornoteheader.identifier = "author-note"
       
@@ -499,7 +499,7 @@ return {
         if meta.language and meta.language["section-title-abstract"] then
           abstractheadertext = meta.language["section-title-abstract"]
         end
-        local abstractheader = pandoc.Header(1, abstractheadertext)
+        local abstractheader = pandoc.Header(5, abstractheadertext)
         abstractheader.classes = {"unnumbered", "unlisted", "AuthorNote"}
         abstractheader.identifier = "abstract"
         if FORMAT:match 'docx' then
@@ -583,6 +583,9 @@ return {
         body:extend({keywords_paragraph})
       end
 
+      -- Add acknowledgements section after keywords and before main content
+      if meta.acknowledgements and not meta["suppress-acknowledgements"] then
+        -- Add page break before acknowledgements
         if FORMAT:match 'docx' then
           body:extend({pandoc.RawBlock('openxml', '<w:p><w:r><w:br w:type="page"/></w:r></w:p>')})
         end
@@ -591,9 +594,86 @@ return {
           body:extend({pandoc.RawBlock('typst', '#pagebreak()\n\n')})
         end
         
+        local acknowledgementsheadertext = pandoc.Str("Acknowledgements")
+        if meta.language and meta.language["section-title-acknowledgements"] then
+          acknowledgementsheadertext = meta.language["section-title-acknowledgements"]
+        end
+        local acknowledgementsheader = pandoc.Header(5, acknowledgementsheadertext)
+        acknowledgementsheader.classes = {"unnumbered", "unlisted", "Acknowledgements"}
+        acknowledgementsheader.identifier = "acknowledgements"
+        
+        body:extend({acknowledgementsheader})
+        local acknowledgements_paragraph = pandoc.Para(pandoc.Str(""))
+        
+        if pandoc.utils.type(meta.acknowledgements) == "Inlines" then
+          acknowledgements_paragraph.content:extend(meta.acknowledgements)
+          local acknowledgementsdiv = pandoc.Div(acknowledgements_paragraph)
+          acknowledgementsdiv.classes:insert("AcknowledgementsFirstParagraph")
+          body:extend({acknowledgementsdiv})
+        end
+        
+        if pandoc.utils.type(meta.acknowledgements) == "Blocks" then
+          local acknowledgementsdiv = pandoc.Div({})
+          local acknowledgementsfirstparagraphdiv = pandoc.Div({})
+          local acknowledgementslinecounter = 1
+          if FORMAT == "typst" then
+            acknowledgementslinecounter = 2
+          end
+          meta.acknowledgements:walk {
+            LineBlock = function(lb)
+              lb:walk {
+                traverse = "topdown",
+                Inlines = function(el)
+                    local lbpara = pandoc.Para(el)
+                    
+                    if acknowledgementslinecounter == 1 then
+                      acknowledgementsfirstparagraphdiv.content:extend({lbpara})
+                      acknowledgementsfirstparagraphdiv.classes:insert("AcknowledgementsFirstParagraph")
+                    else
+                      acknowledgementsdiv.content:extend({lbpara})
+                      if acknowledgementslinecounter == 2 then
+                        acknowledgementsdiv.classes:insert("Acknowledgements")
+                      end
+                    end
+                    
+                    acknowledgementslinecounter = acknowledgementslinecounter + 1
+                    return el, false
+                end
+              }
+            end,
+            Para = function(para)
+              if acknowledgementslinecounter == 1 then
+                acknowledgementsfirstparagraphdiv.content:extend({para})
+                acknowledgementsfirstparagraphdiv.classes:insert("AcknowledgementsFirstParagraph")
+              else
+                acknowledgementsdiv.content:extend({para})
+                if acknowledgementslinecounter == 2 then
+                  acknowledgementsdiv.classes:insert("Acknowledgements")
+                end
+              end
+              
+              acknowledgementslinecounter = acknowledgementslinecounter + 1
+              return para, false
+            end
+          }
+          if acknowledgementslinecounter > 1 then
+            body:extend({acknowledgementsfirstparagraphdiv})
+          end
+          
+          if acknowledgementslinecounter > 2 then
+            body:extend({acknowledgementsdiv})
+          end
+        end
+      end
 
-  
-
+      -- Page break after acknowledgements, before main content
+      if FORMAT:match 'docx' then
+        body:extend({pandoc.RawBlock('openxml', '<w:p><w:r><w:br w:type="page"/></w:r></w:p>')})
+      end
+      
+      if FORMAT:match 'typst' then
+        body:extend({pandoc.RawBlock('typst', '#pagebreak()\n\n')})
+      end
       
       local myshorttitle = meta["apatitle"]
 

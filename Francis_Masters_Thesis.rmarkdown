@@ -1,0 +1,1344 @@
+---
+# Document Metadata
+title: "Probing the Limits of Memory: Can A Learned Response Persist Through Decapitation and Regeneration in Planaria?"
+shorttitle: "Persistance of Memory Through Regeneration in Planaria"
+author: 
+  - name: Francis Charles Forde
+    email: francisforde98@gmail.com
+    affiliations:
+      - name: Victoria University of Wellington
+        department: School of Psychology
+        address: PO Box 600, Easterfield Building, Kelburn Pde, Kelburn
+        city: Wellington
+        region: New Zealand
+abstract:
+  "Research stemming from the invertebrate literature is forcing us to question some of our assumptions about the nature of memory. Planaria, a flatworm with a centralised brain and incredible regenerative capabilities, have demonstrated retention of simple associative memories, such as associating a texture with a reward, in brainless tail fragments after decapitation. This suggests basic memories may be stored outside the brain but leaves open the question of whether complex goal-oriented memories share this capacity. To address this, we performed a series of Experiments to determine whether planaria can acquire an operantly conditioned response that persists for at least two weeks, and whether this can be retained in the brainless tail halves of decapitated planaria. 
+
+  Using a Y-maze paradigm, we established baseline arm preferences and then rewarded treatment subjects with either cocaine or methamphetamine for entering their non-preferred arm during conditioning. Control subjects received vehicle only (distilled water). For the key experiments, subjects were then cut into head and tail fragments and allowed to regenerate for 14 days before we tested for memory retention. The next day, subjects were exposed to the rewarding compounds to identify whether the memory could be brought back or strengthened with a reinstatement procedure. 
+
+  Our results were mixed as to whether planaria can learn and retain an operantly conditioned response. Experiments 3 and 4 provided preliminary evidence for learning, as treatment subjects entered the active arm more often at the end of conditioning. However, experiments 2 and 5 failed to show a significant change in behaviour compared to control subjects. We found no conclusive evidence that learned responses were retained in the brainless tail fragments, although the relatively weak learning may have limited the likelihood of successful retention. Future experiments will require more robust training methods to conclusively test the hypothesis of complex memory retention outside of the brain. 
+
+  The literature conveys that planaria are useful for answering questions relating to addiction and other learning processes. Yet, is our opinion that more sophisticated tasks must first be established if planaria are to produce insights that have implications for memory related processes and impairments in humans."
+
+acknowledgements: |
+  Stepping away from the corporate world to pursue a Masters degree was a big decision for me. But I was lucky enough to be surrounded by caring people who encouraged me to pursue my passion. My parents have always been my biggest supporters. Despite being hard working farmers, they have always backed me no matter what I choose to spend my time doing. Reading books, watching lectures and experimenting with rats and worms feels a bit useless in comparison to what they do every day. Yet, they have always been fully supportive and are always there when I need them. Thanks to you both Mum and Dad.
+
+  Sylvia, my partner, has been there for the day to day fluctuations in motivation, stress and working hours as I trudged away to complete this degree. You are, of course, one of my greatest supporters and consolers, helping to counsel me through the complexities of life. Thanks for earning the big bucks while I gave drugs to worms.
+
+  To all my firends and former colleagues, thanks for being patient with me as I ignored social invitations and ghosted Facebook messages while being too busy in the lab or too tired to do other things. Hopefully you will answer my messages as I attempt to catch up on lost social time. To my newly acquired science buddies, it has been great to learn and work alongside you. Particular thanks are owed to Meyrick Kidwell for your support with all things lab related, to Stephanie Huang for engaging discussions in neuroscience and for pushing me to learn new things, to Matt Ramirez for being in the planaria trenches with me in our overly humid room without a window in sight, and to Juan Canales for introducing me to the realm of planaria research. That said, there are many other members of the Behavioural Neurogenetics Lab who made my days at University enjoyable -- thanks to all of you!
+
+  I owe an extra sizable thanks to Bart Ellenbroek, for having me in his lab for two years and change. You are a great mentor and person. Your interests and personality always liven up our chats and lab discussions. Thanks for creating an atmosphere where I always felt like you have my back. Your jovial approach to life is something I hope to acquire as I move through mine. Thanks for always making time for me when I needed it.
+
+  Finally, thanks to Victoria University of Wellington for supporting my studies through the Wellington Graduate Award and the Wellington Master's by Thesis Scholarship.
+  
+
+suppress-author-note: true
+
+# Document Structure
+# If true, sections will be numbered (1, 1.1, 1.2, etc.)
+number-sections: true
+
+# Use to set position of footnotes
+reference-location: margin
+
+# If true, tables and figures are mingled with the text instead of listed at the end of the document
+floatsintext: true
+
+# Suppress the title above the introduction
+donotrepeattitle: true
+
+suppress-title-introduction: true
+
+# Number of blank lines to add above the title
+blank-lines-above-title: 2
+
+# Bibliography Settings
+# File with references
+bibliography: bibliography.bib
+bibliographystyle: apa
+
+# Link citations to references
+link-citations: true
+
+# Masks references that appear in the masked-citations list
+mask: false
+masked-citations: ~
+
+# Language Settings
+# Language options. See https://quarto.org/docs/authoring/language.html
+lang: en
+language:
+  citation-last-author-separator: "and"
+  citation-masked-author: "Masked Citation"
+  citation-masked-date: "n.d."
+  citation-masked-title: "Masked Title"
+  email: "Email"
+  title-block-author-note: "Author Note"
+  title-block-correspondence-note: "Correspondence concerning this article should be addressed to"
+  title-block-role-introduction: "Author roles were classified using the Contributor Role Taxonomy (CRediT; https://credit.niso.org/) as follows:"
+  references-meta-analysis: "References marked with an asterisk indicate studies included in the meta-analysis."
+
+# Global Format Settings
+# DPI (dots per inch) for figures
+fig-dpi: 300
+
+# Format for figures (png, jpg, etc.)
+fig-format: png
+
+# Code execution options
+execute: 
+  # Don't show code in output
+  echo: false
+  # Don't show warnings
+  warning: false
+  # Don't show errors
+  error: false
+
+# Output Format Settings
+format:
+  # DOCX output
+  apaquarto-docx: 
+    # Include table of contents
+    toc: false
+    toc-depth: 2
+    donotrepeattitle: true
+    #below doc allows me to change figure heading style to remove from TOC
+    reference-doc: "custom-style-reference.docx" 
+    #below supresses repeating thesis title before intro
+    suppress-title-introduction: true
+    
+  # HTML output  
+  apaquarto-html: 
+    # Include table of contents
+    toc: true
+    # Depth of headings to include in TOC
+    toc-depth: 2
+    # CSS file for styling
+    css: styles.css
+    
+  # Typst output
+  apaquarto-typst: 
+    # table of contents blocked, lua file used to insert under #toc section
+    toc: false
+    # Depth of headings to include in TOC
+    toc-depth: 2
+    # Keep the Typst source file
+    keep-typ: true
+    list-of-figures: true
+    list-of-tables: true
+    
+  # PDF output
+  apaquarto-pdf:
+    # Include table of contents
+    toc: true
+    # Depth of headings to include in TOC
+    toc-depth: 2
+    lof: true
+    # Can be jou (journal), man (manuscript), stu (student), or doc (document)
+    documentmode: jou
+    # Font size for document
+    fontsize: "12pt"
+    mainfont: "Times New Roman"
+    # a4 paper if true, letter size if false
+    a4paper: false
+    # Suppress the title above the introduction
+    donotrepeattitle: true
+    # Suppresses loading of the lmodern font package
+    nolmodern: false
+    # Suppresses loading of the fontenc package
+    nofontenc: false
+    # In jou mode, use times or pslatex instead of txfonts
+    notxfonts: false
+    # In jou mode, use Computer Modern font instead of times
+    notimes: false
+    # In jou mode, cancels automatic stretching of tables to column width
+    notab: false
+    # Uses Helvetica font in stu and man mode
+    helv: false
+    # In man and stu mode, neutralizes the \helvetica command
+    nosf: false
+    # In man and stu mode, uses typewriter font
+    tt: false
+    # Puts draft watermark on first page
+    draftfirst: false
+    # Puts draft watermark on all pages
+    draftall: false
+    # Masks references that are marked as the author's own
+    mask: false
+    # Journal name (for journal mode)
+    journal: ~
+    # Volume number (for journal mode)
+    volume: ~
+    # Course name (for student mode)
+    course: ~
+
+# Editor type
+editor: visual
+
+# Numbered lines (.pdf and .docx only)
+numbered-lines: false
+
+# Suppress title page
+suppress-title-page: false
+---
+
+```{r}
+#| label: global configuration and setup
+#| include: false
+
+#push updates using git push origin master
+
+#To pull updates git checkout origin/master -- Francis_Masters_Thesis.qmd
+
+# to push updates git commit -m "updating thesis manuscript"
+
+
+#removes scientific notation (e.g. 10 x e^2)
+options(scipen = 999)
+
+
+#YOu may need Rtools installed to enable lme4 and Matrix package to be installed
+#otherwise errors arise.
+
+# Conflicted
+if (!require("conflicted")) install.packages("conflicted")
+library(conflicted)
+
+if (!require("pwr")) install.packages("pwr")
+library(pwr)
+
+# Tidyverse
+if (!require("tidyverse")) install.packages("tidyverse")
+library(tidyverse)
+
+# Flextable
+if (!require("flextable")) install.packages("flextable")
+library(flextable)
+
+# ftExtra
+if (!require("ftExtra")) install.packages("ftExtra")
+library(ftExtra)
+
+# Knitr
+if (!require("knitr")) install.packages("knitr")
+library(knitr)
+
+# Here
+if (!require("here")) install.packages("here")
+library(here)
+
+# Patchwork
+if (!require("patchwork")) install.packages("patchwork")
+library(patchwork)
+
+# Rempsyc
+if (!require("rempsyc")) install.packages("rempsyc")
+library(rempsyc)
+
+# PNG
+if (!require("png")) install.packages("png")
+library(png)
+
+# Grid
+if (!require("grid")) install.packages("grid")
+library(grid)
+
+# JPEG
+if (!require("jpeg")) install.packages("jpeg")
+library(jpeg)
+
+# ggplot2
+if (!require("ggplot2")) install.packages("ggplot2")
+library(ggplot2)
+
+# APA
+if (!require("apa")) install.packages("apa")
+library(apa)
+
+# Ghibli
+if (!require("ghibli")) install.packages("ghibli")
+library(ghibli)
+
+# ggdist
+if (!require("ggdist")) install.packages("ggdist")
+library(ggdist)
+
+# RColorBrewer
+if (!require("RColorBrewer")) install.packages("RColorBrewer")
+library(RColorBrewer)
+
+# dplyr
+if (!require("dplyr")) install.packages("dplyr")
+library(dplyr)
+
+# ggpubr
+if (!require("ggpubr")) install.packages("ggpubr")
+library(ggpubr)
+
+# tidyr
+if (!require("tidyr")) install.packages("tidyr")
+library(tidyr)
+
+# ggridges
+if (!require("ggridges")) install.packages("ggridges")
+library(ggridges)
+
+# viridis
+if (!require("viridis")) install.packages("viridis")
+library(viridis)
+
+# agridat
+if (!require("agridat")) install.packages("agridat")
+library(agridat)
+
+# Conflicted
+if (!require("conflicted")) install.packages("conflicted")
+library(conflicted)
+
+# showtext
+if (!require("showtext")) install.packages("showtext")
+library(showtext)
+
+#svglite
+if (!require("svglite")) install.packages("svglite")
+library(svglite)
+
+#rstatix
+if(!require("rstatix")) install.packages("rstatic")
+library(rstatix)
+
+#dunn.test
+if(!require("dunn.test")) install.packages("dunn.test")
+library(dunn.test)
+
+#psych
+if(!require("psych")) install.packages("psych")
+library(psych)
+
+#psych
+if(!require("hrbrthemes")) install.packages("hrbrthemes")
+library(hrbrthemes)
+
+#psych
+if(!require("hrbrthemes")) install.packages("hrbrthemes")
+library(hrbrthemes)
+
+#effectsize
+if(!require("effectsize")) install.packages("effectsize")
+library(effectsize)
+
+#gghalves
+if(!require("gghalves")) install.packages("gghalves")
+library(gghalves)
+
+#ggtext
+if(!require("ggtext")) install.packages("ggtext")
+library(ggtext)
+
+#emmeans
+if(!require("emmeans")) install.packages("emmeans")
+library(emmeans)
+
+#DHARMa
+if(!require("DHARMa")) install.packages("DHARMa")
+library(DHARMa)
+
+#car
+if(!require("car")) install.packages("car")
+library(car)
+
+#lme4
+if(!require("lme4")) install.packages("lme4", type = "binary")
+library(lme4)
+
+#ggsignif
+if(!require("ggsignif")) install.packages("ggsignif")
+library(ggsignif)
+
+#readxl
+if(!require("readxl")) install.packages("readxl")
+library(readxl)
+
+#Matrix
+if(!require("Matrix")) install.packages("Matrix", type = "binary")
+library(Matrix)
+
+#colorspace
+if(!require("colorspace")) install.packages("colorspace")
+library(colorspace)
+
+set_here() #sets the working directory
+
+
+
+conflicts_prefer(dplyr::filter, .quiet = TRUE)
+conflicts_prefer(flextable::separate_header, .quiet = TRUE)
+conflicts_prefer(lme4::lmer, .quiet = TRUE)
+conflicts_prefer(cowplot::get_legend, .quiet = TRUE)
+
+```
+
+
+
+
+
+
+
+
+<!-- need to manually click update Table once rendered to word doc - uses docx-toc-placement.lua file -->
+
+::: {#toc}
+##### Table of Contents {.unnumbered}
+:::
+
+\newpage
+
+# Introduction {#sec-introduction}
+
+A brain in isolation is just a clump of extravagant cells. A brain earns its keep by liaising with the body and the external world. It is among these brain-environment interactions that an organism can set and achieve goals and, ultimately, carve a pathway to survival. But brains operate in the dark. Their only insight into the on-goings of the world is through delicately placed sensory organs such as the eyes, nose and ears.
+
+The sensory technology that each organism possesses, what philosophers call its sensorium, differs across species. Some build a picture of the world using light sensitive proteins. Others live where no light can penetrate and so must form their worldview using other sensory modalities like echolocation. Notwithstanding these differences, neuroscientists and biologists seek to understand the suite of abilities each organism possesses, the neuronal and molecular mechanisms which underpin these, and the factors that determine when and why an organism deploys the behaviours in its arsenal. But we do not usually do this for the sake of the organism itself. Rather, we use non-human organisms with the hope of learning something about our own brains and bodies.
+
+We now have a broad tool set for inspecting brains across different time spans and at different levels of analysis. From looking at activity within a single dendritic spine over microseconds to looking at connectivity between different brain structures over several minutes. We can even track changes in the size of spines on a single dendrite over time – impressive given the width of a spine is 100 times smaller than the thickness of a human hair [@bayramoglu_hair_2022; @li_current_2023]. At the network level, we are able to identify groups of neurons (ensembles) involved in encoding and storing a memory, and can use precise tools to excite or inhibit those networks to alter an animals behaviour [@goshen_optogenetic_2014].
+
+Our experimental competency arose from many small steps. Before we had the capability for manipulating neurons to understand their role in memory, we had to attack things more abstractly. Our early exploration of how memory functions involved basic procedures like learning lists of nonsense syllables or simple motor tasks. Very basic stuff. But this early research helped answer the question of whether memory is a unitary system or a suite of separate systems which can be dissociated. Out of this fell the distinction between episodic and semantic memory, as well as short- and long-term memory storage. Early theoretical progress provided the foundation upon which specialised tools and procedures could be developed. With these, we can now investigate and characterise the biology of memory in its different forms.
+
+## Overview of Key Concepts in the Field of Learning and Memory
+
+### Categories of Memory
+
+Memory is the embodiment of past experience which shapes our future behaviour. Learning, on the other hand, is the process of memory acquisition. That said, there may be as many different definitions of learning and memory as there are papers published on the topic. @barron_embracing_2015 surveyed the various uses of the term "learning" across disciplines including cognitive psychology and behavioural ecology, and identified at least 50 definitions (albeit with a lot of overlap). Memory has been parceled into several distinct categories based on the content of the information held (see @fig-figure1 below). A major distinction was made between explicit and implicit memory [@squire_memory_1987; @schacter_memory_1994]. Explicit memories are those accessible to conscious awareness, like the memory of where you parked your car this morning. Implicit memories cannot be consciously accessed but still affect behaviour, an example being the muscle memory used to ride a bike. Explicit memory has been further subdivided into episodic and semantic memory [@tulving_episodic_1972]. Episodic refers to the rich experiential quality of personal memories, while semantic relates to things that you know but which lack an experiential component, such as facts about the world.
+
+Memory can also be categorised temporally. @spence_human_1968 proposed a model with three stores that process memories over time: a sensory register, short-term store, and long-term store. This division is still usefully applied in the field of learning and memory [e.g., @miller_timescales_2024]. The temporal framing of memory reflects the process of learning itself. Learning is normally broken up into several stages, each building on prior stages to fortify the memory and increase its longevity (see @sec-mechanisms below). Initially, information we process enters a short-term state and may alter behaviour and decision making in the immediate future. However, most sensory information is not retained. Only meaningful information is given permanent residence. For this to occur, a set of active processes are required to ensure the information is maintained so that it can be accessed in perpetuity. This stage, known as consolidation, pushes back against the otherwise imminent process of forgetting.
+
+These distinctions are reasonable in the context of human memory. But it is not clear whether these distinctions generalise to other organisms. Most people do not attribute rich experiential memories to rodents, let alone invertebrates. Yet even very simple organisms such as planaria (see @sec-planaria-as-a-model-organism) have the capacity to retain and act on information from their environment. Viewing memory as a range of dissociable information stores is particularly relevant when investigating whether information can be stored outside of the central nervous system. If, as recent research suggests, memories are able to be stored outside the brain (discussed in @sec-review-of-planarian-memory-literature), the categories outlined here will help us to explore which forms of information have this property and which do not.
+
+While non-associative memories such as sensitisation may be stored outside of neural networks, perhaps rich episodic experiences can only be stored among complex ensembles of neurons in the brain. We do not yet know the bounds memory storage outside of the central nervous system. Armed with these conceptual distinctions of memory, researchers can investigate a broad range of training techniques to identify which forms of memory persist outside the brain and which do not.
+
+
+
+
+
+
+```{r, eval = TRUE}
+#| label: fig-figure1
+#| fig-cap: "Categorisation of Memory"
+#| apa-note: "Theoretical categorisation of memory based on the content and conscious accessibility of the information. The major explicit/implicit distinction was first put forward by Endel Tulving (1972). Figure adapted from Squire (1987)."
+#| fig-width: 8
+#| fig-height: 5
+#| fig-align: "center"
+#| include-in-header: false
+
+library(png)
+library(grid)
+Figure1 <- readPNG("Figures/Figure1.png") 
+grid.raster(Figure1)
+```
+
+
+
+
+
+
+### Associative and Non-associative Learning
+
+Associative learning requires learning the temporal relationship between two stimuli. For example, one stimulus reliably precedes another, or a behaviour reliably elicits a reward. Non-associative forms of learning captures learning about a stimulus itself, but not in relation to other stimuli. This typically takes the form of behavioural sensitisation or habituation. If you were to deliver a mild shock to my hand, I would withdraw it reflexively as part of the innate startle response. But with repeated administration of the shock over time, I would learn that the shock is not harmful. The size of my startle response would decrease (habituation). I have learned something about the shock, but have learned nothing about its temporal relationship with other stimuli. To translate this example to an associative form of learning, a moderate shock could be delivered after being shown a picture of a sunflower. I would learn an association between the flower imagery and the subsequent painful experience. With repeated pairings, I would display a preemptive startle response (tense muscles, squint my eyes, dip my head) to presentations of the flower alone. I have learnt a temporal association between the flower and the shock such that my body now predicts and prepares for the shock before it arrives.
+
+Classical conditioning and operant conditioning are two frequently used forms of associative learning. Classical conditioning involves learning an association between two or more stimuli, as in the flower/shock example above. Operant conditioning differs from classical conditioning in that rather than one stimulus being paired with another stimulus, a behaviour comes to be associated with a specific outcome. For example, I learn that signing up to psychology experiments often involves being exposed to irritating stimuli. This changes the likelihood of that response being produced in the future. In other words, I stop signing up as a participant.
+
+### Maladaptive Learning
+
+The examples outline above capture learning in cases where it is beneficial for the learner. In the classical conditioning case described above, preparing for a shock by tensing my muscle tissue reduces the painfulness of the experience and minimises the chance of tissue damage. For the operant conditioning case, avoiding future experiments would mean I am exposed to less unnecessary irritants. Although these are mundane examples, we will all encounter consequential cases whereby our wellbeing and longevity are enhanced by learning from past experience. A close call when crossing a road (and the negative physiology experience that ensues) increases the likelihood of diligently looking both ways before future crossings. But learning is not always protective.
+
+The capacity for learning leaves us vulnerable to developing maladaptive habits. Consider Rebecca's first experience with heroine. Prior to consumption, Rebecca has heard about heroine, but only in the sense that she knows it is a harmful drug, that similar drugs are used in a medical setting, and so on. She has no prior subjective experience of its effects. After several experiences with the drug, she learns about the intense sense of euphoria that comes from its consumption. Later, Sarah develops a strong motivation to take the drug again, especially when she sees drug associated cues (syringes, white powder etc.).
+
+Without the capacity to form such associations, addiction would not be an issue. Sarah would fail to remember what actions led to such euphoric experiences, and no motivations would be aroused at the sight of drug paraphernalia. Addiction arises from the often useful ability to remember what past actions and events resulted in positive and negative experiences. In Rebecca's case, the euphoria experienced while initially using the drug led to a neurological rewiring. It is as if the cognitive system used for goal pursuit has been hijacked to pursue heroine, even in the face of adverse consequences [@panksepp_role_2002; @tan_drugs_2024].
+
+Many aspects of poor mental health, including features of depression, PTSD, and anxiety, only arise because of our ability to learn. For example, anxiety entails worry or concern over some perceived threat. The threat has not yet occurred, but to a person with anxiety, past experience of similar circumstances creates excessive fear as they imagine a similar negative outcome occurring in the future. If we can understand what biological mechanisms create associations between a context and a negative outcome, as in the case of anxiety, we can then develop methods which unpick the maladaptive associations and reduce human suffering. While we have made progress in our understanding of how memories are forged at the molecular and cellular level, there are many unknowns which constrain our ability to create useful interventions.
+
+## Mechanisms of Memory Storage {#sec-mechanisms}
+
+As described earlier, the process of acquiring an enduring memory involves transforming information from a temporary state to a stable state. But this is not a usual trajectory for most of the information we encounter. The most common fate is for information to be quickly forgotten. This is evolutionary sensible. Storing information takes energy and physical real estate, and attaining energy comes at a price. Every organism therefore has a small number of things about which it must study extensively and track over time. But most of the information an organism encounters, be it visual, tactile, or olfactory, is not worth storing. A gazelle cares about the scent of a cheetah, but cares not for the small beetle being crushed under its foot as it moves. While a gazelle's brain may process information about both stimuli, it is not equally likely to store both experiences and the contexts in which they took place.
+
+When discussing how information is stored, one becomes steeped in complex biological pathways. These pathways involve proteins interacting with other proteins, proteins interacting with DNA, and the production of new proteins. In the neurobiological literature, much of the discussion around learning takes place at the level of the synapse -- a synapse being the point where two neurons interact. Typically, the axon from neuron A attaches to a dendrite from neuron B and forms a synapse. Synapses are the locus of communication in the brain. At an abstract level, learning occurs when incoming stimulation affects downstream dendritic spines such that they move through the following sequence of stages: generation, stabilisation, consolidation, and maintenance [see @rudy_neurobiology_2014 for a digestible overview of each stage]. Complicated mechanisms are involved in each stage of learning, and not all the components are fully understood. Despite that, the literature provides a good account of many important molecular events thought to be involved in storing information in the brain so that it can be accessed in the future.
+
+When some new bit of information has been acquired by the brain, its physical embodiment is referred to as a "memory trace" [@asok_molecular_2019; @robins_21st_2023; @semon_mneme_1921]. To generate this memory trace, a post-synaptic influx of calcium (resulting from stimulation by an upstream neuron A) is necessary [@lynch_intracellular_1983; @cavazzini_ca2_2005]. Once inside the pos-synaptic dendrite, calcium interacts with intracellular proteins that break down actin into smaller chunks [@lynch_ltp_2007]. Although actin helps give structure to dendritic spines, dissasembly is necessary to create room for more receptors into the membrane of neuron B. Adding receptors to the membrane makes the spine on neuron B more sensitive to the upstream firing of neuron A, and thus more likely to itself fire an action potential in response. This rapid change in sensitivity (potentiation) is short lived. Without further processing, the potentiated state will revert back to baseline.
+
+Stabilisation of the memory trace requires expanding and strengthening the post-synaptic actin network to solidify the heightened sensitivity [@chen_changes_2007]. The spine head is enlarged and as a result, the actin scaffolding is modified to make it less vulnerable to being disassembled in the future. In addition to actin reorganisation, cell adhesion proteins in the cell membrane help to couple the pre- and post-synaptic neurons, improving the effectiveness of neurotransmission [@huntley_cadherin_2002]. With these two key modifications, the pencil marks of memory are laid down. But these scratchings must be committed to ink to stand the test of time.
+
+Consolidation is where the cellular changes are solidified to stave off forgetting. Consolidation is unique in that it involves the production of new proteins. In response to neuronal stimulation, a number of events take place in the postynaptic neuron. One response is the activation of proteins which are able to enter the nucleus and bind to DNA. This activity leads to transcription of new molecules (messenger RNA) that will later be turned into proteins including receptors. This genomic signaling ensures new proteins are continually minted, providing a sufficient pool of receptors and other elements needed to keep the spine in a state of heightened sensitivity. But the events of consolidation are not final. The post-synaptic cell enters a maintenance stage where the supply of membrane receptors produced and inserted into the membrane remains heightened. Moreover, the typical dynamics of receptor removal and recycling is slowed. More excitatory receptors remain on the cell membrane which ensures heightened sensitivity to signals from presynaptic neurons both now and in the future.
+
+## Memory Research in Animals and Invertebrates
+
+Many organisms have been poked and prodded during our efforts to understand the mechanisms of memory. Scrub jays, a bird sporting a bold blue coat and pointed black beak, have been recurring subjects in studies investigating spatial memory. This is because of their food caching expertise [@shettleworth_how_1982]. Sophisticated techniques have been used to study changes in hippocampal volume in response to caching. The possibility of season-dependent changes in hippocampal neurogenesis in caching birds has also been explored [reviewed in @pravosudov_25the_2007].
+
+Rodents have featured heavily in the experimental memory literature [@ghafarimoghadam_review_2022]. Recent advances in stimulation and imaging, specifically techniques like optogenetics [@goshen_optogenetic_2014] and two-photon microscopy [@kawakami_vivo_2015], have enabled us to study representation of different types of memory at levels ranging from individual synapses to neuronal ensembles. Moreover, the last two decades saw a growing interest in episodic memory in rodents. In the rodent literature, episodic memory is the ability to represent the past and draw on specific encoded events in a manner akin to mental time travel [@tulving_episodic_2002; @eacott_mental_2007; @krause_episodic_2022]. Intricate tasks have been developed which enable rats to demonstrate memory for the context in which a stimulus had been previously presented, and to disentangled this from mere familiarity with the stimulus due to temporal proximity [@panoz-brown_rats_2016]. However, the existence of episodic-like memory in non-human animals remains controversial [@tulving_episodic_2005; @hoerl_thinking_2019]. The establishment of procedures for identifying and manipulating complex episodic memory, by optogenetic and other means, may help identify the mechanisms (synaptic or molecular) that underpin episodic memory in humans.
+
+Research in birds and rodents has supplied decades of insights into the brain regions involved in memory. But to understand the precise structural and molecular changes that underpin the creation of memory, the field turned to invertebrates. The simplicity of invertebrate neural architecture allows researchers to account for and track the entirety of a nervous system, and to observe the functional specificity of individual neurons. However, simplicity is not the only benefit. Costs can also be significantly reduced and environmental variables are more easily controlled. Moreover, ethical concerns are diminished due to the reduced likelihood of finding meaningful sentience at this level.
+
+Although largely unknown outside of the sciences, *Aplysia* is a celebrity among the invertebrates for its contribution to the neurobiology of learning. *Aplysia* is a marine snail with a simple nervous system. The abdominal ganglion (collection of neurons) of *Aplysia* is home to the largest known neurons in nature [@moroz_aplysia_2011]. This makes it an ideal candidate for studies using electrophysiology -- the approach where neural activity is recorded by inserting electrodes into cells or in the space surrounding cells. In *Aplysia*, stimulation of the siphon used for transporting water throughout the body leads to a defensive retraction of the gill [@carew_classical_1981]. Repeated stimulation leads to a decrease in the intensity and length of the retraction, a simple form of non-associative memory called habituation [@pinsker_habituation_1970]. Admittedly, this simple form of learning is of limited relevance to human cognition. Yet, this basic adaptation in *Aplysia* served as a platform for understanding the general principles of learning from generation to consolidation and maintenance. It is thought that these stages of information processing are conserved throughout nature and underpin more complex forms of learning that are of interest to humans [@kandel_principles_2021, p. 1330].
+
+*C. elegans* is another organism which towers above most invertebrates in terms of popularity. *C. elegans* gained prestige after it was the first organisms to have its connectome mapped [@white_structure_1986]. Understating the wiring of all 302 neurons in *C. elegans* allowed for a systems perspective of the nervous system. We could piece together the role of each neuron in helping the body to perform actions such as navigation, digestion, and defensive behaviours. Although the nervous system of *C. elegans* is small compared to that of mammals, it revealed principles of neuronal organisation which persist across brains of all sizes. Principles such as reciprocal inhibition to facilitate movement, computing at the level of the cell for efficiency, and minimising the total length of neuronal wire [@sterling_principles_2015]. We may find comfort in distancing ourselves from so-called "lower organisms", but nature is indifferent to our need for preeminence. Our brains may be bigger, but nature has equipped us with many of the same basic processes for learning, navigating, and operating in a complex world.
+
+The study of invertebrates revealed that even complex behaviour can arise from a modest number of neural cells. Consider that *C. elegans* has less connections in its entire nervous system (\~7000) than a single mammalian pyramidal neuron [@cook_whole-animal_2019; @sterling_principles_2015; @megias_total_2001]. Yet, this bare-bones neuronal setup is sufficient for detecting a variety of chemical and olfactory cues, navigating the environment, escaping threats and detecting dynamic environmental signals such as temperature changes and social crowding. As we climb the ladder of complexity from *C. elegans* to more sophisticated invertebrates, the cognitive capabilities and potential for translational insights expands in turn.
+
+### Planaria as a Model Organism {#sec-planaria-as-a-model-organism}
+
+Planaria are a broad group of invertebrates which have become a key part of several areas of research [see @fig-Planaria-phenotypes]. Planaria are being used to investigate questions in regenerative biology [@karami_planarians_2015], toxicology [@li_effects_2008; @hagstrom_comparative_2019], radioprotective materials [@ermakov_planarians_2021] addiction [@raffa_planaria_2008], and the effect of zero gravity environments on morphology [@vista_ssep_mission_11_team_studying_2018]. Planaria have built niches across many ecological contexts and can be found in salt-water and fresh-water environments, and also on land. Land dwelling planaria span up to half a meter long [@esser_land_1981], whereas freshwater planaria, which are more commonly used in behavioural research, are typically less than a centimeter in length [@vasquez-doorman_current_2022].
+
+Planaria are bilaterians. They display bilateral symmetry across their left and right sides [@sluys_planarian_2018]. Planaria exhibit anterior-posterior polarity, such that their head can be distinguished from the tail in both its structure and its behavioural repertoire. While the tail end of a planarian is rather uninteresting, the head has many intriguing features. Auricles are what give the head of many planarian species a triangular shape. Auricles are thought to support the detection of food and noxious chemicals in the immediate environment [@asano_rhodopsin-like_1998]. Eyespots, which are the most discernible feature of planaria, sit atop the dorsal surface of the head. These light-sensitive cell clusters allow planaria to detect light intensity and direction [@shettigar_hierarchies_2017].
+
+
+
+
+
+
+```{r, eval = TRUE}
+#| label: fig-Planaria-phenotypes
+#| fig-cap: "Image of two planaria from our breeding colony (species unknown)"
+#| apa-note: "There were presumably two different phenotypes among the planaria collected from the river which supplied our breeding colony, although a detailed genetic analysis is currently ongoing. The left image shows the brown coloured planaria, while the right image shows the darker black coloured planaria. The contrast and brightness of the images were enhanced to make the differences more visible."
+#| fig-width: 4.2
+#| fig-height: 3
+#| fig-align: "center"
+
+library(png)
+library(grid)
+Planaria_phenotypes <- readPNG("Figures/Planaria_phenotypes.png") 
+grid.raster(Planaria_phenotypes)
+```
+
+
+
+
+
+
+Of particular interest to neuroscientists, the planarian head harbors a bilobed brain which is needed to coordinate activity throughout the body [@inoue_planarian_2015]. This simple neural structure is of special evolutionary significance as planaria are thought to be the oldest organism to house an organised central nervous system, or what we might call a true brain [@pagan_first_2014; @sarnat_brain_1985]. In real terms, the planarian brain lacks many features compared to the exuberance of the mammalian brain. But relatively speaking, the brain-to-body-mass ratio of planaria is similar to that of a rat [@best_transphyletic_1983].
+
+The planarian brain resembles a horseshoe [@agata_structure_1998; @sarnat_brain_1985] and has been estimated to contain between twenty to thirty thousand neurons [@inoue_functional_2017, p.82]. The brain exhibits nine branches on each side which radiate out from the center. The lobes of the brain form thin nerve cords at their posterior end. These cords extend down the length of the body towards the tail and, together with the brain, comprise the central nervous system (see @fig-Planarian_CNS). The left and right nerve cords are connected by commissures which form a ladder-like structure [@sluys_planarian_2018].
+
+Planarian neurons appear more similar in structure to those of vertebrates than to those of other invertebrates [@sarnat_brain_1985]. They feature spine-like protrusions on their dendrites [@sarnat_brain_1985; @petralia_diversity_2016], and contain many dendritic branches but only a single axon. Zooming in further, planarian neurons contain a variety of synaptic vesicles, such as clear and dense-core variations, which resemble those seen in vertebrate neurons [@oosaki_observations_1965]. Most relevant to the research described in this project, planaria produce many of the same neurotransmitters and neuromodulators that we humans possess. These include serotonin, dopamine, epinephrine, acetylcholine, GABA, glutamate and opioid peptides [@sarnat_brain_1985; @welsh_monoamine-containing_1970; @rawls_measurement_2006; for a comprehensive review of planarian neurochemistry see @buttarelli_neuropharmacology_2008].
+
+
+
+
+
+
+```{r, eval = TRUE}
+#| label: fig-Planarian_CNS
+#| fig-cap: "Anatomy of the planarian central nervous system (species unknown)"
+#| apa-note: "Figure 28 from Jordan, D. S. & Heath, H. (1902) Animal Forms; a Second Book of Zoology, public domain"
+#| fig-width: 4
+#| fig-height: 3.2
+#| fig-align: "center"
+
+library(png)
+library(grid)
+Planarian_CNS <- readPNG("Figures/Planarian_CNS.png") 
+grid.raster(Planarian_CNS)
+```
+
+
+
+
+
+
+The physiologist August Krogh posited that "You will find in the lower animals mechanisms and adaptations of exquisite beauty and the most surprising character" [@krogh_progress_1929, p.203]. The conservation of neurochemistry in planaria is noteworthy. But it is their regenerative ability that makes them worthy of Krogh's dictum. Many planaria species undergo a natural form of fission as part of their reproductive cycle. They tear themselves in half, with each half then regrowing all the necessary parts of its basic body plan to form a complete planarian again -- a form of reproductive immortality. Regeneration is not completely novel in nature. Humans can regrow skin, and salamanders can regrow amputated limbs. But what sets planaria apart from the rest of the natural world is their ability to regrow tissue for the brain and central nervous system.
+
+Planarian regeneration is facilitated by adult pluripotent neoblast cells which are found throughout the body [@neuhof_vertically-_2016; @reddien_fundamentals_2004]. After significant injury, these cells proliferate and undergo differentiation, providing the cell types needed to restore organs, membranes, and neural networks in the brain. This capability has drawn interest from medical researchers for more than a century [@morgan_experimental_1898; @child_patterns_1941; @reddien_cellular_2018]. By understanding the factors that control planarian regeneration, we may be able to artificially simulate these processes in humans to restore limbs or neural structures after injury. Commercial ventures are already being established in this area. Companies such as Morphoceuticals are looking to apply lessons learnt from planarian regeneration to rodents and, pending pre-clinical success, eventually humans [@pio-lopez_morphoceuticals_2023; @saltzman_boston_2023].
+
+### Review of the Planarian Memory Literature {#sec-review-of-planarian-memory-literature}
+
+In the 1900's, there was still some debate regarding whether invertebrates have the cognitive means needed to learn. A skeptical approach was evident from Donald Jensen in the 1970s who posited that "no invertebrate, no matter how complex is capable of showing 'true learning'" [quoted in @rilling_mystery_1996, p. 591]. This view established an artificial barrier separating organisms that suitably model human cognition from those that do not. Because invertebrates were overlooked, researchers tried to make progress on the neurobiology of memory using the complex nervous systems of rodents. After many years searching for the rodent engram, the collection of neurons underlying a specific learning event, this venture unearthed little of value [@mcconnell_manual_1967, pp. 2-3]. A group of psychologists including James McConnell in the 1970s were aware that little progress was being made in this endeavor. The group moved defiantly away from rodents and drifted towards invertebrates. Starting with much simpler organisms would allow researchers to progress past mere descriptions and arrive at an actual understanding of the mechanisms of learning.
+
+At first, McConnell and colleagues completed basic experiments showing that planaria could learn to associate a light (conditioned stimulus, CS) with a shock (unconditioned stimulus, US) [@mcconnell_effects_1959]. Compared to control subjects, trained planaria would exhibit more body contractions in response to light and perform more changes of direction. But criticism arose over the lack of controls in these experiments [@travis_replicating_1981]. Later follow ups included blinding the experimenter and testing for confounding factors such as pseudo-conditioning (where additional stimuli elicit the unconditioned response despite no temporal relationship) and sensitisation (an increase in responding to the CS due to repeated presentation, rather than because of its association with the US). Contrary to the expectations of psychologists at the time, evidence for learning in invertebrates accrued study after study. It was eventually impossible to deny the ability to form stable associative memories to these rudimentary creatures. McConnell and others such as Eric Kandel established definitively that invertebrates are capable of learning, retaining, and acting on information.
+
+Forming associative memories is an impressive feat given the bare-bones layout of the planarian brain. But why pursue planaria as a model organism? Why not shift all our resources towards other sophisticated invertebrates like honeybees and fruit flies? It was the pairing of a capacity to learn with the rare ability for regeneration in planaria that sprouted one of the most peculiar branches of research to date: the investigation of memory retention after decapitation and regeneration of the brain. This unique combination allowed researchers to ask what happens if you condition a planarian then cut it in half? Does the tail, which needs to regenerate its head and central nervous system, retain any prior learning? James McConnell, alongside Allan Jacobson and Daniel Kimble were the first scientists to pose and pursue an answer to this question [@mcconnell_effects_1959]. Across a range of different training procedures, McConnell and colleagues found that regenerated planarian tails indeed retain information. This challenged the intuition that memories could only ever be stored in the brain, at least in some instances [@mcconnell_manual_1967]. Instead, through some mechanism, memories are stored or backed up outside the brain and can be reinstantiated in the new brain during regeneration.
+
+Due to controversial studies on the mechanism of memory persistence, interest in planaria eventually waned [@rilling_mystery_1996]. Thirty years later, this area underwent a modern resurgence thanks to the work of @shomrat_automated_2013. The authors published an important paper which used an automated training protocol to revisit the memory retention effect. Planaria, like rodents, are hesitant to approach food in the center of a novel environment [@best_protopsychology_1963]. They will first explore the territory, and only then engage in consumption. As planaria become familiar with the environment through repeated trials, they begin to approach the food more quickly, demonstrating a form of recognition memory [@best_protopsychology_1963]. The authors explored whether this type of memory persists in the tails of trained planaria following complete regeneration of the brain.
+
+Over ten consecutive days, half of the planaria were fed on the novel rough surface ("familiar" planaria) while the other half were only fed on a common smooth surface ("naive" planaria). At the end of the training period, the familiar group took a significantly shorter amount of time to approach and consume the food in the rough environment. Both groups were then bisected into head and tail halves and left to regenerate for 10-14 days. The authors then looked at whether the tail regenerates of familiar planaria retained familiarity of the rough environment and thus approached food more quickly compared to the naive tail offspring. The data revealed that regenerated tail fragments from familiar planaria did approach the food more quickly, however, this did not reach statistical significance. After undergoing the same training procedure as the original planaria, the authors found that regenerated tail fragments from familiar planaria demonstrated a form of memory savings. The familiar tail regenerates became accustomed to the rough environment faster than regenerates of control planaria. This indicated that some memory trace from prior training survived brain regeneration but required repetition of the training process for the memory savings to be expressed.
+
+More recently, @samuel_addiction-related_2021 corroborated this puzzling memory retention effect. The authors used sucrose to shift the surface preference of planaria from their innate preference for a smooth surface to the sucrose-paired rough surface. After amputating the planaria and allowing time for head regeneration, it was observed that the tail halves retained the sucrose-paired rough preference, despite the newly regenerated brain never having been exposed to the rough surface. In contrast, the tail halves of control planaria -- which were exposed to the rough surface but did not receive sucrose in this environment -- showed the expected initial preference for the smooth surface.
+
+Memory retention experiments presuppose that although a brain is not necessary for memory storage, it is needed to act upon the memories. For this reason, sufficient time is always allotted for the brain to regenerate. However, a recent preprint by @shimojo_preservation_2022 challenges this assumption. They tested whether planarian tails can show retention of a conditioned response prior to regeneration of the brain. In this study, planaria were trained to associate a neutral weak UV light (conditioned stimulus) with an aversive shock (unconditioned stimulus). The shock typically causes planaria to twist their body -- an unconditioned contortion response. After pairing the light with the shock, planaria will display a conditioned contortion response to the UV light alone. On the second and third day after dissection, well before the brain is thought to be reformed, the tail halves were exposed to the conditioned stimulus over a number of trials and their responses were recorded. The authors analysed the data using a deep neural network to classify behaviour. They found that most responses from the tail halves were similar to those produced by an electric shock rather than those produced by a neutral ultraviolet light. Ultimately, this suggested the tail halves retained the conditioned behaviour and were able to act on it despite lacking a brain at the time.
+
+@rhodes_effects_2024 followed a similar procedure to establish conditioned negative phototaxis in planaria (moving away from light). Typically, planaria are strongly averse to blue light, mildly averse to green light, and are indifferent to red light [@paskin_planarian_2014]. Planaria were trained to associate a neutral red light with an aversive green light across 5 days. After conditioning, half of the planaria were bisected into head and tail halves. Three weeks later, all planaria were tested for retention of the conditioned response. Both head and tail regenerates retained the conditioned memory as well as intact planaria. Moreover, memory retention was not statistically different when comparing head regenerates to tail regenerates. This study adds to the evidence suggesting that tail regenerates can retain and act on a memory even after total loss of the brain.
+
+There are a number of issues with the study by Rhodes and Vierick, which represent common limitations in the planarian literature. First, the number of planaria per group was very small. Most contained just four to six subjects. Another key issue is it was not clear how the dependent variable was operationalised. For example, how much movement was necessary to qualify as negative phototaxis on a given trial? We must maintain skepticism for individual studies given their limitations. But the number of findings showing successful retention of learning through regeneration provides strong support for the phenomenon.
+
+Classical conditioning procedures are common in the planarian literature, but some experimenters have also employed operant conditioning methods [@crawford_operant_1967; @chicas-mosier_new_2015; see @best_behavior_1963 for a review of early studies]. A simple learning procedure known as the Van Oye maze was one of the first forms of reinforcement learning in planaria [@van_oye_over_1920; @wells_training_1967; @raffa_analysis_2008]. In the typical setup, planaria are housed in a beaker and a fishing line with food is suspended just below the water surface. Planaria can detect the presence of food and navigate towards it [@ash_chemical_1973; @miyamoto_chemotaxis_1985]. Planaria must navigate up the wall, across the surface and down the line to reach the food. This is a low probability behaviour, but some small percentage will find their way to the fishing line and be reinforced by the food.
+
+Many planaria will learn to reliably perform this chain of behaviour when food is present in the environment. Control planaria, on the other hand, undergo the same procedure but without the food reward attached. At test, food is not placed on the rod, but is instead dissolved in the water beforehand. The dissolved food is a cue that food is available. Trained planaria are subsequently found in much greater numbers on the suspended line compared to control subjects. Across five experiments performed by Wells, an average of \~17 trained subjects were found on the line at test compared to an average of \~3 experimental subjects [reviewed in @corning_planarian_1970]. This procedure demonstrated that planaria can be trained using reinforcement learning.
+
+Another operant conditioning study was conducted by @corning_retention_1966 during the height of planaria fame. Corning wondered whether operant conditioned behaviours could persist through regeneration. Using a T-shaped apparatus, planaria were trained via positive reinforcement to select their least preferred side. Reinforcement consisted of being returned to the home arena for 10 minutes after making a correct choice. After incorrect choices planaria were taken to the start of the maze for another trial. A threshold for successful learning was set at nine out of ten consecutive correct choices across trials. Planaria that met this threshold were bisected.
+
+After a two to three week regeneration period, the regenerates (both heads and tails) were given a baseline preference test and were subsequently conditioned to criterion. Corning found that the baseline of trained tail regenerates differed significantly from the baseline of the original planaria, while untrained planaria tail regenerates did not differ from the original subjects. This suggested that the trained tail regenerates retained the prior learned preference, implying that operant conditioned behaviour can be retained outside of the planarian brain. Furthermore, the regenerates of trained planaria could also be conditioned to threshold faster than regenerates of untrained planaria. While this provided evidence of memory savings when re-exposed, it also demonstrated a form of uncued recall of the memory.
+
+Building on some of the earliest work on operant conditioning in planaria, @read_reinforcing_2021 investigated whether a Y-shaped maze can be used to shape a directional preference in planaria. Baseline directional preferences were obtained for planaria by allowing them to complete six trials in the Y-maze and recording whether they entered the left or right arm more often. The planaria then underwent a conditioning procedure. In experiment two, planaria were rewarded with 2% ethanol if they entered their non-preferred arm ("active arm"). On day four of conditioning, planaria entered the active arm significantly more often than during baseline. This provides preliminary evidence that planaria may be capable of learning a directional preference in a Y-maze. Importantly, the behaviour was only significantly different from baseline on day four (the final day), and it was therefore not clear whether this conditioned response was stable or the result of chance variation. Optional stopping may have increased the chance of a false positive findings within this study, as the number of conditioning days differed between experiments.
+
+A related study investigated the ability for planaria to be conditioned in a Y-maze using cocaine as the reinforcing agent (unpublished data, Canales laboratory). After assessment of the baseline preference, the non-preferred arm was reinforced with cocaine across three conditioning days, with three trials each day. Cocaine treated planaria showed a strong rapid increase in active arm entries, choosing the cocaine reinforced arm more than 90% of the time across the final two days of conditioning. This effect was replicated among another group of subjects. Other groups were also run which received cocaine in conjunction with different doses of either ceftriaxone or N-acetylcystein – there was no vehicle only group. In general, Planaria treated with ceftriaxone or N-acetylcystein alongside cocaine did not acquire a conditioned response.
+
+The experiments above provide preliminary evidence that planaria can learn an operantly conditioned response. But when considering whether this behaviour can persist through bisection and regeneration, there is very limited evidence. Much of the research on operant conditioning in planaria dates back to the mid-twentieth century. Although historical research still holds value, modern psychological science has raised questions regarding the reliability and replicability of past experiments.
+
+Recent evidence suggests that the psychological literature broadly considered has oversold the robustness of many psychological phenomena [@open_science_collaboration_estimating_2015]. Much effort is being devoted towards identifying the types of decisions which lead to unreliable results appearing in the literature [@simmons_false-positive_2011]. Interestingly, many scientists openly admit that they have engaged in questionable research practices -- design and analysis decisions which lead to untrustworthy results that fail to replicate [@gopalakrishna_prevalence_2022]. While replication attempts may often focus on findings from the last two decades, we must also carry over this skepticism to research from the twentieth century. Especially in cases where there are only one or two reports of a given phenomenon. For this reason, we must seek to establish reliable methods for inducing operant conditioned behaviours in planaria. Furthermore, we should withhold judgement on whether learned behaviours can persist through decapitation and regeneration in planaria until the phenomenon is replicated.
+
+### Positive Reinforcement of Planarian Behaviour
+
+Investigators have used many different stimuli, both aversive and appetitive, in their efforts to condition planaria. Cocaine is one of the most common appetitive stimuli used to date, which acts primarily on the dopamine transporter. Importantly, these proteins are abundant in planaria [@algeri_effects_1983; @buttarelli_neuropharmacology_2008]. Cocaine is a cost-effective tool for conditioning given the small quantity needed to reward planaria. But there are some concerns that require consideration when administering cocaine in behavioural tasks. For example, cocaine induces strong effects on locomotion and atypical behaviours at some doses [@rawls_first_2010; @pagan_planarians_2013].
+
+Cocaine exerts its agonistic effects by blocking reuptake of dopamine through the dopamine transporters. In humans, this results in more dopamine activity in the synapse and therefore altered neural activity in downstream neurons, particularly in the meso-limbic pathway connecting the ventral tegmental area to the nucleus accumbens [@nestler_molecular_2019]. This agonistic effect is linked to the high that cocaine users experience, an effect shared by all drugs of abuse [@pierce_mesolimbic_2006]. Cocaine also acts on serotonergic and noradrenergic transmission by blocking their respective transporters [@mateo_role_2004; @galli_sodium-dependent_1995]. The noradrenergic effects are thought to stimulate the sympathetic nervous system by blocking reuptake of noradrenaline and decreasing sympathetic nerve discharge, resulting in effects such as increased blood pressure and heart rate [@jacobsen_effects_1997; @freye_pharmacology_2009; @nestler_molecular_2019].
+
+@amaning-kwarteng_relapse_2017 explored the establishment and extinction of a cocaine-reinforced texture preference. They found that planaria can be conditioned using cocaine to shift their surface texture preference from smooth to rough and that this preference can be extinguished (reverted back to the original preference) after repeated exposure without reinforcement. Subsequently, exposure to a bath of cocaine was enough to reinstate the conditioned preference when given free access to both surfaces.
+
+Building on prior work dating back to the 1960's [@needleman_tolerance_1967], @mohammed_jawad_dissociation_2018 investigated addiction like behaviour in planaria through conditioning, extinction and tolerance. The experiment successfully demonstrated a conditioned place preference (CPP), extinction of the preference, and context specific tolerance. Of particular significance, this work demonstrated that sucrose induced CPP requires dopaminergic activity. Administration of a dopamine D1 antagonist during conditioning blocked acquisition of CPP but did not interfere with context specific tolerance. An interesting dissociation that may have implications for understanding addiction in humans.
+
+Understanding the molecular and circuit dynamics underpinning addiction may allow us to interface with the brain so as to reduce maladaptive behaviours. Currently, therapies focus on top-down strategies. People are coached to recognise their thoughts and emotions related to drugs and to manage them rather than act on them. However, if the chemistry and structural wiring of the brain change during the acquisition of an addiction, top-down strategies may be inadequate. bottom-up therapies involving a change of the bodies chemical and molecular milieu may support the unraveling of these harmful brain adaptations [@chodkiewicz_conceptual_2023]. We are not in a position to experiment freely with bottom-up interventions in humans or other mammals. In place of that, planaria enable us to pursue a deeper understanding of the chemical and molecular changes underlying habit formation and the identification of targeted interventions to reduce future drug seeking behaviour.
+
+## Unresolved Questions
+
+In the first half of the 20th century, there was doubt regarding whether invertebrates can learn. But as we look back nearly a century later, we have gathered ample evidence that planaria and many other invertebrates can form long-lasting memories [@wells_training_1967; @samuel_addiction-related_2021; @amaning-kwarteng_relapse_2017]. Planaria are an especially useful organism given their ability to learn and their unique ability to regenerate. As has been shown with conditioning procedures, there is now evidence that memory can be successfully retained outside of the brain [@shomrat_automated_2013]. The persistence of basic associative memory through regeneration is remarkable. But a more compelling finding that would truly shake our fundamental understanding of memory storage mechanisms would be the persistence of complex behavioural responses.
+
+An acquired texture preference is a valid form of learning. But it is far removed from the memories that concern us in our day to day lives. In contrast, learning shaped by a reward better reflects the intentional learning we associate with intelligence and meaningful behaviour in humans. If complex memories formed by operant conditioning can persist in planaria despite complete loss of the brain, this may have profound implications for the way we view memory storage and retrieval in humans. This project aims to extend the phenomenon of memory retention through regeneration shown for classical conditioning to an operant conditioned behaviour.
+
+@shomrat_automated_2013 observed that familiar tail regenerates did not initially show evidence of memory retention. However, it was clear that their performance on the task improved more rapidly than controls when they were exposed to the training procedure. Some fragment of memory for the context must have survived outside the brain. The authors showed this memory benefited future performance after re-exposure to the training procedure. What remains unknown is whether retraining is the only process that supports reinstantiation of the previously acquired memory. Could it be that other contextual cues, such as exposure to the reinforcing stimulus alone, are sufficient to bring back memories acquired before decapitation?
+
+The results of @shomrat_automated_2013 suggested the memory trace lay dormant and failed to be reactivated at first. After exposure to the same training procedure that led to the original memory formation, the dormant trace was then reawakened. This phenomenon of memory reactivation after prior failures parallels behaviour reinstatement in addiction research. After successfully training an animal to lever press for a reward such as cocaine, the lever press response can be extinguished by allowing the animal to repeatedly engage in the behaviour without being rewarded [@de_wit_reinstatement_1981]. Eventually the animal will stop performing the conditioned response when the lever is presented. However, if the animal is exposed to the reinforcing stimulus before being placed back in the operant chamber, the lever pressing behaviour will spontaneously return [@de_wit_reinstatement_1981].
+
+With respect to both phenomena, the memory is either not accessible or is not acted upon and requires exposure to the right stimulus to be reactivated. Although extinction and reinstatement of drug seeking behaviour has been modeled in planaria [@amaning-kwarteng_relapse_2017], no experiments have explored whether a reinstatement procedure can also be used to reactivate memories which are dormant after decapitation and regeneration. The phenomena of memory saving among regenerates demonstrate that some memory trace is retained in the brainless tail half. Perhaps this trace can be reactivated without the need for retraining by instead exposing the tail regenerates to the reinforcing stimulus. This project will therefore investigate whether memory stored outside the brain behaves like an extinguished memory such that exposure to the reinforcing stimulus is sufficient to reinstate the memory trace.
+
+# Experiment 1 {#sec-experiment-1}
+
+Experiment 1 aimed to find a dose of cocaine that would not significantly alter the locomotive behaviour of planaria. To increase the likelihood that our selected dose was still rewarding despite a lack of effect on movement, we used a range of doses that have been reported to show effective conditioning in the literature. Cocaine has been regularly used in planaria research to establish models of addictive behaviour and to understand its toxicity and synergistic effects when combined with other drugs [@amaning-kwarteng_relapse_2017; @raffa_description_2005; @tallarida_ethanol_2014; @hutchinson_persistent_2015; @palladini_pharmacological_1996]. Studies focused on classical conditioning, often for the purpose of modelling addictive behaviour, have used doses ranging from 1μM [@hutchinson_persistent_2015] to 80μM [@raffa_cocaine_2005].
+
+Investigators have observed that some planaria species are more amenable to conditioning procedures than others [@samuel_addiction-related_2021; @mueller_use_2002]. Differences in the behaviour and responses of planarian species have been observed in response to several types of stimuli [@cochet-escartin_scrunching_2015; @debold_differences_1965]. The species used throughout this project likely differs from those used elsewhere in the literature and may in fact be a species indigenous to New Zealand, although its identity is, as yet, unknown. For this reason, it is important to identify a suitable dose of cocaine which does not significantly alter motility.
+
+### Colony Maintenance and Handling
+
+Due to restrictions on importing identified species such as *Schmidtea mediterranea* into New Zealand, local planaria were sourced from a local stream within Wellington, New Zealand. Given the basic characteristics of the planaria (colour, head shape etc.) it is thought that there is a combination of *Cura* and *Neppia* – both of which are commonly found in New Zealand waterways. We intend to perform genomic analysis at a later date to confirm the species identity. Prior to collection for this experiment, planaria were housed in a 50 liter glass aquarium with internal filtering. The aquarium contained a natural ecological environment (rocks, snails, algae etc.). The tank water (referred to as "planaria water" hereafter) was maintained with Prime – a concentrated water conditioner. Planaria were fed between one and three times a week, with meals consisting of frozen liver paste. The colony was maintained on a 12-hour light/dark cycle with lights on at 9:30am till 9:30pm. For this experiment, planaria were handled using either a filbert (medium length flat) paintbrush or a fine artist's paintbrush.
+
+### Materials and Procedure
+
+Plastic petri dishes with a diameter of 5.5cm were used to assess motility. Petri dishes contained a final solution of 8ml, made up of planaria water for control subjects and cocaine hydrochloride mixed with planaria water for experimental subjects. Planaria locomotion was captured using an OPPO A17 smart phone and the videos were imported into EthoVision (Noldus Information Technologies, Wageningen, the Netherlands) for motility tracking. When subjects were not visible due to being occluded by a shadow or dish wall (\~10% of frames on average across all subjects), missing data were interpolated using the interpolation feature in EthoVision. This imposed a direct line from the subject's last location to the next observed location to determine the distance traveled.
+
+60 planaria were used in this experiment. Planaria were assigned to one of six dose conditions based on those commonly used in the planarian literature. This included 0, 1, 5, 10, 20 and 100μM (*n* = 10 per condition). Subjects were run across twelve recording sessions[^1]. Subjects were collected from the breeding tank on the day of data collection. Within each session, subjects were randomly allocated to their condition using a freely available [random number generator](https://stattrek.com/statistics/random-number-generator#table).
+
+[^1]: The first ten sessions each contained one subject from the 0 - 20μM conditions, whereas the last two session only contained subjects in the 100μM condition. This is because the 100μM condition was added after the initial data were analysed to ensure that the cocaine was having some effect on the planaria and was not inert.
+
+Each dose-response session lasted 15 minutes. Prior to the first recording session of the day the drug concentrations were achieved by mixing cocaine (dissolved in distilled water) with planarian water to reach a final solution of 8ml. Each solution was mixed and allowed to sit for several minutes to ensure diffusion of the drug. For each session, planaria were picked up at random and a randomly generated number sequence was used to determine which condition it was assigned to. The recording began once all five subjects were in their respective dishes. After completing a single trial, planaria were rehoused in a large tank and were not used for any subsequent experiments in this manuscript.
+
+@fig-Dose_response_apparatus shows the recording setup used for this experiment. Five petri dishes were positioned on a white acrylic sheet. Recording sessions took place under red light, with the light positioned 36cm above the dishes. The dishes were aligned in a 2x3 grid, with a gap left in the top middle position. The overhead light was centered here to minimise shadows cast over the dishes -- this was important for digital tracking accuracy. Each drug concentration was rotated across the 5 grid positions between trials to control for any effects of lighting angle.
+
+
+
+
+
+
+```{r, eval = TRUE}
+#| label: fig-Dose_response_apparatus
+#| fig-cap: "Graphical Depiction of the Dose response apparatus"
+#| apa-note: "Graphical depiction of the dose response setup used to assess planarian motility in response to cocaine. The room was illuminated by a lamp fitted with red plastic to filter out non-red light. All other lights were turned off during data collection. The arrangement of petri dishes and planaria on the white plastic sheet can be seen below the lamp. A Oppo A17 phone was used to record planaria motility (not shown in the graphic). The phone was balanced on a clamp attached to a support stand positioned to the side of the plastic sheet."
+#| include: true
+#| fig-width: 12
+#| fig-height: 7
+#| fig-align: "center"
+
+library(png)
+library(grid)
+#Figure2
+Dose_response_apparatus <- readPNG("Figures/Dose_response_apparatus.png") 
+grid.raster(Dose_response_apparatus)
+```
+
+
+
+
+
+
+### Results and Discussion
+
+
+
+
+
+
+```{r}
+#| label: Dose Response Descriptives
+#| include: False
+
+library(papaja)
+library(rstatix)
+library(afex)
+
+
+# Source the script
+source("Descriptives.R")
+source("Graphs.R")
+source("PvalueFormattingFunction.R")
+
+```
+
+
+
+
+
+
+@fig-boxplot depicts the distance moved by planaria across the six conditions. Prior to performing any statistics, the assumptions of normality and homogeneity of variances were tested. Levene's test for homogeneity of variances suggests there were equal variances across conditions (F = `r format(levene_dose_response$F[1], digits = 3)`, `r format_pvalue(levene_dose_response$P[1])`). The Shapiro-Wilk test indicated that the data were not normally distributed (W = `r format(shapiro_test_dose_response$statistic, digits = 3)`, `r format_pvalue(shapiro_test_dose_response$p.value, digits = 3)`). Due to violation of the assumptions of ANOVA, a Kruskal-Wallis test was used to evaluate group differences. The results show a statistically significant effect of condition on distance moved (χ2 (`r kruskal_test$parameter`) = `r format(kruskal_test$statistic, digits = 3)`, `r format_pvalue(kruskal_test$p.value, digits = 3)`). An exploratory post-hoc Dunn's test was carried out to determine the group differences. The results indicated that the 100μM group differed significantly from several other groups: control (`r format_pvalue(dunn_test$P[11])`), 5μM (`r format_pvalue(dunn_test$P[7])`), 10μM (`r format_pvalue(dunn_test$P[1])`), and 20μM (`r format_pvalue(dunn_test$P[4])`). No other significant differences were found.
+
+
+
+
+
+
+```{r, eval = TRUE}
+#| label: fig-boxplot
+#| fig-cap: "Plot of planarian motility by condition"
+#| apa-note: "Box and whisker plot of distanced moved by planaria over the 15-minute recording interval. Black bars indicate the mean distance moved for each condition."
+#| fig-width: 12
+#| fig-height: 7
+#| fig-align: center
+#| warning: false
+#| message: false
+
+source("Plots/rainplot.R")
+print(rainplot)
+
+```
+
+
+
+
+
+
+The results in @fig-boxplot convey the variability of planarian behaviour. All conditions had at least one subject which moved less than 30cm over the 15-minute recording, and all groups had at least two subjects that moved more than 140cm. Experimenter observations indicate that when placed in the recording dish, some planaria would move initially, and then come to rest within a few minutes at a spot on the wall. They would remain here without meaningful movement for the remainder of the recording. Although the 1μM group did not differ significantly from the control group, there is a curious grouping of planaria in the 1μM condition below 60cm. Consistent with this, @hutchinson_persistent_2015 observed a significant decrease in motility during exposure to 1μM of cocaine but not to 10μM when compared to a control group. No potential explanation was offered for this unusual curvilinear pattern.
+
+The results suggest any dose between 1μM and 20μM could be used for conditioning without systematically affecting planaria motility. It was also necessary to select a dose that was sufficiently rewarding for planaria. A range of doses have been used to successfully condition planaria in CPP paradigms. These procedures typically involve low doses such as 1μM [@hutchinson_persistent_2015], 5μM [@amaning-kwarteng_relapse_2017] or 10μM [@hutchinson_persistent_2015]. It is worth noting that in the case of CPP, drug exposure time is relatively long. On the order of 15-20 minutes per trial. Whereas in the operant conditioning paradigm proposed in Experiment 2 of this project, exposure time would be just 3 minutes. To adjust for the smaller absorption window compared to CPP experiments, the larger 20μM concentration was chosen for experiment 2.
+
+Alongside total motility, we were able to inspect how planaria motility changed over the recording interval. We observed that planaria moved more at the start of the session compared to the end, with a gradual decrease in the distance moved with each passing minute (see @fig-ridgeplot). An exploratory Welch's two sample t-test found a significant difference between the time traveled in the first minute (M = `r format(minute1_descriptives$mean, digits = 3)`, SD = `r format(minute1_descriptives$sd, digits = 3)`) compared to the 15th minute (M = `r format(minute15_descriptives$mean, digits = 3)`, SD = `r format(minute15_descriptives$sd, digits = 3)`), with subjects travelling significantly further during minute 15 (t(`r (time_binned_t_test_result$parameter)`) = `r format(time_binned_t_test_result$statistic, digits = 3)`, `r format_pvalue(time_binned_t_test_result$p.value)`). In future dose-response assessments, shorter recording sessions may suffice to assess dose-response curves.
+
+
+
+
+
+
+```{r}
+#| label: fig-ridgeplot
+#| include: True
+#| fig-cap: "Plot of planarian motility across recording interval"
+#| apa-note: "Ridge plot of distance moved by planaria during each minute interval. Each ridge shows the distance distribution for all subjects during the minute interval. Black bars indicate the mean distance moved for the whole sample (treatment and control subjects)."
+#| fig-width: 12
+#| fig-height: 7
+#| fig-align: "center"
+
+source("Plots/ridgeplot.R")
+
+print(ridgeplot)
+
+```
+
+
+
+
+
+
+# Experiment 2 {#sec-experiment-2}
+
+Prior research has demonstrated the capacity for learning in planaria by way of classical conditioning. Moreover, it has been further shown that classically conditioned memories can be retained after decapitation and regeneration of the brain [@shomrat_automated_2013; @samuel_addiction-related_2021]. But the capacity for complex memories shaped by operant conditioning to persist under these conditions has not been definitively shown. As a first step towards assessing whether operantly conditioned memories can persist through decapitation, we must first demonstrate the capacity for operant learning in this species of planaria. The power analysis, experimental design and analysis plan of this experiment were preregistered prior to data collection. The preregistration can be found online at [Open Science Framework](https://osf.io/tq7u4/?view_only=9c794dd942fb4a54b6a986c0a893fe46) and at [PsycArchives](https://www.psycharchives.org/en/item/d6109ed1-9aab-467b-b981-e009be95f308).
+
+### Colony Maintenance and Handling
+
+The colony maintenance protocols were identical to those described in Experiment 1. To track subjects throughout the experiment, planaria were housed individually in 12-well plates with 2ml of planarian water (changed daily[^2]). Planaria were stored in a room illuminated with standard white fluorescent lighting on a 12-hour light/dark cycle with lights on at 9:30am till 9:30pm. Subjects were moved into a room dimly illuminated with red light while completing their Y-maze trials. Planaria were handled using different techniques for different circumstances. When removing planaria from their 12-well-plate, a filbert (medium length flat) paintbrush was preferred. However, when moving planaria between petri dishes and the y-maze, a fine artist's paintbrush was preferred. In other cases, such as when planaria would sit in the middle of the y-maze divot, a plastic transfer pipette with the tip cut off was used. Planaria were gently handled throughout their lifespan. Rough handling was suspected to have caused a high mortality rate during pilot experiments.
+
+[^2]: In the waiting period between conditioning and the memory retention test, 12 subjects (#49 - #60 inclusive) from Experiment 1 were left overnight without water due to experimenter error. This lead to three immediate deaths. Although the remaining subects survived, during the memory retention and reinstatement tests, six failed to respond at all and the remaining three subjects only responded once or twice.
+
+### Materials and Procedure {#sec-2-materials-and-methods}
+
+This experiment used two groups: a treatment group (*n* = 30) which received cocaine and and a control group (*n* = 30) which received vehicle only. There were four experimental stages: baseline, conditioning, test, and reinstatement (see @fig-exp2_timeline). A modified version of the Y-maze conditioning procedure outlined by @read_reinforcing_2021 was adopted. During baseline and conditioning trials two planaria were run concurrently in separate Y-mazes (see @fig-Ymaze_V1_dimensions). Each maze was filled with 1.8ml of planaria water which shaken gently to evenly distribute the water throughout the runway and arms. Six planaria were used per run, wherein they completed either six (baseline) or four trials per day (conditioning) with an intertrial interval of approximately 15 minutes. At the start of each run six planaria were moved into petri dishes. At the start of a trial, planaria were transferred to the middle of a maze runway using a paintbrush. Each maze contained one planarian. A timer was started once each planarian was placed in the runway. Planaria were given three minutes to enter one of the arms[^3]. Once a subject entered an arm, the plug was inserted to stop liquid moving between compartments, after which 0.5ml remained in each arm[^4]. A planarian was considered to have entered the arm when the plug could be safely inserted without touching the planarian.
+
+[^3]: If the planarian had some part of their body in an arm at the end of the allotted time, they would be given up to an extra minute to make their decision.
+
+[^4]: Measured by extracting and weighing the volume of distilled water trapped in each arm, assuming a density of 1g/ml. Small deviations are inevitable, but this was the most common value seen during our tests
+
+When treatment subjects entered the active arm, 43.5μL of cocaine in distilled water was pipetted near the center of the arm to achieve a 20μM concentration. If the inactive arm was selected, an identical volume of distilled water was pipetted near the center of the arm. After administration, the timer was restarted and three minutes were given for absorption. For control subjects, entry into either arm resulted in 43.5μL of distilled water (vehicle) into the arm. If a subject failed to enter an arm, the plug was inserted and 43.5μL of distilled water was pipetted into the runway and then three minutes were given. The runway light was on throughout the duration of the trial. At the end of a trial, planaria were gently removed and placed back into their holding dish. Mazes were rinsed and dried between each trial.
+
+The memory retention test took place 14 days after conditioning (see @fig-exp2_timeline). At test, six planaria were used per run. Three planaria were run concurrently in three separate Y-mazes. Planaria were given three minutes to enter an arm. Once a decision was made, the plug was inserted and planaria were left for approximately 60 seconds before being moved back to the holding dish. No additional liquid was added during test trials. The next group of three planaria would then begin their first test trial. The inter trial interval was approximately six minutes and thirty seconds. A reinstatement procedure was carried out the following day. The procedure was identical to the test stage with the only additional step being drug exposure before the first trial. At the start of a run, planaria were placed individually into an 8ml solution planaria water containing 20μM of cocaine for 10 minutes. At the end of the exposure interval, planaria were moved into separate Y-mazes to begin their first trial. Planaria were only exposed to cocaine prior to the first reinstatement trial.
+
+There were three exclusion criteria identified in the preregistration [document](https://osf.io/skfnv?view_only=9c794dd942fb4a54b6a986c0a893fe46). The exclusion criteria were: A) failing to complete at least four of the six baseline trials; B) failing to complete at least two trials on consecutive conditioning days; C) failing to complete at least four of the last six trials of conditioning. We attempted to replace all subjects excluded due to criterion A. However, due to time constraints, of the 18 that failed to meet this criterion, only 13 could be successfully replaced. Five subjects could not be replaced and so started conditioning despite having completed only two or three baseline trials. Thirteen subjects met criterion B or C and were excluded from the data analysis. There was no exclusion criteria set for the test and reinstatement procedure. However, some subjects died in the waiting period, or demonstrated greatly impaired behaviour at test or reinstatement and were thus excluded.
+
+Three laser etched Y-mazes were used for this experiment (see @fig-Ymaze_V1_dimensions for dimensions). Mazes were laser etched into 80x80mm plastic squares. At the intersection between the runway and the arms, there was a small divot on the floor of the maze. This allows a plug to be inserted to trap liquid in the arms and enable controlled drug administration. The maze floor contained subtle lines as a result of the etching process. At the base of the runway there was a small externally powered white light (\~20 lux) which was fixed into the plastic. Light is an aversive stimulus which induces negative phototaxis and should discourage planaria from resting at the start of the runway.
+
+
+
+
+
+
+```{r}
+#| label: fig-exp2_timeline
+#| include: True
+#| fig-cap: "Graphical Timeline of Experiment 2"
+#| fig-width: 15
+#| fig-height: 10
+#| fig-align: "center"
+
+library(png)
+library(grid)
+exp2_timeline <- readPNG("Figures/Exp2_timeline.png") 
+grid.raster(exp2_timeline)
+
+```
+
+```{r}
+#| label: fig-Ymaze_V1_dimensions
+#| include: True
+#| fig-cap: "Laser etched plastic Y-maze"
+#| apa-note: "The Y-maze depicted here was laser etched into white 80x80mm plastic plates. A white LED was drilled into the maze at the start of the runway to induce negative phototaxis (light bulb symbol is indicative of LED location beneath the plastic). The light was powered by a 9V power adapter. A plastic plug was also etched out of plastic to stop liquid moving between compartments after a planarian entered one of the arms."
+#| fig-width: 15
+#| fig-height: 10
+#| fig-align: "center"
+
+library(png)
+library(grid)
+Exp2_Ymaze_V1_dimensions <- readPNG("Figures/y-maze_v1_dimensions.png") 
+grid.raster(Exp2_Ymaze_V1_dimensions)
+
+```
+
+```{r}
+#| label: Experiment Two Results
+#| include: False
+#| echo: false
+#| message: false
+#| warning: false
+
+
+# Source the scripts
+source("ExperimentTwoAnalysis.R")
+source("ExperimentTwoTimeAnalysis.R")
+
+
+```
+
+
+
+
+
+
+### Results and Discussion
+
+Of the 60 original subjects, three died during conditioning (two control subjects and one treatment subject) and another six subjects died throughout the regeneration period (five control subjects and one treatment subject). The initial deaths were attributed to repeated handling with a paintbrush, while the deaths during regeneration were in part due to 12 subjects being left overnight with no water. Additionally, 10 other subjects were excluded due to meeting one or more of the exclusion criteria during conditioning. Of the subjects excluded due to death or meeting the exclusion criteria, 9 were control subjects and 4 were treatment subjects. Due to different requirements for the between groups and within subjects comparisons for active arm entries, and due to some subjects having no data for the decision latency analysis, there were different numbers of subjects for the comparisons at each time point. For this reason, the number of subjects per condition at each time point have been included in the figures shown below.
+
+After removing subjects that met the exclusion criteria, the majority of subjects had an initial preference towards the right arm (*n* = `r Exp2_prefered_arm_count %>% filter(Prefered_arm == "R") %>%  pull(n)`), with just over a quarter favouring the left arm (*n* = `r Exp2_prefered_arm_count %>% filter(Prefered_arm == "L") %>%  pull(n)`) and several having no preference (*n* = `r Exp2_prefered_arm_count %>% filter(Prefered_arm == "NA") %>%  pull(n)`). This experiment employed a biased design, such that the active arm to be reinforced was the opposite of the initial preference or randomly assigned for those with no initial preference. The left arm was active for `r Exp2_left_active_arm_count` subjects, and the right arm was active for `r Exp2_right_active_arm_count` subjects. Looking at the baseline preferences of excluded subjects, there was no systematic bias towards either arm, with slightly more preferring the right arm (*n* = `r Exp2_excluded_subjects_prefered_arm %>% filter(Prefered_arm == "R") %>%  pull(n)`) than the left arm (*n* = `r Exp2_excluded_subjects_prefered_arm %>% filter(Prefered_arm == "L") %>%  pull(n)`), and a few showing no preference (*n* = `r Exp2_excluded_subjects_prefered_arm %>% filter(Prefered_arm == "NA") %>%  pull(n)`).
+
+@fig-exp2decisions shows the average proportion of trials for which subjects entered the active arm at each time point. A generalised linear mixed effects model with family set to binomial was fitted in R using the lme4 package [@bates_fitting_2015]. Subject ID was set as a random effect, with condition, time point and the interaction term as fixed effects. Pairwise comparisons with a Bonferroni correction were carried out using the emmeans package in R [@lenth_emmeans_2024]. A Type III ANOVA was conducted using the car package [@fox_r_2019] to identify whether there was a significant effect of condition or time, or an interaction effect.
+
+We did not detect a significant effect of condition (χ2 (`r (exp2_decisions_model_output$Df[2])`) = `r format(exp2_decisions_model_output$Chisq[2], digits = 3)`, `r format_pvalue(exp2_decisions_model_output$"Pr(>Chisq)"[2])`). The results indicated a significant effect of time (χ2 (`r (exp2_decisions_model_output$Df[3])`) = `r format(exp2_decisions_model_output$Chisq[3], digits = 3)`, `r format_pvalue(exp2_decisions_model_output$"Pr(>Chisq)"[3])`) and a significant time\*condition interaction (χ2 (`r (exp2_decisions_model_output$Df[4])`) = `r format(exp2_decisions_model_output$Chisq[4], digits = 3)`, `r format_pvalue(exp2_decisions_model_output$"Pr(>Chisq)"[4])`).
+
+Post-hoc pairwise comparisons were carried out using estimated marginal means with a Bonferroni corrections applied to account for multiple comparisons. Comparisons looked at within group differences in response probability across the four phases and between group differences at each time phase. The effect sizes were reported using Cohen's h which is appropriate when comparting two proportions [@cohen_statistical_1988]. There were two within-group differences for the control subjects: endpoint differed significantly from baseline (`r control_h_values_exp2_decisions %>% filter(contrast == "Baseline / Endpoint") %>% pull(apa_result)`), and test differed significantly from endpoint (`r control_h_values_exp2_decisions %>% filter(contrast == "Endpoint / Test") %>% pull(apa_result)`). These differences represent medium effect sizes [@cohen_statistical_1988, pp.184-185]. There were three within-group differences for the treatment subjects: endpoint differed significantly from baseline (`r treatment_h_values_exp2_decisions %>% filter(contrast == "Baseline / Endpoint") %>% pull(apa_result)`), test differed significantly from baseline (`r treatment_h_values_exp2_decisions %>% filter(contrast == "Baseline / Test") %>% pull(apa_result)`), and reinstatement differed significantly from endpoint (`r treatment_h_values_exp2_decisions %>% filter(contrast == "Endpoint / Reinstatement") %>% pull(apa_result)`). These differences represent small effect sizes, with the baseline-to-endpoint difference approaching the medium effect size criterion of *h* = 0.5 [@cohen_statistical_1988, pp.184-185]. A significant between-group difference was found in the preference score between treatment and control subjects at test (`r between_group_h_final %>% filter(Time == "Test") %>% pull(apa_result)`) which represent a small to medium effect size. Treatment subjects entered the active arm more often (*M* = `r Exp2_summary_Stats %>% filter(Condition == "Treatment") %>% pull(mean_prop) %>% format(digits = 3)`, *SD* = `r Exp2_summary_Stats %>% filter(Condition == "Treatment") %>% pull(sd) %>% format(digits = 3)`) than control subjects (*M* = `r Exp2_summary_Stats %>% filter(Condition == "Control") %>% pull(mean_prop) %>% format(digits = 3)`, *SD* = `r Exp2_summary_Stats %>% filter(Condition == "Control") %>% pull(sd) %>% format(digits = 3)`). No other significant between group differences were detected.
+
+\newpage
+
+
+
+
+
+
+```{r}
+#| label: fig-exp2decisions
+#| include: True
+#| fig-cap: "Learning and Memory Retention across two weeks in Cocaine Treated Planaria"
+#| apa-note: "Changes in Y-maze active arm preference across experimental phases. The baseline phase included 6 trials, conditioning endpoint included the final 6 trials of conditioning, and both test and reinstatement phases included 4 trials each. A) The control group showed significant differences in active arm entries between baseline and endpoint, and between endpoint and test. B) Treatment group demonstrated significant differences between baseline and endpoint, baseline and test, and endpoint and reinstatement. C) Between-group comparisons revealed there was a significant difference in active arm entries at the test phase. Error bars represent standard error of the mean. * = p <.05; ** = p <.01; *** = p <.001." 
+#| fig-width: 12
+#| fig-height: 14
+#| fig-align: "center" 
+#| dpi: 300
+
+source("ExperimentTwoAnalysis.R")
+
+print(combined_panel)
+
+```
+
+
+
+
+
+
+Looking at the results in [@fig-exp2decisions]B, subjects in the treatment group showed some evidence of a conditioned response. These subjects were more likely to choose the active arm at the end of conditioning (endpoint) compared to baseline. Moreover, this preference was maintained for two weeks as demonstrated by the heightened active arm entries at test. Despite the behavioural change persisting for two weeks, when tested the next day during the reinstatement procedure the proportion of active arm entries had returned to baseline levels.
+
+[@fig-exp2decisions]shows that the control group demonstrated a similar increase in active arm entries despite receiving no reinforcement. However, in contrast to the treatment group, this returned to baseline levels when tested two weeks after conditioning. This highlights the natural variability in planaria behaviour over time.
+
+The between groups comparison seen in [@fig-exp2decisions]C shows a significant difference between groups at test. It may be that the preference stability shown by the treatment group is evidence of true learning as opposed to the natural variability of behaviour seen in the control group. This could explain why the change in behaviour for the treatment group persisted for two weeks, while the behaviour of the control group diminished back to baseline levels. Admittedly, the reinstatement results reduce the credibility of this explanation. If the conditioned behaviour was able to persist for several weeks, there is little reason to expect it would be extinguished rapidly but fail to show the expected effect of reinstatement. Overall, the results provide preliminary support for the notion that planaria can be conditioned in a Y-maze and that this response can last at least two weeks.
+
+This experiment also considered planaria response times for each trial. We hypothesised that even if planaria cannot learn to make the correct decision, they may demonstrate increased motivation due to being aware that a reward is available. This could be inferred from faster responding in the treatment group compared to the control group. The response time data across the four experimental phases are shown in [@fig-decision-time].
+
+
+
+
+
+
+```{r}
+#| label: fig-decision-time
+#| include: True
+#| fig-cap: "Decision Latency Across Experimental Phases"
+#| apa-note: "Time taken to make a response across phases and between conditions. Vertical lines show the median values. Boxes represent the inter-quartile range (IQR), with whiskers extending out 1.5 times the IQR." 
+#| fig-width: 16
+#| fig-height: 14
+#| fig-align: "center" 
+#| dpi: 600
+
+source("ExperimentTwoTimeAnalysis.R")
+
+print(grouped_time_horizontal_boxplot)
+```
+
+
+
+
+
+
+The decision latency data were analysed with a linear mixed-effects model using the lme4 package for R [@bates_fitting_2015]. The model included fixed effects of condition, time point, and an interaction term. Subject ID was set as a random effect to account for repeated measures. The decision time data were log-transformed. Type III ANOVA was conducted using the car package [@fox_r_2019] to test for statistical significance of the fixed effects. Pairwise comparisons with a Bonferroni correction were carried out using the emmeans package in R [@lenth_emmeans_2024].
+
+The ANOVA results revealed a significant effect of time (χ2 (`r (exp2_time_output$Df[3])`) = `r format(exp2_time_output$Chisq[3], digits = 3)`, `r format_pvalue(exp2_time_output$"Pr(>Chisq)"[3])`), but failed to show a significant effect of condition (χ2 (`r (exp2_time_output$Df[2])`) = `r format(exp2_time_output$Chisq[2], digits = 3)`, `r format_pvalue(exp2_time_output$"Pr(>Chisq)"[2])`). No time\*condition interaction effect was found (χ2 (`r (exp2_time_output$Df[4])`) = `r format(exp2_time_output$Chisq[4], digits = 3)`, `r format_pvalue(exp2_time_output$"Pr(>Chisq)"[4])`).
+
+Post-hoc pairwise comparisons were carried out using estimated marginal means with Bonferroni corrections applied to account for multiple comparisons. Comparisons looked at within group differences in decision latency across the four phases and also looked at between group differences at each phase. The results indicated that there were two within-group differences for the control subjects: test differed significantly from baseline (`r control_results_exp2_time %>% filter(contrast == "Baseline / Test") %>% pull(apa_result)`) and test different significantly from endpoint (`r control_results_exp2_time %>% filter(contrast == "Endpoint / Test") %>% pull(apa_result)`). There were four within-group differences for the treatment subjects: test differed significantly from baseline (`r treatment_results_exp2_time %>% filter(contrast == "Baseline / Test") %>% pull(apa_result)`), reinstatement differed significantly from baseline (`r treatment_results_exp2_time %>% filter(contrast == "Baseline / Reinstatement") %>% pull(apa_result)`), test differed significantly from endpoint (`r treatment_results_exp2_time %>% filter(contrast == "Endpoint / Test") %>% pull(apa_result)`), and reinstatement differed significantly from endpoint (`r treatment_results_exp2_time %>% filter(contrast == "Endpoint / Reinstatement") %>% pull(apa_result)`). There were no significant differences between groups.
+
+The decision latency data do not support our hypothesis. Instead of decision latency decreasing for the treatment group between baseline and the end of conditioning as predicted, there was no change for either treatment or control groups. Moreover, both groups showed increased latency for decision making when comparing test to baseline. As a caveat, it was noticed that planaria became smaller during the experiment. This occurs when planaria have been deprived of food for prolonged periods and is thought to be an evolved survival mechanism in planaria [@thommen_body_2019; @pascual-carreras_planarian_2020]. Interestingly, some research suggests that planarian locomotor velocity is not correlated with body size [@raffa_quantitative_2001]. But this may only hold for between subjects comparisons during short experiments but not within subject comparisons.
+
+The change in body size that was observed throughout the experiment is likely a sign of impaired health and low energy availability. One cause of poor health may have been the repeated handling with a paintbrush, which was suspected to have resulted in the death of several subjects. While the remaining subjects could still complete the maze, their movement may have been impaired from bodily damage. This would have obscured any effect of increased motivation. These results were thus compatible with at least three interpretations. One possibility is that there was no increase in motivation among planaria. This hinders the claim that the change in behaviour for treatment subjects was evidence of learning. Another posibility is that response latency can measure a change in motivation, but the effect of fatigue and injury in this case impaired the ability to detect an increase. Finally, response latency may simply not be a suitable measure of planarian motivation. Because of the time and effort required to record response latency despite its unknown validity, it was not measured during subsequent experiments.
+
+# Experiment 3 {#sec-experiment-3}
+
+The y-maze experiment carried out in Experiment 2 suffered from several procedural issues. First, the y-maze contained a divot at the end of the runway that planaria would often swim into and circle around -- possibly disturbing any sense of direction relative to the start of the maze. Second, due to handling planaria with a paint brush, the death rate was relatively high. Third, the number of trials where a subject failed to respond was high, perhaps due to fatigue from too many trials per day [@lee_conditioning_1963; @best_maze_1962]. Despite these limitations, there was some indication that planaria were able to learn and retain a conditioned response and that this may endure for at least two weeks. While a replication of experiment 2 would have been beneficial, due to time constraints we decided that the project would progress and include a regeneration phase.
+
+A third experiment was thus carried out which aimed to improve on the limitations described for experiment 2 and test whether memories can be retained through regeneration. Due to preliminary success by another colleague in our lab who used methamphetamine to condition planaria, this project also adopted methamphetamine as the reinforcing stimulus (unpublished data, Inveterate Neuroscience Laboratory). Methamphetamine is a psychoactive compound similar to cocaine in that it also increases extracellular dopamine levels [@kuczenski_hippocampus_1995; @desai_monoaminergic_2010]. Methamphetamine has been established elsewhere as a rewarding stimulus for planaria in models of addiction and withdrawal [@raffa_-opioid_2008; @kusayama_reinforcing_2000; @sacavage_withdrawal-like_2008].
+
+### Colony Maintenance and Handling
+
+The planaria and colony maintenance protocols were similar to those described in Experiment 2. The key differences were that the colony was stored in a small plastic container and once experimental subjects had been collected they were stored in a separate experimental room. This room was dimly illuminated with red light during experimentation and otherwise kept dark. Planaria were handled using a plastic transfer pipette with the tip cut off.
+
+### Materials and Procedure {#sec-exp-3-materials-and-methods}
+
+Forty-two planaria were used for this experiment, all assigned to the methamphetamine treatment group. No control group was used[^5]. There were four experimental stages: baseline, conditioning, retention test, and reinstatement (see @fig-exp3_timeline). Planaria completed three trials per day. There were two days for baseline, five days for conditioning, and one day each for the retention test and reinstatement procedure. During baseline and conditioning trials multiple planaria were run concurrently in separate Y-mazes. Each maze was filled with 2ml of planaria water which was shaken gently to evenly distribute the water throughout the runway and arms. Planaria completed three trials per day with an intertrial interval of approximately 120 minutes. At the start of a trial, planaria were transferred to the start of the maze runway using a plastic transfer pipette with the tip cut off. A timer was stared once each planarian was placed in its maze runway. Planaria were given up to five minutes to enter one of the arms. Once a planarian had entered an arm, the plug was inserted to stop liquid moving between compartments, after which approximately 0.675ml remained in each arm[^6]. A planarian was considered to have entered the arm when the plug could be safely inserted without touching the planarian.
+
+[^5]: It was important to establish weather an increase in active arm entries is stable over the conditioning period. To allow for a large number of treatment subjects to be included, no control group was run
+
+[^6]: Measured by extracting and weighing the volume of distilled water trapped in each arm, assuming a density of 1g/ml. Small deviations are inevitable, but this was the most common value seen during our tests
+
+
+
+
+
+
+```{r}
+#| label: fig-exp3_timeline
+#| include: True
+#| fig-cap: "Graphical timeline of Experiment 3"
+#| fig-width: 8
+#| fig-height: 9
+#| fig-align: "center"
+#| out-width: "100%"
+
+library(png)
+library(grid)
+exp3_timeline <- readPNG("Figures/Exp3_timeline.png") 
+grid.raster(exp3_timeline)
+
+```
+
+
+
+
+
+
+When treatment subjects entered the active arm, 29.35μL of methamphetamine (in distilled water) was pipetted throughout the arm to achieve a 10μM concentration. Nothing was added when planaria entered the inactive arm. After an arm was chosen and, where applicable, the drug was administered, the timer was restarted and three minutes were given for absorption. The runway light was turned on after placing the subject in the maze and turned off once the subject entered an arm. At the end of each trial, planaria were washed thoroughly in a bath of planaria water before being transferred back to their 12-well dish. Mazes were rinsed and dried between each trial.
+
+Planaria which exhibited evidence of learning at the end of conditioning were bisected on the day following their last conditioning trail. For the purposes of this experiment, a planarian was considered to have learned if it entered the active arm on 4 or more out of the last 6 conditioning trials (*n* = 10). For the bisection, planaria were placed individually onto a plastic block with some planaria water and cut transversely using a flat edge blade. The cut was made above the pharynx and below the base of the head. This resulted in two subjects: a tailless head fragment and a headless tail fragment. Planaria fragments were placed into 12-well plates with labels to track the original subject number and whether they were a head or tail fragment. Bisected subjects were not fed for the duration of the experiment.
+
+To enable sufficient time for regeneration of the head and tail fragments, the memory retention test took place 14 days after bisection (see @fig-regeneration-timeline for an example of the regeneration process). For the memory retention test on day 14 of regeneration, multiple planaria were run simultaneously in separate y-mazes. Planaria were given five minutes to enter an arm. Once a decision was made, the plug was inserted and planaria were left for approximately 60 seconds before being moved back to the holding dish. No additional liquid was added during test trials. The inter trial interval was approximately 30 minutes. A reinstatement procedure was carried out the following day. The reinstatement procedure was identical to the test stage with the only additional step being drug exposure before each trial. At the start of a run, planaria were placed into separate 4ml solutions of planaria water containing 10μM of methamphetamine for five minutes. At the end of the exposure interval, planaria were moved into their separate Y-maze to begin the first trial.
+
+Four improved 3D printed Y-mazes were used for this experiment (for dimensions see @fig-exp3_maze_dimensions). Mazes were printed using Siraya Tech professional UV resin. Similar to the mazes used in Experiment 2, these mazes also contained an LED light embedded in the resin after printing to induce negative phototaxis.
+
+As described in Experiment 2, three exclusion criteria were used. The exclusion criteria were: A) failing to complete at least four of the six baseline trials; B) failing to complete at least two trials on consecutive conditioning days; C) failing to complete at least four of the last six trials of conditioning. None of the subjects were excluded based on those criteria. No subjects died during the experiment.
+
+
+
+
+
+
+```{r}
+#| label: fig-exp3_maze_dimensions
+#| include: True
+#| fig-cap: "Modified 3D printed y-maze"
+#| apa-note: "Four Y-mazes (one pictured here) were printed using Siraya Tech professional UV resin. A white LED was drilled into the resin at the start of the runway to induce negative phototaxis. The light was powered by a single 9V battery. A silicone plug was molded to block liquid transfer after a planarian entered one of the arms."
+#| fig-width: 15
+#| fig-height: 10
+#| fig-align: "center"
+
+library(png)
+library(grid)
+exp3_maze_dimensions <- readPNG("Figures/y-maze_v2_dimensions.png") 
+grid.raster(exp3_maze_dimensions)
+
+```
+
+```{r}
+#| label: Experiment three Results
+#| include: False
+
+
+# Source the scripts
+#Note experiment 4 below is the third experiment in this series of experiments
+source("ExperimentFourAnalysis_V2.R")
+
+```
+
+```{r}
+#| label: fig-regeneration-timeline
+#| include: True
+#| fig-cap: "Planaria regeneration timeline"
+#| apa-note: "The image above shows the regeneration process for one of the experimental subjects used in this project. Soon after bisection, a blastema containing stem cells appears at the wound site which gives it the white colouring. The contrast and sharpness of the planaria have been adjusted to make the regenerating section more visible. The regeneration process has been described in detail by Reddien and Alvarado (2004)." 
+#| fig-width: 15
+#| fig-height: 10
+#| fig-align: "center"
+
+library(png)
+library(grid)
+regeneration_timeline <- readPNG("Figures/Planaria_regeneration_timeline.png") 
+grid.raster(regeneration_timeline)
+
+```
+
+
+
+
+
+
+### Results and Discussion {#sec-results-and-discussion}
+
+The majority of subjects had an initial preference towards the right arm (*n* = `r Prefered_arm_count %>% filter(Prefered_arm == "R") %>%  pull(n)`), with just over a quarter favouring the left arm (*n* = `r Prefered_arm_count %>% filter(Prefered_arm == "L") %>%  pull(n)`) and a few having no preference (*n* = `r Prefered_arm_count %>% filter(is.na(Prefered_arm)) %>%  pull(n)`). This experiment employed a biased design so that the active arm to be reinforced was the opposite of the initial preference or randomly assigned for those with no initial preference. The left arm was active for `r Left_active_arm_count` subjects, and the right arm was active for `r Right_active_arm_count` subjects.
+
+[@fig-Exp4_conditioning_results_panel]A shows the change in active arm preference across conditioning days for all subjects (*n* = 42). There was an increase in active arm entries which was visible on the first day of conditioning. This change persisted over the five conditioning days, although there was a slight downward trend as conditioning proceeded. A paired t-test was used to test whether there was a significant difference in the proportion of active arm entries between baseline and endpoint. At the end of conditioning, planaria entered the active arm significantly more often than before conditioning (`r ttest_results %>% filter(contrast == "Baseline / Endpoint") %>% pull(apa_result)`). This change in preference between baseline and endpoint can be seen in [@fig-Exp4_conditioning_results_panel]B.
+
+[@fig-Exp4_conditioning_results_panel]C and D show the memory retention and reinstatement data for bisected planaria (*n* = 10) that were given 14 days to regenerate. Paired t-tests were used to assess whether the active arm preference after regeneration and during reinstatement were significantly different from baseline. For the post-regeneration memory test, we failed to find a difference between the heads (`r head_regen_apa$apa_result`) or tails (`r tail_regen_apa$apa_result`) compared to the baseline active arm entries. Similarly, the reinstatement results failed to demonstrate a significant difference between the heads (`r head_reinstate_apa$apa_result`) or tails (`r tail_reinstate_apa$apa_result`) compared to the baseline active arm entries.
+
+
+
+
+
+
+```{r}
+#| label: fig-Exp4_conditioning_results_panel
+#| include: True
+#| fig-cap: "Learning and Memory Retention Through Decapitation in Meth Treated Planaria"
+#| apa-note: "Changes in Y-maze active arm preference across experimental phases. The baseline phase included 6 trials, conditioning endpoint included the final 6 trials of conditioning, and both test and reinstatement phases included 3 trials each. A) shows the mean proportion of active arm entries for baseline and conditioning. B) Methamphetamine treated subjects showed a significant difference in their active arm entries between baseline and endpoint. C) Despite a visual trend showing greater active arm entries for regenerates compared to baseline in the memory retention test, the patterns were not significant. D) The reinstatement procedure failed to generate significant differences in active arm entries compared to baseline. Error bars represent standard error of the mean. * = p <.05"
+#| fig-width: 18
+#| fig-height: 16
+#| fig-align: "center"
+
+Exp4_combined_figure <- readPNG("Exp4_combined_figure.png") 
+grid.raster(Exp4_combined_figure)
+
+
+```
+
+
+
+
+
+
+The results described provide preliminary evidence that methamphetamine can be used to shape the behaviour of planaria in a Y-maze. The behavioural change took place rapidly, with an increase in active arm entries visible after one day of conditioning. The speed at which behaviour change takes place is likely conditional on when planaria sample the active arm. By chance, many subjects in one group may enter the active arm on the first or second trial whereas in subsequent groups it may take subjects three or four trials. While a gradual increase in the active arm entries was expected, this rapid increase can be explained by the fact that 22 subjects entered the active arm on the first trial.
+
+It could be argued that what appears to be a change in preference towards the active arm (i.e., successful conditioning) is actually the expression of truly random behaviour. Given a binary choice, if the planaria were behaving randomly you would expect them to enter each arm 50% of the time on average. Because the proportion of active arm entries centered around 0.5 during conditioning, this could reasonably explain the observed behaviour. In contrast, if the behaviour was random, then we explain why the baseline level of active arm entries was low across two consecutive conditioning days. If planaria do not typically have a directional preference, we should have seen more variation between day one and two during baseline. Moreover, as the frequency of active arm entries did not return to baseline levels at all throughout conditioning, we cannot easily attribute this pattern to chance. As no control group was run, it is not clear whether a similar pattern would occur without active reinforcement.
+
+Although neither the head or tail regenerates differed significantly in their active arm entries compared to baseline, the group means were all visually higher compared to baseline (see @fig-Exp4_conditioning_results_panel ). For example, the proportion of active arm entries for tail regenerates (*M* = `r regen_summary %>% filter(BodyStatus == "Tail") %>% pull(mean_prop) %>% format(digits = 3)`) was similar to what was seen at the end of conditioning for the original sample (*M* = `r exp4_endpoint_mean %>% pull(mean_entries) %>% format(digits = 3)`). It must of course be noted that the failure to find a significant effect despite the apparent trends may be due to the small sample size for regenerates (*n* = 10). Larger samples in the future may help identify subtle effects if they in fact exist. Nevertheless, the current data indicate that, although planaria can be conditioned using a y-maze, there is no strong evidence that this learned response survives bisection and regeneration. A stronger test of the hypothesis in the future would require the inclusion of a control group and larger sample sizes. Moreover, prior research suggests that methamphetamine can increase the strength of learning in a dose dependent manner [@kusayama_reinforcing_2000]. It may therefore be beneficial to use a higher dose in future experiments.
+
+# Experiment 4 {#sec-experiment-4}
+
+
+
+
+
+
+```{r}
+#| label: Experiment four Results
+#| include: False
+
+
+# Source the scripts
+#Note experiment 7 below is the fourth experiment in this series of experiments
+source("ExperimentSevenAnalysis_V2.R")
+
+```
+
+
+
+
+
+
+The Y-maze experiment carried out in Experiment 3 made several improvements on the materials and procedure from Experiment 2. Yet the results were difficult to interpret due to a number of limitations. Specifically, it did not employ a control group, a small number of subjects were used for the regeneration tests, and the change in active arm entries was significant but still relatively weak. To address these limitations, this experiment included a control group, used more subjects in the regeneration phase, and used a higher dose of methamphetamine for reinforcement.
+
+### Colony Maintenance and Handling
+
+The planaria maintenance and handling protocols were identical to those described in Experiment 3.
+
+### Materials and Methods
+
+This experiment used two groups: a treatment group (*n* = 15) which received methamphetamine and a control group (*n* = 15) which received vehicle only. There were four experimental stages: baseline, conditioning, regeneration test, and reinstatement (see @fig-exp3_timeline) . The materials and procedures used here were the same as Experiment 3 except for the following modifications. The active arm was reinforced with 58.7μL of methamphetamine (in distilled water) to reach a final concentration of 20μM. Control subjects received an equal volume of vehicle only (distilled water) when they entered the active arm, and were otherwise treated the same as the treatment subjects. At the end of conditioning, all subjects were bisected into head and tail halves. For conditioning and testing procedures, the intertrial intervals were approximately 90 minutes and 60 minutes, respectively. For the reinstatement phase, all regenerated planaria, including control subjects, were bathed in 20μM methamphetamine prior to each trial. The exclusion criteria exployed were the same as in Experiment 2. None of the subjects used for this experiment were excluded based on those criteria. No subjects died during this experiment.
+
+### Results and Discussion
+
+There was a slight bias in baseline arm preference with `r Exp7_prefered_arm_count %>% filter(Prefered_arm == "R") %>%  pull(n)` subjects favouring the right arm, `r Exp7_prefered_arm_count %>% filter(Prefered_arm == "L") %>%  pull(n)` favouring the left arm, and `r Exp7_prefered_arm_count %>% filter(Prefered_arm == "NA") %>%  pull(n)` having no preference. This experiment employed a biased design such that the active arm to be reinforced was the opposite of the initial preference or randomly assigned for those with no initial preference. The left arm was active for `r Exp7_left_active_arm_count` subjects, and the right arm was active for `r Exp7_right_active_arm_count` subjects.
+
+[@fig-Exp7_conditioning_results_panel]A shows the proportion of active arm entries throughout conditioning for both treatment (*n* = 15) and control (*n* = 15) subjects. The treatment group exhibits a steady increase in active arm entries over the first three conditioning days. However, this begins to decrease sharply after day three. The control group shows little variation across conditioning. To assess whether the endpoint active arm preference differed from baseline, a generalised linear mixed effects model with family set to binomial was fitted in R using the lme4 package [@bates_fitting_2015]. Subject ID was set as a random effect, with condition, time point and the interaction term as fixed effects. The model analysed the proportion of entries into the active arm out of six total trials at each time point. Pairwise comparisons with a Bonferroni correction were carried out using the emmeans package in R [@lenth_emmeans_2024]. A Type III ANOVA was conducted using the car package [@fox_r_2019] to identify whether there was a significant effect of condition or time, or an interaction effect.
+
+There was a significant main effect of time (`r get_result(glmm_results, "anova", "Time")`). and a significant main effect of condition (`r get_result(glmm_results, "anova", "Condition")`). We did not detect a significant condition \* time interaction (`r get_result(glmm_results, "anova", "Condition:Time")`). Post-hoc pairwise comparisons were carried out using estimated marginal means with a Bonferroni corrections applied to account for multiple comparisons. Comparisons looked at within group differences in response probability over time and between group differences at each time point. The within group comparison showed that endpoint was significantly higher compared to baseline for treatment subjects only (`r get_result(glmm_results, "within", condition = "Treatment")`). The post-hoc comparisons failed to show any significant between-group differences at baseline or endpoint. This indicates that while active arm entries were higher for the treatment group overall, the individual data points were not significantly different when comparing the treatment group to the control group.
+
+Paired t-tests were used to determine whether there were significant within group differences when comparing memory retention and reinstatement data to baseline active arm entries (see [@fig-Exp7_conditioning_results_panel] C and D). For the initial memory retention test on day 14 the control heads differed significantly from their baseline active arm preference (`r get_planaria_result(Exp7_regen_reinstate_results, part="memory", condition="Control", bodypart="head")`). Treatment heads differed significantly from their baseline active arm preference (`r get_planaria_result(Exp7_regen_reinstate_results, part = "memory", condition = "Treatment", bodypart = "head")`). Control tails differed significantly from their baseline active arm preference (`r get_planaria_result(Exp7_regen_reinstate_results, part="memory", condition="Control", bodypart="tail")`). For reinstatement on day 15, no significant differences were found between heads or tails and their respective baseline values for either group.
+
+The data presented in @fig-Exp7_conditioning_results_panel support the claim that methamphetamine can be used to successfully shape the responses of planaria in a Y-maze. In particular, [@fig-Exp7_conditioning_results_panel]A shows a gradual increase in active arm selection for the treatment group across the first three days of conditioning. Similar to the trend seen in Experiment 3 ([@fig-Exp4_conditioning_results_panel]A), treatment subjects exhibited a decrease in active arm entries towards the end of conditioning. The control group showed little change in their behaviour during conditioning.
+
+
+
+
+
+
+```{r}
+#| label: fig-Exp7_conditioning_results_panel
+#| include: True
+#| fig-cap: "Learning and Memory Retention Through Decapitation in Planaria"
+#| apa-note: "Changes in Y-maze active arm preference across experimental phases. The baseline phase included 6 trials, conditioning endpoint included the final 6 trials of conditioning, and both test and reinstatement phases included 3 trials each. A) shows the mean proportion of active arm entries for baseline and conditioning for both treatment and control subjects. B) Methamphetamine treated subjects showed a significant difference in their active arm entries between baseline and endpoint. No difference was found for control subjects. C) The day 14 retention test found that control head and tail regenerates, and treatment head regenerates differed significantly from baseline. D) No significant differences were observed between regenerates of either group and their respective baseline values during reinstatement. Error bars represent standard error of the mean. * = p <.05"
+#| fig-width: 18
+#| fig-height: 16
+#| fig-align: "center"
+
+#Note, this refers to experiment 7, which is the fourth in this particular sequence of Y maze experiments 
+Exp7_combined_figure <- readPNG("Exp7_combined_figure.png") 
+grid.raster(Exp7_combined_figure)
+
+
+```
+
+
+
+
+
+
+# Experiment 5 {#sec-experiment-5}
+
+The experiments described above support the claim that planaria can obtain an operantly conditioned response. Yet, as can be seen from @fig-exp2decisions, @fig-Exp4_conditioning_results_panel and @fig-Exp7_conditioning_results_panel, the response was not stable. The conditioned response tended to reach its peak early during conditioning and then diminished towards baseline values despite still being actively reinforced. It is not clear whether the reversion to baseline behaviour is a sign of forgetting, drug tolerance, or active rejection of a reinforced direction [described in @best_maze_1962, pp. 565-566]. To properly test memory retention through regeneration, it is important to have a high rate of successful responses just prior to bisection. Otherwise, what appears to be a lack of retention in regenerates may just be a continuation of an already declining response rate. An additional Y-maze experiment was therefore carried out.
+
+Rather than having a pre-determined conditioning period, it was decided that data would be inspected each day for evidence of learning. A mean proportion of active arm entries above 0.6 for the treatment group would trigger an end of the conditioning period. This was to ensure the active arm was preferred by planaria so as to give the greatest chance of retaining the learned response throughout the regeneration period. Initiation of the regeneration phase was thus conditional on whether adequate learning was shown for the treatment subjects.
+
+### Colony Maintenance and Handling
+
+The planaria maintenance and handling protocols were identical to those described in Experiment 3.
+
+### Materials and Procedure
+
+This experiment used two groups: a methamphetamine treated group (*n* = 24) and a control group (*n* = 24) which received vehicle only. This experiment had two stages: baseline and conditioning[^7]. The materials and procedures used here for baseline and conditioning were identical to those in Experiment 4. The exclusion criteria employed were the same as in Experiment 2. None of the subjects used for this experiment were excluded based on those criteria. No subjects died during the experiment.
+
+[^7]: The treatment subjects failed to show adequate evidence of learning. Given the failure of learning and the extended time required to perform the regeneration phase, it was decided that the experiment would be terminated after day four of conditioning.
+
+The mean proportion of active arm entries for treatment and control subjects were monitored each day. The data were graphed to show daily active arm entries compared to baseline. No statistical analyses were performed during the conditioning period. After day four of conditioning the experiment was stopped due to a consistent decrease in active arm entries among the treatment group.
+
+### Results and Discussion
+
+
+
+
+
+
+```{r}
+#| label: Experiment eight Results
+#| include: False
+
+
+# Source the scripts
+#Note experiment 8 below is the fifth experiment in this series of experiments
+source("ExperimentEightAnalysis.R")
+
+```
+
+
+
+
+
+
+An approximately equal number of subjects preferred the right arm (*n* = `r Exp8_prefered_arm_count %>% filter(Prefered_arm == "R") %>%  pull(n)`) and left arm (*n* = `r Exp8_prefered_arm_count %>% filter(Prefered_arm == "L") %>%  pull(n)`), with a small number of subjects having no preference (*n* = `r Exp8_prefered_arm_count %>% filter(Prefered_arm == "NA") %>%  pull(n)`) at baseline. This experiment employed a biased design, such that the active arm to be reinforced was the opposite of the initial preference, or randomly assigned for those with no initial preference. The left arm was active for `r Exp8_left_active_arm_count` subjects, and the right arm was active for `r Exp8_right_active_arm_count` subjects.
+
+[@fig-Exp8_conditioning_results_panel]A shows the change in active arm preference across conditioning days for both treatment (*n* = 24) and control (*n* = 24) subjects. The treatment group demonstrates a sudden jump on the first day of conditioning. This change remains stable for one day before declining towards baseline. The control group shows a steady increase across days, with a slight decrease on the last day of conditioning. To assess whether the endpoint active arm preference differed from baseline, a generalised linear mixed effects model with family set to binomial was fitted in R using the lme4 package [@bates_fitting_2015]. Subject ID was set as a random effect, with condition, time point and the interaction term as fixed effects. The model analysed the proportion of entries into the active arm out of six total trials at each time point. Pairwise comparisons with a Bonferroni correction were carried out using the emmeans package in R [@lenth_emmeans_2024]. A Type III ANOVA was conducted using the car package [@fox_r_2019] to identify whether there was a significant effect of condition or time, or an interaction effect.
+
+There was a significant main effect of time (`r get_result(glmm_results, "anova", "Time")`), but no significant effect of condition or a time \* condition interaction. Post-hoc pairwise comparisons compared the proportion of arm entries at baseline to endpoint. After four days of conditioning with 20μM of methamphetamine, treatment subjects were significantly more likely to enter the active arm (`r get_result(glmm_results, "within", condition = "Treatment")`) compared to baseline. After four days of conditioning with vehicle only, control subjects were significantly more likely to enter the active arm (`r get_result(glmm_results, "within", condition = "Control")`) compared to baseline. We did not detect any significant between-group differences.
+
+The results presented here conflict with those presented in Experiment 4. As can be seen in @fig-Exp7_conditioning_results_panel, the active arm preference for the control group did not shift significantly, suggesting that in Experiment 4, the change observed in the treatment group was due to reinforcement with methamphetamine. However, the results presented here show a large shift in the control groups behaviour despite being treated with vehicle only. Further still, the control group appears to have experienced a greater shift in their preference than the treatment group (albeit the between groups comparison at endpoint was not statistically significant). What appeared to be effective conditioning as a result of methamphetamine administration in Experiment 4 may instead be the result of some other extraneous other variable. Or, as described earlier, it may indicate that planaria do not typically have a directional preference in the Y-maze.
+
+
+
+
+
+
+```{r}
+#| label: fig-Exp8_conditioning_results_panel
+#| include: True
+#| fig-cap: "Failure to Find Evidence of Learning Among Meth Exposed Planaria "
+#| apa-note: "Changes in Y-maze active arm preference across experimental phases. The baseline phase included 6 trials, conditioning endpoint included the final 6 trials of conditioning. A) shows the mean proportion of active arm entries for baseline and conditioning. B) Both methamphetamine treated subjects and control subjects treated with vehicle only showed a significant difference in their active arm entries between baseline and endpoint. Error bars represent standard error of the mean."
+#| fig-width: 14
+#| fig-height: 10
+#| fig-align: "center"
+
+Exp8_results_panel <- readPNG("Exp8_combined_figure.png")
+grid.raster(Exp8_results_panel)
+
+```
+
+
+
+
+
+
+\newpage
+
+# Discussion {#sec-discussion}
+
+## Review of Findings {#sec-review-of-findings}
+
+Planaria have gained attraction as a model organism in several areas of science ranging from drug addiction to limb regeneration. But it must be said that the most interesting aspect of planaria research involves the study of memory retention through decapitation and head regeneration. Despite a pockmarked past in the 20th century, recent experiments suggest that, even after losing their brain, planaria can maintain previously acquired associative memories which can then be acted upon once a new brain is regenerated [@shomrat_automated_2013; @samuel_addiction-related_2021].
+
+While this phenomenon is extraordinary in and of itself, whether it has implications for the kinds of memories that concern humans has not yet been shown. For example, prior experiments have focused on things like familiarity with a surface texture and other simple associative memories. There have been no clear tests for persistence of complex forms of memories formed through operant conditioning. Just as humans must navigate through the world to accomplish their goals (e.g., getting to work on time), operant conditioning requires that a subject learns that it must maneuver its body through the environment in a particular way to receive a reward.
+
+A number of factors may explain the lack of research concerning whether operantly conditioned responses survive decapitation and brain regeneration. For example, researchers may have tried and failed to achieve successful conditioning with operant procedures. While planaria are incredibly capable despite their rudimentary body plan, reinforcement learning may fall outside of their cognitive capability. Alternatively, it may be within the scope of planarian capability but cannot be reliably induced. Just as some humans excel in intellectual activities while others struggle. Planaria too may exhibit high variability in their cognitive capacities.
+
+Another possible explanation for this research gap is the demanding schedule operant conditioning imposes on experimenters. Classical conditioning methods such as CPP often require a brief set up but then have periods of idle time while the subject is exposed to an environmental condition, with software allowing for automatic tracking of movement. Operant conditioning, on the other hand, typically requires continuous observation of the subject to ensure a reward is delivered reliably and in close proximity to the performance of the desired behaviour. When taking into account the necessary sample size and number of observations required per subject, this amounts to a large time commitment.
+
+The present research aimed to plug this gap in the planarian learning and memory literature. Specifically, it aimed to identify whether the phenomena of memory retention through decapitation and regeneration in planaria could be extended to more complex forms of memory. Additionally, it investigated whether time-dependent forgetting can be reversed with a reinstatement procedure.
+
+As a preliminary step, in Experiment 2 we investigated whether a Y-maze can be used to induce a conditioned response and whether this can persist for at least two weeks -- the approximate period required for regeneration of planaria. Although both cocaine treated and control subjects entered the active arm more frequently at the end of conditioning, only the cocaine treated group showed evidence of a persistent change in behaviour when tested two weeks later. During the reinstatement procedure the following day, not only did reinstatement fail to reinstate or increase memory strength among the cocaine treated group, but the cocaine treated groups behaviour actually returned to baseline levels. This suggests the learned response which persisted for two weeks in the cocaine treated group was rapidly extinguished across three trials during the memory retention test. This observation of rapid extinction is consistent with the findings of @amaning-kwarteng_relapse_2017 who observed extinction over three trials in a CPP procedure. Moreover, recent work in our lab suggests conditioned responses in the Y-maze are extinguished quickly if not reinforced (unpublished data, Invertebrate Neuroscience Lab). Contrary to expectations, the time taken to make a decision did not improve for the treatment group.
+
+Over a series of experiments we then tested whether an operantly conditioned response can survive bisection and regeneration. Despite a visual trend in Experiment 3 which appeared to show memory retention through regeneration, we failed to find evidence of significant memory retention in regenerates. These results were followed up in Experiment 4 with a larger sample size. We found evidence of memory retention after regeneration in the head regenerates of treatment subjects. Surprisingly, the control group (treated with vehicle only) also showed evidence of a change in behaviour after regeneration. That is, despite showing no statistically significant shift in behaviour during conditioning, the regenerated heads and tails of control subjects showed a high proportion of active arm entries after regeneration.
+
+Although Experiment 3 and 4 implied successful conditioning of drug treated subjects, Experiment 5 failed to demonstrate adequate evidence of learning in the treatment group. Furthermore, the control group in Experiment 5 showed a significant shift in their behaviour. This shift was comparable in size to that observed among methamphetamine treated subjects from Experiments 3 and 4. It is apparent that each of the experiments described here, if inspected in isolation, would tell a different story.
+
+Having briefly summarised the findings at the level of each experiment, we will now move to a general discussion of whether planaria can learn an operantly conditioned response in a Y-maze. It is tempting to take the observed shift in active arm preference for treatment subjects across several experiments as evidence that we can successfully shape planarian behaviour. However, in Experiment 2 and 5 we also found a significant shift in the active arm preference of control subjects. A change in the behaviour of drug exposed subjects can be interpreted as successful reinforcement learning. But a change in the behaviour of control subjects is more difficult to understand, especially when it resembles a smooth learning curve.
+
+It is possible that when control subjects received distilled water in the active arm, the movement of liquid may have been experienced as a positive stimulus and thus reinforced the responding of control planaria. There is some evidence dating back more than a century that planaria will actively swim against a current [@allen_reversibility_1915] which suggests moving water is preferred to still water. In partial support of this, it was observed throughout the project that when the water in the planarian housing was changed, planaria became more motile. However, whether this represents approach or avoidance behaviour is unknown.
+
+In all cases where planaria became more likely to enter the active arm, be it for drug treated or control subjects, the proportion of active arm entries floated around 0.5. While one interpretation holds that this is evidence of learning in the treatment groups, an alternative explanation is that planaria were exhibiting truly random behaviour. On this view, the apparent baseline preference was the consequence of observing a small number of trials. The bias that results from under sampling can be illustrated by a simple example such as flipping a coin. Using a simple unbiased coin flipping script in R, when we observed six coin flips per trials, four repeated trials produced the following outcomes outcomes: 5:1, 3:3, 6:0 and 4:2 (ratio of tails to heads). Meanwhile, observing 100,000 coin flips in a single trial resulted in 49.6% of the flips being tails and 50.4% being heads. Provided enough observations are made, the stochastic nature of the variable is revealed. That our apparent biases at baseline may simply be under sampling of a random variable is supported by the results of @abbott_conditioning_2008 who found that when looking at a single baseline session containing ten trials, most planaria showed arm preferences in a Y-maze procedure. However, when combining thirty baseline trials across three days, most planaria showed no arm preference.
+
+If @abbott_conditioning_2008 are correct in claiming that planaria typically do not have an arm preference, we still need to explain why the proportion of active arm entries observed in our experiments were consistent across two separate baseline days. If the behavior was truly random, one would expect greater variability between baseline day one and baseline day two. However, across experiments for both treatment and control groups, the proportion of entries into the active arm was approximately 0.3 on two consecutive baseline days.
+
+Although the planaria used by @abbott_conditioning_2008 may not exhibit a directional preference, given many documented behavioural differences among planaria species [@samuel_addiction-related_2021; @mueller_use_2002; @cochet-escartin_scrunching_2015; @debold_differences_1965], it may be that there are also differences in directional preferences. Perhaps the species used throughout this project differed in their behaviour from the Dugesia Tigrina used by @abbott_conditioning_2008. A targeted investigation is required to determine if the species of planaria used here exhibit a directional bias in the Y-maze.
+
+Moving now to the behaviour of control subjects, it is difficult to know whether such dramatic shifts in behaviour are expected because there are few studies available for comparison. The modern literature on planaria behaviour in general conveys stable behaviour of the control group in paradigms such as CPP [@hutchinson_persistent_2015; @jordan_conditioned_2023]. However, early planaria conditioning work by @corning_retention_1966 exhibited a similar level of variability of directional preference in a T-maze paradigm. In fact, the control group in @corning_retention_1966 demonstrated a noticeable increase in active arm preference across the first ten trials, with the active arm preference remaining between 0.45 and 0.5 for the remaining 70 trials. In the case of @corning_retention_1966, despite this increase for the control group, the treatment groups entered the active arm between 60--65% of the time. In line with our observations from Experiment 3, @corning_retention_1966 saw a spike in active arm entries for treatment subjects within the first ten trials.
+
+Two recent projects which aimed to shape directional preferences also found high variability among the control group. @read_reinforcing_2021 observed that the percentage of entries into the active arm varied from \~25% at baseline to \~50% at the end of conditioning for the control group. Another investigation (unpublished data, Canales Laboratory) observed similar variation in active arm entries when subjects were treated with cocaine alongside compounds known to prevent cocaine seeking in rodents. All groups experienced a large jump in active arm entries on the first day of conditioning, hovering around 50% and then declining towards baseline levels. This resembles the behaviour seen in the control group within the current project and, to some extent, matches the decline in active arm entries seen in the treatment groups.
+
+The intertrial interval is one factor that may affect the extent of learning among planaria. It has been suggested elsewhere that planaria learn mazes most effectively when a 30-minute intertrial interval is used [@warren_comparative_1965, p.100]. Moreover, larger intertrial intervals have been reported to mitigate the effects of fatigue from repeated trials[@lee_conditioning_1963; @best_maze_1962]. But the optimal intertrial interval may differ largely between tasks. Some classical conditioning procedures have had success when using an intertrial interval of one minute. @crawford_distribution_1966 found that spaced trials (at least one minute between) were more effective than massed trials (only 30 seconds between).
+
+The experiments employed here varied in their intertrial intervals. Experiment two had a shorter intertrial interval of 15 minutes, while the remaining experiments had intertrial intervals of 60 minutes or more. This was due to a change in procedure. In Experiment 2, six planaria were moved into temporary petri dishes and completed all of their trials before the next group of six started their first trial. Whereas in later experiments, planaria were taken straight from their 12-well housing compartments, with each planaria completing their first trial before any planaria started their second trial. Although the intertrial interval may play a role in the rate and extent of learning, we did not observe any obvious difference based on this.
+
+Another factor which may impact the rate of learning is the drug concentration used. Across the experiments reported here, doses of either 10μM or 20μM were administered. While these are similar to those used in most studies of learning and addiction-like behaviour in planaria [@amaning-kwarteng_relapse_2017; @hutchinson_persistent_2015; @turel_planaria_2022; @sacavage_withdrawal-like_2008; @nayak_benzodiazepine_2016; @raffa_subadditive_2006], there are a several papers which have employed drug concentrations as high as 80μM with success [@raffa_description_2005; @raffa_cocaine_2005; @rawls_nitric_2006; @umeda_cocaine_2004].
+
+As was observed in the dose-response analysis shown in @fig-boxplot, there was no evidence that the doses 10μM or 20μM of cocaine affected planaria motility. We specifically sought out a concentration that would not affect the movement of planaria during subsequent trials. But a lack of physical effects may also indicate that the drug is failing to have any psychoactive (and therefore rewarding) effects for the planaria. Although higher concentrations may reduce the speed with which planaria complete the Y-maze and increase the rate of non-responses, it may also increase the strength of learning on average. That said, some experiments have shown successful learning with drug concentrations as low as 1μM [@hutchinson_persistent_2015; @vouga_stereochemistry_2015]. It would thus be beneficial to systematically manipulate drug concentrations to identify the optimal dose which maximises learning in the planaria species used here.
+
+Given the instability of planarian behaviour observed here, it is difficult to recommend the Y-maze procedure as a viable conditioning paradigm for the field. If the phenomena of memory retention through regeneration is a reliable effect as is suggested by the literature [@shomrat_automated_2013; @samuel_addiction-related_2021; @mueller_use_2002; @shimojo_preservation_2022; @rhodes_effects_2024; @mcconnell_effects_1959; @corning_retention_1966], understanding whether this extends to complex forms of memory is a worthwhile pursuit. But to achieve this, a reliable method for effectively shaping planaria behaviour is needed. The Y-maze procedure may not be a reliable method. Instead, alternative operant conditioning procedures may be better suited to carry on this research project. There are several alternative methods for conditioning planarian. Some date back to the early 20th century such as the Van Oye maze [e.g., @van_oye_over_1920], while others have only appeared in the last decade. For example, @chicas-mosier_new_2015 established a method where the directed movement of planaria is reinforced with water in a crescent petri dish. Although independent replications of these methods are needed to demonstrate their viability, they may hold more promise for successfully shaping planaria behaviour.
+
+One key insight evident from the work performed here is that the behaviour of planaria is highly variable. As was seen when assessing planaria motility during the dose response procedure, there was large variability among all groups. Some planaria covered the diameter of the dish just two or three times during the 15-minute recording interval, while many others traveled a distance 20 times greater than the dish diameter. Both of these extremes were observed across four of the five groups. Regarding the Y-maze, there was high variability in active arm entries over time even among the control group. Moreover, when we observed an increased preference for the active arm among methamphetamine treated subjects, this change was not stable and began to diminish rapidly towards the end of conditioning.
+
+Behavioural volatility may be a general characteristic of planarian behaviour. There is evidence for between species variability when undergoing conditioning [@mueller_use_2002; @samuel_addiction-related_2021], and even within species differences to slight changes in environmental conditions including light, vibrations, size of the recording dish and more [@rejo_optimization_2023]. If planarian behaviour exhibits high within-subject variability, the probability of arriving at a reliable operant conditioning procedure may be low.
+
+We shall now turn to the more philosophically interesting capability addressed within this project: the retention of a learned response through bisection and regeneration. The standing synaptic trace theory of memory would suggest that a memory can only be retained if the synaptic connections which underpin it are maintained. This theory would be challenged if a change in behaviour, such as a conditioned arm preference, is conserved in the tail regenerates of trained planaria. Our results showed that head regenerates of methamphetamine treated subjects maintained an active arm preference that was significantly higher than baseline. However, the tail regenerates failed to show retention of the active arm preference. Surprisingly, a spontaneous change in the behaviour of controls was seen in regenerated head and tails.
+
+The head regenerates of trained planaria should in theory contain most of the original brain cells present during the conditioning procedure. Because, as synaptic trace theory predicts, the original dendritic spines that underpin the memory would not be affected by the bisection. The head regenerates could therefore act on previously acquired information. This aligns with the behaviour of head regenerates from methamphetamine exposed planaria in Experiment 4. The tail regenerates of methamphetamine treated planaria also confirm the predictions of synaptic trace theory. These regenerates did not differ significantly from baseline in their proportion of active arm entries. A proponent of the synaptic trace theory would argue that the necessary neural connections that underlay the memory were absent in the tail half and, therefore, the information could not possibly persist in the tail regenerates.
+
+While the observed results for methamphetamine treated regenerates are explainable by the prevailing synaptic trace theory, the behaviour of control subjects is much harder to parse. The head and tail regenerates of control planaria exhibited a significantly higher proportion of active arm entries compared to baseline. That is, despite showing no evidence of learning during conditioning, the arm preference of regenerate controls shifted in both halves after bisection. Moreover, the proportion of active arm entries in the head and tail regenerates of control subjects centered around 0.5, reflecting the earlier concern that planaria may not have a true directional preference. While it is tempting to claim that methamphetamine treated head regenerates are demonstrating retention of a learned behaviour, the observed data cannot rule out that under sampling of a random behaviour at baseline is responsible for the pattern, rather than successful learning.
+
+That the directional preference of planaria in a Y-maze may be random is supported by the findings of @akiyama_spontaneous_2015. @akiyama_spontaneous_2015 found that a commonly observed phenomenon in planaria, whereby they prefer to be on the wall of a dish rather than on the base of the dish, is in fact due to spontaneous behaviours that increase the likelihood of ending up on the wall. The authors devised several experiments to show that, absent any alluring or noxious stimuli, planaria move straight ahead until they reach a wall. Moreover, they demonstrated that planaria perform a side-to-side movement of their head while swimming ("wigwag movement"), and that it is this spontaneous behaviour which affects their path of motion. What often appears to be an intentional wall seeking behavior may in fact be the result of two spontaneous behaviours -- forward movement and head wigwagging. People often describe planarian wall preference as if it is an intentional survival strategy. But as @akiyama_spontaneous_2015 suggest, planarian behaviour may be less intentional than initially presumed. If true, this supports the conclusion that planaria do not have a true directional preference.
+
+The handling technique used to transfer planaria may have contributed to the apparent behaviour changes observed across experiments. Planaria were typically transferred into the Y-maze using a plastic transfer pipette. This method made it difficult to precisely control the starting position at the beginning of each trial. On occasion, the planaria would land close to or on a wall of the maze. While this did not guarantee that the planarian would enter a particular arm, if their default motion is to continue moving straight as suggested by @akiyama_spontaneous_2015, it may have biased the outcome. This aligns with the experimenter's observations, as planaria seemed more likely to enter the arm corresponding to a wall it landed on or was closest to when entering the maze runway. Given the experimenter was right-handed, the discharge angle of planaria was typically biased towards the left hand wall. While most planaria landed on the floor of the maze runway, this may have increased the chance that planaria land on the left wall and enter the left arm. Fortunately, there was no evidence of a left-arm bias in planaria. In fact, when considering the baseline behaviour in Experiment 3 and 4, we found that subjects tended to enter the right arm more often at baseline. No systematic bias was seen in Experiment 5.
+
+In summary, we may have effectively shaped the behaviour of treatment subjects in Experiment 3 and 4. But because the extent of behaviour change was limited and responses were unstable towards the end of conditioning, the experiments reported here can only be considered a weak test of whether planaria can retain an operantly conditioned response through regeneration. It is clear that further work is required to explore this phenomenon. Though our results were inconclusive, they form part of a wider literature forcing us to question whether synaptic weights are the only game in town.
+
+We must contend with a whole host of research being amassed which has indicated that other memory storage mechanisms may be at play. These studies include those previously highlighted which demonstrate that simple associative memories can be maintained outside of the brain in planaria, and that these can be expressed once a new brain is regenerated [@mcconnell_effects_1959; @corning_retention_1966; @shomrat_automated_2013; @samuel_addiction-related_2021; @shimojo_preservation_2022; @rhodes_effects_2024]. But they also encompass work with other model organisms such as the nematode *C. elegans* and even single celled organisms such as *Paramecium caudatum* and *Physarum polycephalum (which will be discussed shortly)*. Together, these studies compel us to turn our attention away from the crown jewel of memory research (neuronal networks) in search of other mechanisms that could facilitate memory storage. We shall next turn our attention to some alternative memory storage mechanisms that have been suggested, and discuss the applications and implications that may stem from a better understanding of these mechanisms.
+
+## Alternative Memory Storage Mechanisms and their Implications {#sec-challenging-prevailing-theory}
+
+Neuroscientists have focused their attention on neurons as the storehouse of memory for good reasons. There is compelling evidence that manipulating neurons, altering the way they behave in response to experience, can shape whether an animal succeeds or fails to learn a desired response. Moreover, it can even affect the lifespan of the memory. By introducing particular compounds or blocking the activation of certain proteins, researchers can manipulate whether a learned behaviour makes it through the biological hump separating early and late stages of memory encoding – equating to whether a memory is forgotten within hours or lasts for many weeks.
+
+Early experiments using imprecise methods allowed researchers to identify the biological pathways involved in memory. But recent innovative methods are allowing for greater levels of control over memory creation and expression by specifically manipulating neural cells. For example, @han_selective_2009 selectively extinguished a fear memory by destroying the neurons active during fear acquisition. This showed that the neurons in the amygdala which were engaged when a new fear memory was formed can be tagged and selectively destroyed and that this inhibits the expression of the specific fear memory. An even greater level of precision was demonstrated by @liu_optogenetic_2012. Using an optogenetic approach, which allows memory-associated neurons to be modified via light exposure, @liu_optogenetic_2012 demonstrated that a fear response acquired in one context (by paring it with a shock) can be transferred to a novel context by simply activating the fear engram while the rodent is in that novel context. The rodents will then freeze in that context as if they had been previously shocked within it.
+
+Clearly, neurons are important for memory. But can we confidently state that they are the only game in town? Before doing so, we must stop to ask: what other mechanisms might be capable of storing information from past experiences and thus shaping future behaviour?
+
+Research in single celled organisms provides additional evidence that memories can be encoded without the use of neurons [see @gershman_reconsidering_2021 for review]. Single celled, by definition, implies there are no connections between cells. No connections between cells means no possibility of storing memories among synaptic weights. Yet, despite their lack of neurons, several studies have indicated that single celled organisms can demonstrate habituation and even classical conditioning. For example, @gelber_investigations_1952 found that paramecia, a unicellular ciliate, learned to congregate around a wire covered in nutritious bacteria that was placed in their culture dish. When a wire lacking any nourishing bacteria was later introduced during a test phase, the trained paramecia still gathered around it in larger numbers compared to untrained paramecia. More recently, @armus_discrimination_2006 have shown that paramecia can learn to associate the position of a cathode delivering an electric shock with a light. Further evidence of learning without the need for synaptic plasticity. Other unicellular organisms, such as the slime mold *Physarum polycephalum*, have also been shown to exhibit learning in the form of habituation to previously aversive compounds [@boisseau_habituation_2016].
+
+These studies on learning in single celled organisms do not go so far as to identify what the underlying memory mechanisms are. They simply highlight, at a conceptual level, that behaviour changes indicative of learning can occur in liu of changes in synaptic weights – a sort of proof by omission. Thankfully, there are a number of ongoing inquiries to understand how information, including experiences and other form of learning, may be encoded in the resources available to evolved organisms.
+
+RNA is best known for its role as the intermediary allowing our genes encoded in DNA to be translated into proteins. Although this may be its predominant role, it is just one of the many roles that single stranded RNAs play. @moore_role_2021 have shown that RNAs can also play a role in communicating important survival information across generations and between organisms. *C elegans* will learn to avoid *P. aeruginosa*, a pathenogenic bacteria, after exposure [@zhang_pathogenic_2005]. Incredibly, this learned response can be transferred to naive *C elegans* by feeding them homogenized worms and can also can be passed to offspring for four generations.
+
+Although *C elegans* contains a nervous system, @moore_role_2021 provided evidence that the information resulting in the aversion is stored in vesicles containing small RNAs. It is the tunelling of these vesiicles into gametes that is thought to transfer the epxerience transgenerationally. So while a brain may be required to act on this information, the actual information can be stored through another biological mechanisms. This scenario is of course far different than what we envision when we hear the concept of memory transfer. For us, t brings to mind the idea that our thoughts and experiences may literally be transferred to our offspring. Nevertheless, this work in *C elegans* demonstrates that mechanisms beyond synaptic connections are capable of storing experiential information which can later be acted on by an oganisms with a central nervous system.
+
+Biolectric signalling provides another mechanism of information storage. Work on biolectric signalling in planaria has shown that pattern memories, which hold information pertaining to how cells should arrange themselves to reach a target morphology, can be stored among the voltage gradients of regular somatic cells [@levin_bioelectric_2023; @pezzulo_bistability_2021]. This is to say that the voltage gradients of a collection of cells can encode information regarding how the body should regenerate and what the end morphological goal is. By altering these voltage gradients, @beane_bioelectric_2013 showed that planaria can be made to regenerate an additional head in place of their tail. A morphological pattern memory may be a long shot away from the kinds of experiental memories we are interested in. And whether a mechanism like bioelectric signalling is capable of storing experiential information attained by planaria, such as a texture or directional preference, is not yet known. Nevertheless, it provides a clear example of information (which morphological features should be generated and where they should be placed) being stored outside of neural tissue and affecting future behaviour (regeneration).
+
+Turning now to the final mechanism we will touch upon, epigenetic modifications have been shown to play a role in all forms of learning and memory, from habituation to fear conditioning [see @bronfman_epigenetics_2016]. The epigenetic mechanisms implicated span all possible epigenetic markings. DNA methylation, histone modifications, and histone variations all modulate learning and memory performance. One epigenetic modification in particular, DNA methylation, was found to be necessary for learning to occur in rodents [@han_effect_2010; @heyward_dna_2015]. This was shown as inhibition of DNA methytransferases which are responsible for methylating DNA stops memory formation [@miller_covalent_2007]. Methylation is thought to be important for inhibiting translation of proteins that block memory formation and also by silencing genes encoding microRNAs that repress memory formation[@bronfman_epigenetics_2016]. Histone acetylation, which opens up DNA and increases the rate of transcription, has also been associated with improved memory performance [@levenson_regulation_2004].
+
+Important for the current project, epigenetic regulation plays a crucial role in planaria. Particularly during regeneration, factors responsible for methylation and chormatin remodeling are critical for enabling successful regeneration [@hubert_epigenetic_2013; @bonuccelli_rbap48-like_2010]. In the context of learning and memory, it has already been suggested elsewhere that the pluripotent neoblast cells responsible for regeneration may imprint previouusly learned information on the developing brain via epigenetic mechanisms [@blackiston_stability_2015]. Though the details of how memories can be maintained in planaria must be explored, epigenetic regulation of neoblast cells may play a role.
+
+The studies and mechanisms described above are not intended to suggest than neuronal connections are not the primary site of memory storage and expression. Instead, they serve to show that our current conception of memory storage is too narrow to account for findings available throughout the learning and memory literature. Moreover, if non-neuronal storage mechanisms are exploited by simple organisms to store and act on information, we should consider whether these primitive mechanisms, whatever their structure may be, might also be at work in humans. That said, we have not yet addressed a question of central importance: why should we care if other memory storage mechanisms exist? It could be argued that we are already making progress in understanding and diagnosing conditions like Alzheimer's and other age related memory impairments. What benefits are to be gained by recognising alternative memory storage mechanisms?
+
+If it was discovered that the body uses macromolecules such as RNAs or some other mechanism alongside neuronal storage, this would have important therapeutic and clinical implications. Primarily, the information stored outside of neurons could be exploited to reinstantiate information that has been disturbed after a traumatic event. People experience head trauma from a variety of activities and events. Contact sports, traffic accidents, and stroke are just a few common examples. Fortunately, some memories and abilities that at first appear lost will recover spontaneously over time [@kerr_experience-dependent_2011]. But much of what is lost, be it motor abilities or past experiences, never return.
+
+Current efforts to improve rehabilitation after damage focus on task specific training and factors such as exercise which have been linked to improved patient outcomes [@paris_stroke_2007; @han_clinical_2017]. But a greater understanding of non-synaptic storage mechanisms could improve recovery rates by facilitating the restoration of this knowledge. Our current view of memory storage suggests that we should be trying to maximise neurogenesis and structural reorganisation of neural tissue to improve recovery rates for patients with brain damage. But another route to recovery may lie in directing the movements of macromolecular storage components. This may also open up new avenues for peer assisted therapeutics. Just as microbiota can be transferred between individuals to enhance health outcomes [@mazzawi_kinetics_2018], molecular transfusions may similarly enable information to be moved between individuals to enhance cognitive outcomes. This is admittedly highly speculative, but the work of @moore_role_2021 provides preliminary evidence that molecules such as RNAs can be transferred between organisms to confer the recipient with adaptive information that affects its behaviour.
+
+## Limitations {#sec-limitations}
+
+This project suffered from a number of limitations, some of which have been highlighted throughout. One major issue which needs to be highlighted is that we have not carried out species level identification of the planaria used here. Given there were two phenotypes apparent in our breeding colony, these may represent two separate species. This limits the comparability of the results presented here with others in the literature and may even limit comparability between studies carried out within our lab. This is especially true given inter-species differences have been described for a number of behaviours and conditioning paradigms [@rejo_optimization_2023; @mueller_use_2002; @samuel_addiction-related_2021; @cochet-escartin_scrunching_2015; @debold_differences_1965].
+
+The concentration of drug administered during the Y-maze experiments could not be precisely controlled. This stemmed from two factors. First, when we attempted to ascertain the amount of liquid left in each arm after the plug had been inserted, there were slight variations each time. Second, when planaria were transferred using the plastic transfer pipette, there was always some additional planaria water being introduced along with the subject (despite a persistent effort to minimise this). While these two factors are not expected to affect the concentration by more than one or two micromolar for most trials, some trials may have experienced greater variation. While higher drug concentration was not expected to hinder learning, a particularly low concentration for a given trial may have done so.
+
+Variability of the intertrial interval may also have affected the conditioning procedure for treatment subjects. For Experiments 3, 4 and 5, all subjects completed their first trial before any subjects started their second trial. Any given trial could take between just over three minutes up to eight minutes. This variability resulted in inconsistent intervals between trials and is the reason that only approximate intertrial intervals were provided. Moreover, the duration of drug exposure for planaria was not precise due to running multiple subjects simultaneously. While we attempted to minimise variability in this regard, and the process of rinsing each planaria and putting them back into their housing compartment was quite quick, some planaria would have been exposed to the drug for longer than others (occasionally on the order of 90 seconds more than the intended three minutes duration).
+
+Another major limitation results from the small number of observations used to establish the baseline arm preference. This was already discussed exhaustively throughout the manuscript. Nevertheless, it must be reiterated. It is still questionable whether planaria actually show a directional preference in the Y-maze. By observing only six trials, we risk inferring a preference where no preference exists. Adding additional baseline trials would restrict the sample size (given the time-demanding nature of an operant conditioning procedure), but it would give a more reliable estimate of the initial directional preference. With a robust baseline established, a change in behaviour could be more easily interpreted as learning.
+
+The exclusions in Experiment 2 may have systematically biased the results. For the baseline to endpoint comparison, nine control subjects were excluded compared to just three treatment subjects. Due to additional deaths during regeneration, partly due to an experimenter error where 12 subjects were left overnight without water, the control group had just 18 subjects for the two week follow up test and 17 subjects for reinstatement. In comparison, the treatment group had 24 subjects at both follow up test points. The difference in the subject dropout rate may have contributed to the between group differences detected at the test phase. This could be the case if control subjects which entered the arms equally were more likely to be excluded.
+
+Because the drugs were dissolved in planaria water rather than being injected directly into each subject, the dose of drug absorbed by each subject was unknown. It is often said that planaria lack a circulatory system and uptake chemicals and nutrients in the water via epithelial absorption and diffusion [@felix_it_2019; @vu_stem_2015; @lewallen_metabolic_2020]. We can assume this is how planaria took up the compounds we administerd into the water. But uncertainty remains regarding whether the compounds reached the brain in the short period of time allowed for absorbtion.
+
+This matter of drug uptake is further complicated as the location of drug action is different for different compounds. For example, @pagan_planarians_2013 demonstrated that planaria require an intact brain to react to cocaine but not nicotine. In bisected tail fragments, exposure to nicotine but not cocaine produced seizure like movements. This may affect how rapidly the rewarding properties take effect. This difference could be modulated by the size of planaria, particularly in cases where receptors are found widely dispersed throughout the body. Because the planaria used throughout this report were not precisely weighed or measured, there may have been size-dependent differences in drug uptake and, consequently, learning. To control for such effects, future experiments should consider using only those subjects that are of a specified length.
+
+A theoretical limitation of the current approach stems from the fact that even tail halves of planaria are thought to contain neural tissue. While the majority of the central nervous system is contained within the head in the form of a centralised brain, there are ventral nerve cords which are thought to contain neurons that form neural networks independent of the brain [@okamoto_neural_2005]. The bisection should have successfully removed all of the brain tissue from the tail fragments, but would have left some of these posterior neural networks intact. A proponent of the synaptic trace theory could argue that the memories are still being stored synaptically in the tail halves of bisected planaria. For a clearer test of whether memories can be stored non-synaptically, which is to say outside of neural tissue, one would need to cut planaria in such a way that the target fragments lack any tissue from the nerve cords. It has been previously suggested that a planarian fragment around 1/279th the weight of the original worm can survive and regenerate [@morgan_experimental_1898]. With some others reporting that just 10,000 cells are required for complete cephalic regeneration [@montgomery_minimal_1974]. This may enable smaller sections from the side of the body to be used for regeneration. This would test memory retention while ensuring synaptic storage mechanisms are ruled out.
+
+## Summary and Future Directions {#sec-summary-and-future-directions}
+
+Memory research performed using popular model organisms such as rodents, birds and apes, allow for straightforward inferences to how human memory operates. However, research using these animals suffers from many restrictions on the kinds of manipulations that can be performed. Other limitations arise due to the high cost of housing and maintaining these animals. Planaria present a unique opportunity to investigate the nature of memory, as they provide a means for investigating learning and memory phenomena with high-throughput, low cost and a wide scope for exploratory investigations. Given their regenerative abilities, planaria can be used to answer questions unavailable when working with typical model organisms, such as whether memory can be retained outside of the brain.
+
+The current project built on previous findings showing that simple associate memories can be retained in planaria after decapitation and regeneration of the brain. The experiments carried out here asked whether this phenomenon can be extended to more complex forms of memory, such as reward seeking behaviour. Although we found preliminary evidence that planaria could obtain a conditioned directional preference in a Y-maze, there was no evidence that this could persist in the tail regenerates – which was necessary to show that complex memories can be stored outside the brain. This failure does not definitively show that complex memories cannot be stored outside of the brain. Rather, it indicates that more robust procedures are required to improve learning rates to enable a a stronger test of the hypothesis.
+
+Whether or not planaria are a viable organisms for understanding addictive behaviours in humans directly depends on whether they can reliably learn complex tasks. Although a number of papers have explored planaria as a model for addiction [@samuel_addiction-related_2021; @amaning-kwarteng_relapse_2017; @mohammed_jawad_dissociation_2018; @turel_planaria_2022; @francis_planaria_2015], simple texture preferences and light preferences are very far removed from the complex drug seeking behaviours found in humans [@singer_are_2018]. If we are to use planaria as a real model for understanding addiction related behaviours like habit formation, extinction, and tolerance, we must use models which have some resemblance to the complexity of the human behaviour.
+
+Humans must string together a number of behaviours and actions in the world to find and procure drugs of abuse. Therefore, to garner insight into the mechanisms governing these behaviours, we must at least capture some of the complexity of drug seeking behaivour in our animal models. If planaria can be reliably shown to acquire operantly conditioned responses, this should generate optimism for planaria as a viable model organism. On the other hand, if we fail to find a robust way to shape planaria behaviour, it is not clear that we will garner any insights of practical utility for addressing addiction in humans.
+
+A number of next steps arise naturally from the lessons learnt during this project. First, for the continuation of planaria research in New Zealand, species level identification should be carried out to determine whether the genome of the planaria used here match those of other known species, or whether they are a novel species indigenous to New Zealand. Once the species used for this project has been identified, it will help position this work within the existing literature. Given the already described inter-species differences, it will help contextualise our failure to find strong evidence for operant conditioning. If we are working with a species native to New Zealand, it may be that they are simply poor learners. In contrast, if we are working with a species shared by other labs around the world, it may be a cause for skepticism around current claims of operant conditioning in the literature.
+
+It remains to be shown whether the Y-maze is a viable procedure for studying learning and memory retention. A number of manipulations could be tested to optimise the procedure, allowing for a more robust test of whether complex memories can be stored outside of the brain. First, a range of doses could be used which test whether low or high concentrations are more effective for shaping behaviour, while allowing the researcher to observe whether high doses impact behaviour on subsequent trials (e.g. maze completion time). The following concentrations of both cocaine and methamphetamine could be tested: 1μM, 20μM, 50μM and 150μM. Once a concentration which maximises learning has been identified, manipulation of the exposure time should be carried out. The current experiment used a 3-minute absorption period. However, a shorter or longer duration may enhance learning. Absorption durations ranging from 1 to 10 minutes could be tried. A longer absorption period may constrain the sample size given the additional time required to complete all the trials. However, if learning can be made more consistent, this would be an acceptable trade off.
+
+As an alternative approach, one could search for another viable operant conditioning procedure. The Van Oye maze described in the literature review would be a useful starting be. The benefit of the Van Oye maze is that the task requires more movement and a larger sequence of behaviours which would make evidence of learning more obvious. Depending on where a planaria lands in the Y-maze, an entry into the active arm may simply require forward movement. Whereas in the van Oye Maze, at minimum a planaria must climb across the floor, up the wall, across the water surface, and down the fishing line towards the food. The issue of baseline preference sampling and difficulty assessing whether a change in preference is evidence of learning is less of a problem for the Van Oye setup. Despite being touted as one of the most successful operant conditioning paradigms [@raffa_analysis_2008], we could not find modern replications using the Van Oye method in the literature. Future experiments should attempt to replicate results reported in the 20th century [@van_oye_over_1920; @corning_planarian_1970]. Preregistration should be completed prior to experimentation which details what a successful trial looks like, the training protocol, exclusion criteria, and ideally a power analysis to determine the required sample size to replicate effects reported previously.
+
+Once a method for establishing effective operant conditioning has been reached, future experiments should consider whether it is viable to use a small fragment of trained planaria to test for memory retention. This will allow for a stronger test of the hypothesis that memories can be stored non-synaptically, as the neural tissue in the fragment can be minimised. Small fragments can be compared to tail fragments and or head fragments. If learning can persist in head and tail fragments but not the smaller fragments, then one may conclude that memory is stored outside of the centralised brain, but still maintained among synaptic connections in the ventral nerve cords.
+
+# Conclusions
+
+Planaria are gaining attraction as a model organisms across several domains, from regenerative medicine to early-stage addiction and memory research. Their incredible capacity for regeneration led to demonstrations that simple form of learning can be retained in the brainless tail fragments. This is an interesting phenomenon, but the simplicity of the behaviours involved limit the kinds of inferences we can make about memory in humans.
+
+This project aimed to test whether more complex forms of memories – those involved in reward seeking behaviour – can also survive in planaria outside the brain. Unfortunately, our findings were mixed. Although there was some evidence that planaria will navigate to an arm where they were previously rewarded with a stimulant, this behaviour was not stable. Moreover, some of the control groups demonstrated a shift in behaivour similar to that of the treatment group. Because of this, we could not drawn any definitely conclusions abut the learning capacities of planaria or whether memory can be retained through decapitation and regeneration.
+
+Although planaria are touted as a suitable organism for studying addiction and other processes related to learning, our experience suggests that they may be less reliable than previously thought and their behaviour can be rather difficult to interpret. Demonstration that planaria can acquire complex memories is necessary if they are to be useful for learning about processes with relevance to humans.
+
+# Data Availability
+
+This manuscript was developed using Quarto – a publishing software that allows for the creation of reproducible research papers. The datasets used to perform the analyses reported here, as well as the R scripts required to generate the statistics and graphs, are avaliable in the following GitHub repository (). Because it was our first time using this software to generate a reproducible manuscript, the organisation of files is far from optimal. Despite this, all the files necessary to regenerate this manuscript are available for download.
+
+\newpage
+
+# References {#sec-references}
+
+::: {#refs}
+:::
+

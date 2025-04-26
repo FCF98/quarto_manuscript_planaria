@@ -11,15 +11,28 @@ author:
         address: PO Box 600, Easterfield Building, Kelburn Pde, Kelburn
         city: Wellington
         region: New Zealand
-abstract: "Research stemming from the invertebrate literature is forcing us to question some of our assumptions about the nature of memory. Planaria, a flatworm with a centralised brain and incredible regenerative capabilities, have demonstrated retention of simple associative memories, such as associating a texture with a reward, in brainless tail fragments after decapitation. This suggests basic memories may be stored outside the brain but leaves open the question of whether complex goal-oriented memories share this capacity. To address this, we performed a series of Experiments to determine whether planaria can acquire an operantly conditioned response that persists for at least two weeks, and whether this can be retained in the brainless tail halves of decapitated planaria. 
+abstract:
+  "Research stemming from the invertebrate literature is forcing us to question some of our assumptions about the nature of memory. Planaria, a flatworm with a centralised brain and incredible regenerative capabilities, have demonstrated retention of simple associative memories, such as associating a texture with a reward, in brainless tail fragments after decapitation. This suggests basic memories may be stored outside the brain but leaves open the question of whether complex goal-oriented memories share this capacity. To address this, we performed a series of Experiments to determine whether planaria can acquire an operantly conditioned response that persists for at least two weeks, and whether this can be retained in the brainless tail halves of decapitated planaria. 
 
-Using a Y-maze paradigm, we established baseline arm preferences and then rewarded treatment subjects with either cocaine or methamphetamine for entering their non-preferred arm during conditioning. Control subjects received vehicle only (distilled water). For the key experiments, subjects were then cut into head and tail fragments and allowed to regenerate for 14 days before we tested for memory retention. The next day, subjects were exposed to the rewarding compounds to identify whether the memory could be brought back or strengthened with a reinstatement procedure. 
+  Using a Y-maze paradigm, we established baseline arm preferences and then rewarded treatment subjects with either cocaine or methamphetamine for entering their non-preferred arm during conditioning. Control subjects received vehicle only (distilled water). For the key experiments, subjects were then cut into head and tail fragments and allowed to regenerate for 14 days before we tested for memory retention. The next day, subjects were exposed to the rewarding compounds to identify whether the memory could be brought back or strengthened with a reinstatement procedure. 
 
-Our results were mixed as to whether planaria can learn and retain an operantly conditioned response. Experiments 3 and 4 provided preliminary evidence for learning, as treatment subjects entered the active arm more often at the end of conditioning. However, experiments 2 and 5 failed to show a significant change in behaviour compared to control subjects. We found no conclusive evidence that learned responses were retained in the brainless tail fragments, although the relatively weak learning may have limited the likelihood of successful retention. Future experiments will require more robust training methods to conclusively test the hypothesis of complex memory retention outside of the brain. 
+  Our results were mixed as to whether planaria can learn and retain an operantly conditioned response. Experiments 3 and 4 provided preliminary evidence for learning, as treatment subjects entered the active arm more often at the end of conditioning. However, experiments 2 and 5 failed to show a significant change in behaviour compared to control subjects. We found no conclusive evidence that learned responses were retained in the brainless tail fragments, although the relatively weak learning may have limited the likelihood of successful retention. Future experiments will require more robust training methods to conclusively test the hypothesis of complex memory retention outside of the brain. 
 
-The literature conveys that planaria are useful for answering questions relating to addiction and other learning processes. Yet, is our opinion that more sophisticated tasks must first be established if planaria are to produce insights that have implications for memory related processes and impairments in humans."
+  The literature conveys that planaria are useful for answering questions relating to addiction and other learning processes. Yet, is our opinion that more sophisticated tasks must first be established if planaria are to produce insights that have implications for memory related processes and impairments in humans."
 
-author-note: ~
+acknowledgements: |
+  Stepping away from the corporate world to pursue a Masters degree was a big decision for me. But I was lucky enough to be surrounded by caring people who encouraged me to pursue my passion. My parents have always been my biggest supporters. Despite being hard working farmers, they have always backed me no matter what I choose to spend my time doing. Reading books, watching lectures and experimenting with rats and worms feels a bit useless in comparison to what they do every day. Yet, they have always been fully supportive and are always there when I need them. Thanks to you both Mum and Dad.
+
+  Sylvia, my partner, has been there for the day to day fluctuations in motivation, stress and working hours as I trudged away to complete this degree. You are, of course, one of my greatest supporters and consolers, helping to counsel me through the complexities of life. Thanks for earning the big bucks while I gave drugs to worms.
+
+  To all my firends and former colleagues, thanks for being patient with me as I ignored social invitations and ghosted Facebook messages while being too busy in the lab or too tired to do other things. Hopefully you will answer my messages as I attempt to catch up on lost social time. To my newly acquired science buddies, it has been great to learn and work alongside you. Particular thanks are owed to Meyrick Kidwell for your support with all things lab related, to Stephanie Huang for engaging discussions in neuroscience and for pushing me to learn new things, to Matt Ramirez for being in the planaria trenches with me in our overly humid room without a window in sight, and to Juan Canales for introducing me to the realm of planaria research. That said, there are many other members of the Behavioural Neurogenetics Lab who made my days at University enjoyable -- thanks to all of you!
+
+  I owe an extra sizable thanks to Bart Ellenbroek, for having me in his lab for two years and change. You are a great mentor and person. Your interests and personality always liven up our chats and lab discussions. Thanks for creating an atmosphere where I always felt like you have my back. Your jovial approach to life is something I hope to acquire as I move through mine. Thanks for always making time for me when I needed it.
+
+  Finally, thanks to Victoria University of Wellington for supporting my studies through the Wellington Graduate Award and the Wellington Master's by Thesis Scholarship.
+  
+
+suppress-author-note: true
 
 # Document Structure
 # If true, sections will be numbered (1, 1.1, 1.2, etc.)
@@ -365,24 +378,12 @@ conflicts_prefer(cowplot::get_legend, .quiet = TRUE)
 
 ```
 
-# Acknowledgements {.unnumbered}
 
-Stepping away from the corporate world to pursue a Masters degree was a big decision for me. But I was lucky enough to be surrounded by caring people who encouraged me to pursue my passion. My parents have always been my biggest supporters. Despite being hard working farmers, they have always backed me no matter what I choose to spend my time doing. Reading books, watching lectures and experimenting with rats and worms feels a bit useless in comparison to what they do every day. Yet, they have always been fully supportive and are always there when I need them. Thanks to you both Mum and Dad.
-
-Sylvia, my partner, has been there for the day to day fluctuations in motivation, stress and working hours as I trudged away to complete this degree. You are, of course, one of my greatest supporters and consolers, helping to counsel me through the complexities of life. Thanks for earning the big bucks while I gave drugs to worms.
-
-To all my firends and former colleagues, thanks for being patient with me as I ignored social invitations and ghosted Facebook messages while being too busy in the lab or too tired to do other things. Hopefully you will answer my messages as I attempt to catch up on lost social time. To my newly acquired science buddies, it has been great to learn and work alongside you. Particular thanks are owed to Meyrick Kidwell for your support with all things lab related, to Stephanie Huang for engaging discussions in neuroscience and for pushing me to learn new things, to Matt Ramirez for being in the planaria trenches with me in our overly humid room with not a window in sight, and to Juan Canales for introducing me to the realm of planaria research. That said, there are many other members of the Behavioural Neurogenetics Lab who made my days at University enjoyable -- thanks to all of you!
-
-I owe an extra sizable thanks to Bart Ellenbroek, for having me in his lab for two years and change. You are a great mentor and person. Your interests and personality always liven up our chats and lab discussions. Thanks for creating an atmosphere where I always felt like you have my back. Your jovial approach to life is something I hope to acquire as I move through mine. Thanks for always making time for me when I needed it.
-
-Finally, thanks to Victoria University of Wellington for supporting my studies through the Wellington Graduate Award and the Wellington Master's by Thesis Scholarship.
-
-\newpage
 
 <!-- need to manually click update Table once rendered to word doc - uses docx-toc-placement.lua file -->
 
 ::: {#toc}
-# Table of Contents {.unnumbered}
+##### Table of Contents {.unnumbered}
 :::
 
 \newpage

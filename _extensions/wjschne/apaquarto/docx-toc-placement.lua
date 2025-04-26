@@ -3,7 +3,7 @@ function Div(div)
   if div.identifier == "toc" and FORMAT:match 'docx' then
     -- Create a manual TOC field at this specific location
     local toc_field = pandoc.RawBlock('openxml', 
-      '<w:p><w:pPr><w:pStyle w:val="Heading1"/><w:jc w:val="center"/></w:pPr>' ..
+      '<w:p><w:pPr><w:pStyle w:val="Heading5"/><w:jc w:val="center"/></w:pPr>' ..
       '<w:r><w:t>Table of Contents</w:t></w:r></w:p>' ..
       '<w:p><w:r><w:fldChar w:fldCharType="begin"/></w:r>' ..
       '<w:r><w:instrText xml:space="preserve"> TOC \\o "1-3" \\h \\z \\u </w:instrText></w:r>' ..
