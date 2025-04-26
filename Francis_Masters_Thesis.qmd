@@ -1159,6 +1159,8 @@ Although planaria are touted as a suitable organism for studying addiction and o
 
 This manuscript was developed using Quarto – a publishing software that allows for the creation of reproducible research papers. The datasets used to perform the analyses reported here, as well as the R scripts required to generate the statistics and graphs, are avaliable in the following GitHub repository (). Because it was our first time using this software to generate a reproducible manuscript, the organisation of files is far from optimal. Despite this, all the files necessary to regenerate this manuscript are available for download.
 
+\newpage
+
 # References {#sec-references}
 
 ::: {#refs}
