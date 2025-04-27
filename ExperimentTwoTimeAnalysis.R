@@ -1,15 +1,15 @@
-# library(readxl)
-# library(tidyverse)
-# library(lme4)
-# library(emmeans)
-# library(ggsignif)
-# library(ggplot2)
-# library(gghalves)
-# library(dplyr)
-# library(ggdist)
-# library(ggtext)
-# library(colorspace)
-# library(forcats)
+library(readxl)
+library(tidyverse)
+library(lme4)
+library(emmeans)
+library(ggsignif)
+library(ggplot2)
+library(gghalves)
+library(dplyr)
+library(ggdist)
+library(ggtext)
+library(colorspace)
+library(forcats)
 
 Exp2_Time_Data <- read_excel("Datasets/ExpeimentTwoTimeData.xlsx")
 
@@ -174,227 +174,6 @@ between_group_stats_exp2_time <- exp2_time_comparisons_between_group %>%
 
 
 
-######### Plotting the grouped data by condition across days #############
-
-
-grouped_time_plots <- ggplot(Exp2_Time_Long_Four_Points, aes(x = TimePoint, y = Time, color = Condition, group = Condition)) +
-  # Add mean lines
-  stat_summary(fun = mean, geom = "line", size = 1) +
-  # Add error bars (standard error)
-  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2) +
-  # Add individual subject points (optional - comment out if too cluttered)
-  geom_point(alpha = 0.2) +
-  # Customize appearance
-  theme_classic() +
-  labs(
-    x = "Time Point",
-    y = "Time to Decision (seconds)",
-    title = "Decision Time Across Experimental Phases",
-    color = "Condition"
-  ) +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    legend.position = "top"
-  ) 
-
-grouped_time_plots
-
-# save the plot
-ggsave("grouped_time_plots.png", grouped_time_plots, 
-       width = 8, height = 10, dpi = 300, units = "in",
-       bg = "white")
-
-
-
-
-########### Trying to plot with significance bars ########
-
-grouped_time_plots_with_sig <- ggplot(Exp2_Time_Long_Four_Points, aes(x = TimePoint, y = Time, color = Condition, group = Condition)) +
-  # Add individual subject points with jitter and dodge
-  geom_point(position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.4),
-             alpha = 0.3,  # slightly increased transparency
-             size = 2) +   # increased point size
-  
-  # Add mean lines - dodged to align with points
-  stat_summary(fun = mean, 
-               geom = "line", 
-               linewidth = 1.2,    # slightly thicker lines
-               position = position_dodge(0.4)) +
-  
-  # Add error bars (standard error) - dodged to align with points
-  stat_summary(fun.data = mean_se, 
-               geom = "errorbar", 
-               width = 0.2,
-               linewidth = 1,      # thicker error bars
-               position = position_dodge(0.4)) +
-  
-  # Control group significance markers
-  geom_signif(
-    annotations = "***",
-    xmin = "Baseline", xmax = "Test",
-    y_position = 200,
-    color = "#159090"
-  ) +
-  geom_signif(
-    annotations = "***",
-    xmin = "Endpoint", xmax = "Test",
-    y_position = 300,
-    color = "#159090"
-  ) +
-  
-  # Treatment group significance markers
-  geom_signif(
-    annotations = "***",
-    xmin = "Baseline", xmax = "Test",
-    y_position = 230,
-    color = "#FF8C00"
-  ) +
-  geom_signif(
-    annotations = "***",
-    xmin = "Baseline", xmax = "Reinst",
-    y_position = 260,    # fixed the y-position from 2600
-    color = "#FF8C00"
-  ) +
-  geom_signif(
-    annotations = "**",
-    xmin = "Endpoint", xmax = "Test",
-    y_position = 330,
-    color = "#FF8C00"
-  ) +
-  geom_signif(
-    annotations = "**",
-    xmin = "Endpoint", xmax = "Reinst",
-    y_position = 360,
-    color = "#FF8C00"
-  ) +
-  
-  # APA-style theme modifications
-  theme_classic() +
-  theme(
-    text = element_text(family = "Times New Roman", size = 12),
-    axis.title = element_text(size = 12),
-    axis.title.y = element_text(margin = margin(r = 15)),
-    axis.text = element_text(size = 10, color = "black"),
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    legend.position = "bottom",
-    legend.title = element_text(size = 12),
-    legend.text = element_text(size = 10),
-    axis.line = element_line(color = "black", linewidth = 0.5),
-    panel.grid = element_blank(),
-    panel.background = element_rect(fill = "white"),
-    plot.margin = margin(t = 20, r = 20, b = 40, l = 20, unit = "pt"),
-    panel.border = element_blank()
-  ) +
-  scale_y_continuous(
-    limits = c(0, 400),
-    breaks = seq(0, 300, 50)
-  ) +
-  scale_color_manual(values = c("Control" = "#159090", "Treatment" = "#FF8C00")) +
-  labs(
-    x = "Time Point",
-    y = "Time to Decision (seconds)",
-    color = "Condition"
-  )
-
-grouped_time_plots_with_sig
-
-
-
-########## With APA formatting
-
-ggplot(Exp2_Time_Long_Four_Points, aes(x = TimePoint, y = Time, color = Condition, fill = Condition)) +
-  # Add boxplots with transparency
-  geom_boxplot(position = position_dodge(0.8), 
-               alpha = 0.2, 
-               width = 0.5) +
-  # Add individual points with jitter
-  geom_point(position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.8),
-             alpha = 0.3, 
-             size = 2) +
-  # Add mean lines
-  stat_summary(fun = mean, 
-               geom = "line", 
-               linewidth = 1.2,
-               position = position_dodge(0.8),
-               aes(group = Condition)) +
-  # Add your existing significance markers and theme
-  # Control group significance markers
-  geom_signif(
-    annotations = "***",
-    xmin = "Baseline", xmax = "Test",
-    y_position = 200,
-    color = "#377EB8"
-  ) +
-  geom_signif(
-    annotations = "***",
-    xmin = "Endpoint", xmax = "Test",
-    y_position = 300,
-    color = "#377EB8"
-  ) +
-  
-  # Treatment group significance markers
-  geom_signif(
-    annotations = "***",
-    xmin = "Baseline", xmax = "Test",
-    y_position = 230,
-    color = "#E60012"
-  ) +
-  geom_signif(
-    annotations = "***",
-    xmin = "Baseline", xmax = "Reinst",
-    y_position = 260,    # fixed the y-position from 2600
-    color = "#E60012"
-  ) +
-  geom_signif(
-    annotations = "**",
-    xmin = "Endpoint", xmax = "Test",
-    y_position = 330,
-    color = "#E60012"
-  ) +
-  geom_signif(
-    annotations = "**",
-    xmin = "Endpoint", xmax = "Reinst",
-    y_position = 360,
-    color = "#E60012"
-  ) +
-  
-  # APA-style theme modifications
-  theme_classic() +
-  theme(
-    text = element_text(family = "Times New Roman", size = 12),
-    axis.title = element_text(size = 12),
-    axis.title.y = element_text(margin = margin(r = 15)),
-    axis.text = element_text(size = 10, color = "black"),
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    legend.position = "bottom",
-    legend.title = element_text(size = 12),
-    legend.text = element_text(size = 10),
-    axis.line = element_line(color = "black", linewidth = 0.5),
-    panel.grid = element_blank(),
-    panel.background = element_rect(fill = "white"),
-    plot.margin = margin(t = 20, r = 20, b = 40, l = 20, unit = "pt"),
-    panel.border = element_blank()
-  ) +
-  scale_color_manual(values = c("Control" = "#377EB8", "Treatment" = "#E60012")) +
-  scale_fill_manual(values = c("Control" = "#377EB8", "Treatment" = "#E60012"))
-
-
-
-
-########## Raincloud plot ############
-
-
-library(ggridges)
-
-ggplot(Exp2_Time_Long_Four_Points, 
-       aes(x = Time, y = TimePoint, fill = Condition)) +
-  geom_density_ridges(alpha = 0.5, 
-                      jittered_points = TRUE,
-                      point_alpha = 0.3,
-                      position = position_points_jitter(width = 0.05, height = 0)) +
-  theme_ridges()
-
-
 
 ############ plotting individual data ################
 
@@ -439,12 +218,6 @@ individual_time_plots <- ggplot(Exp2_Time_Long, aes(x = TimePoint, y = Time, gro
 
 
 individual_time_plots
-
-# save the plot
-ggsave("individual_time_plots.png", individual_time_plots, 
-       width = 20, height = 24, dpi = 300, units = "in",
-       bg = "white")
-
 
 
 
@@ -536,14 +309,14 @@ grouped_time_horizontal_boxplot <- ggplot(Exp2_Time_Long_Four_Points, aes(x = fc
     panel.spacing = unit(2, "cm"),
     strip.text.y = element_blank(),
     axis.ticks = element_blank(),
-    axis.text = element_text(size = 12),
+    axis.text = element_text(size = 16),
     axis.text.y = element_text(
       color = rev(darken(pal, .1, space = "HLS")),
-      size = 14,
+      size = 20,
       margin = margin(r = 10)
     ),
-    axis.title.x = element_text(margin = margin(t = 15), size = 14),
-    plot.title = element_text(face = "bold", size = 16),
+    axis.title.x = element_text(margin = margin(t = 15), size = 18),
+    plot.title = element_text(face = "bold", size = 18),
     plot.subtitle = element_text(
       color = "grey40",
       hjust = 0,
@@ -560,7 +333,7 @@ grouped_time_horizontal_boxplot <- ggplot(Exp2_Time_Long_Four_Points, aes(x = fc
     legend.key.size = unit(1.5, "cm"),
     legend.title = element_blank(),
     legend.margin = margin(0, 0, 15, 0),
-    legend.text = element_text(size = 16)
+    legend.text = element_text(size = 18)
   )
 
 grouped_time_horizontal_boxplot
