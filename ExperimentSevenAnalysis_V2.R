@@ -406,11 +406,11 @@ intact_plot <- Exp7_data_long %>%
     color = "black",
     size = 0.6,
     textsize = 6
-  ) +
+  ) + 
   scale_fill_manual(values = c("Treatment" = "#FF8C00", "Control" = "#159090")) +
   labs(
-    title = "Active Arm Choices Before and After Conditioning",
-    y = "Proportion of Active Arm Choices",
+    title = "Active Arm Entries Before and After Conditioning",
+    y = "Proportion of Active Arm Entries",
     x = "Time",
     fill = "Condition"
   ) +
@@ -446,7 +446,8 @@ Exp7_data_long_days <- Orig_subjects %>%
                        levels = c("Baseline_day1", "Baseline_day2", 
                                   "Conditioning_day1", "Conditioning_day2", 
                                   "Conditioning_day3", "Conditioning_day4", 
-                                  "Conditioning_day5")),
+                                  "Conditioning_day5"),
+                       labels = c("BL1", "BL2", "CD1", "CD2", "CD3", "CD4", "CD5")),
     Subject = factor(Subject),
     Condition = factor(Condition),
     Proportion = ActiveArmChoices / 3 # 3 trials per day
@@ -467,8 +468,8 @@ learning_plot <- Exp7_data_long_days %>%
                 width = 0.2, linewidth = 0.8) +
   scale_color_manual(values = c("Treatment" = "#FF8C00", "Control" = "#159090")) +
   labs(
-    title = "Average Proportion of Active Arm Choices",
-    y = "Proportion of Active Arm Choices",
+    title = "Active Arm Entries Throughout Conditionings",
+    y = "Proportion of Active Arm Entries",
     x = "Day"
   ) +
   scale_y_continuous(
@@ -579,47 +580,7 @@ Individual_comparison <- bind_rows(
     Condition = factor(Condition)
   )
 
-# Create updated memory test visualization using points rather than bars
-memory_plot <- Individual_comparison %>%
-  group_by(Condition, BodyPart) %>%
-  summarise(
-    mean_prop = mean(ActiveProportion, na.rm = TRUE),
-    se = sd(ActiveProportion, na.rm = TRUE) / sqrt(n()),
-    .groups = 'drop'
-  ) %>%
-  ggplot(aes(x = BodyPart, y = mean_prop, color = Condition, shape = BodyPart)) +
-  # Use points instead of bars
-  geom_point(size = 5) +
-  # Error bars
-  geom_errorbar(aes(ymin = mean_prop - se, ymax = mean_prop + se),
-                width = 0.2, linewidth = 1) +
-  # Color and shape scales to match the figure
-  scale_color_manual(values = c("Treatment" = "#FF8C00", "Control" = "#159090")) +
-  scale_shape_manual(values = c("Original" = 16, "Head" = 17, "Tail" = 25)) +
-  # Update labels
-  labs(
-    title = "Regeneration Active Arm Preference Compared to Baseline",
-    y = "Proportion of Active Arm Choices",
-    x = "Body Status"
-  ) +
-  scale_y_continuous(
-    limits = c(0, 1),
-    breaks = seq(0, 1, 0.1)
-  ) +
-  updated_theme() +
-  # Add facet by condition
-  facet_wrap(~ Condition, scales = "free_x", nrow = 1) +
-  # Customize the legend
-  guides(
-    color = guide_legend(title = "Condition"),
-    shape = guide_legend(title = "Legend", 
-                         override.aes = list(
-                           shape = c(16, 17, 25),
-                           color = rep("black", 3)
-                         ))
-  )
 
-print(memory_plot)
 
 #=================================================================
 # PART 4: REINSTATEMENT ANALYSIS
@@ -719,8 +680,8 @@ reinstatement_plot <- Reinstatement_comparison %>%
   scale_shape_manual(values = c("Original" = 16, "Head" = 17, "Tail" = 25)) +
   # Update labels
   labs(
-    title = "Reinstatement Active Arm Preference Compared to Baseline",
-    y = "Proportion of Active Arm Choices",
+    title = "Reinstatement Compared to Baseline",
+    y = "Proportion of Active Arm Entries",
     x = "Body Status"
   ) +
   scale_y_continuous(
@@ -743,74 +704,6 @@ reinstatement_plot <- Reinstatement_comparison %>%
 
 print(reinstatement_plot)
 
-
-#=================================================================
-# PART 6: COMBINING VISUALIZATIONS
-#=================================================================
-
-# Create a common legend for regeneration and reinstatement plots
-common_legend <- get_legend(
-  memory_plot + 
-    guides(
-      color = guide_legend(title = "Condition"),
-      shape = guide_legend(title = "Legend",
-                           override.aes = list(
-                             shape = c(16, 17, 25),
-                             color = rep("black", 3)
-                           ))
-    ) +
-    scale_shape_manual(
-      values = c("Original" = 16, "Head" = 17, "Tail" = 25),
-      labels = c("Intact Baseline", "Head Regenerates", "Tail Regenerates")
-    )
-)
-
-# Remove legends from individual plots for combined figure
-plot_A <- memory_plot + theme(legend.position = "none")
-plot_B <- reinstatement_plot + theme(legend.position = "none")
-
-# Combine plots with A/B labels - Option 1 using patchwork
-combined_regen_figure <- (plot_A / plot_B) +
-  plot_layout(
-    guides = "collect",
-    heights = c(1, 1)
-  ) +
-  plot_annotation(
-    tag_levels = 'A',
-    theme = theme(
-      plot.tag = element_text(face = "bold", size = 16, family = "Times New Roman")
-    )
-  )
-
-# Option 2: Add the legend to the right using cowplot
-regen_figure_with_legend <- plot_grid(
-  combined_regen_figure, common_legend,
-  rel_widths = c(3, 1),
-  ncol = 2
-)
-
-# Option 3: Alternative approach using patchwork with a single shared legend
-combined_regen_figure_alt <- (plot_A + plot_B + 
-                                plot_layout(ncol = 1) +
-                                plot_annotation(tag_levels = 'A')) &
-  theme(legend.position = "right") &
-  guides(
-    color = guide_legend(title = "Condition"),
-    shape = guide_legend(title = "Legend",
-                         labels = c("Intact Baseline", "Head Regenerates", "Tail Regenerates"))
-  )
-
-# Combine all plots into one figure (original code from your script)
-combined_figure <- (learning_plot + intact_plot) / (memory_plot + reinstatement_plot) +
-  plot_layout(heights = c(1.2, 1.2), guides = "collect") +
-  plot_annotation(tag_levels = 'A') & 
-  theme(
-    plot.tag = element_text(face = "bold", size = 16, family = "Times New Roman"),
-    plot.margin = margin(t = 10, r = 10, b = 10, l = 10)
-  )
-
-print(combined_regen_figure_alt) # Print the regeneration/reinstatement combined figure
-print(combined_figure) # Print the overall combined figure
 
 
 #=================================================================
@@ -929,89 +822,6 @@ print("Effect sizes for Tail Memory Test (Cohen's d):")
 print(control_tail_d)
 print(treatment_tail_d)
 
-
-# Create a paired data visualization that shows the individual connections
-paired_viz <- Individual_comparison %>%
-  filter(BodyPart %in% c("Original", "Head")) %>%
-  ggplot(aes(x = BodyPart, y = ActiveProportion)) +
-  # Add individual subject lines
-  geom_line(aes(group = OrigSubject, color = Condition), alpha = 0.3) +
-  # Add points
-  geom_point(aes(color = Condition), size = 3) +
-  # Add means and error bars
-  stat_summary(
-    aes(group = Condition, color = Condition),
-    fun = mean, geom = "point", size = 5, shape = 18
-  ) +
-  stat_summary(
-    aes(group = Condition, color = Condition),
-    fun.data = function(x) {
-      return(c(y = mean(x), ymin = mean(x) - sd(x)/sqrt(length(x)), 
-               ymax = mean(x) + sd(x)/sqrt(length(x))))
-    },
-    geom = "errorbar", width = 0.2, linewidth = 1
-  ) +
-  # Add p-value annotations
-  annotate("text", x = 1.5, y = 0.9, 
-           label = paste0("Control: p = ", format(control_paired_test$p.value, digits = 3)), 
-           color = "#159090", fontface = "bold", size = 3.5) +
-  annotate("text", x = 1.5, y = 0.95, 
-           label = paste0("Treatment: p = ", format(treatment_paired_test$p.value, digits = 3)), 
-           color = "#FF8C00", fontface = "bold", size = 3.5) +
-  # Customize aesthetics
-  scale_color_manual(values = c("Treatment" = "#FF8C00", "Control" = "#159090")) +
-  labs(
-    title = "Paired Comparison: Head Regeneration vs Original Baseline",
-    subtitle = "Lines connect individual subjects across measurements",
-    y = "Proportion of Active Arm Choices",
-    x = "Body Status",
-    color = "Condition"
-  ) +
-  ylim(0, 1) +
-  consistent_theme() +
-  facet_grid(. ~ Condition)
-
-print(paired_viz)
-
-# Create a clean bar chart for publication
-clean_bar_chart <- paired_data %>%
-  group_by(Condition) %>%
-  summarise(
-    Original_Mean = mean(Original, na.rm = TRUE),
-    Original_SE = sd(Original, na.rm = TRUE)/sqrt(n()),
-    Head_Mean = mean(Head, na.rm = TRUE),
-    Head_SE = sd(Head, na.rm = TRUE)/sqrt(n()),
-    .groups = 'drop'
-  ) %>%
-  pivot_longer(
-    cols = c(Original_Mean, Head_Mean),
-    names_to = "Measurement",
-    values_to = "Mean"
-  ) %>%
-  mutate(
-    BodyPart = ifelse(Measurement == "Original_Mean", "Original", "Head"),
-    SE = ifelse(Measurement == "Original_Mean", Original_SE, Head_SE)
-  ) %>%
-  ggplot(aes(x = BodyPart, y = Mean, fill = Condition)) +
-  geom_bar(stat = "identity", position = position_dodge(0.9), width = 0.7) +
-  geom_errorbar(
-    aes(ymin = Mean - SE, ymax = Mean + SE),
-    position = position_dodge(0.9), width = 0.2
-  ) +
-  # Add significance indicators
-  annotate("text", x = 1.5, y = 0.8, label = "***", color = "#159090", size = 6) +
-  annotate("text", x = 2.5, y = 0.8, label = "***", color = "#FF8C00", size = 6) +
-  scale_fill_manual(values = c("Treatment" = "#FF8C00", "Control" = "#159090")) +
-  labs(
-    title = "Head Regeneration Memory Retention",
-    y = "Proportion of Active Arm Choices",
-    x = "Body Status",
-    fill = "Condition"
-  ) +
-  ylim(0, 1) +
-  consistent_theme()
-
-print(clean_bar_chart)
 
 
 ##### reinstatement vs baseline analysis #####
@@ -1661,93 +1471,7 @@ Exp7_regen_reinstate_results <- format_planaria_analyses(
 )
 
 
-############################################################
-#Create visualizations
-############################################################
 
-
-
-# 1. Head Reinstatement Paired Visualization
-head_reinstatement_viz <- Reinstatement_comparison %>%
-  filter(BodyPart %in% c("Original", "Head")) %>%
-  ggplot(aes(x = BodyPart, y = ActiveProportion)) +
-  # Add individual subject lines
-  geom_line(aes(group = OrigSubject, color = Condition), alpha = 0.3) +
-  # Add points
-  geom_point(aes(color = Condition), size = 3) +
-  # Add means and error bars
-  stat_summary(
-    aes(group = Condition, color = Condition),
-    fun = mean, geom = "point", size = 5, shape = 18
-  ) +
-  stat_summary(
-    aes(group = Condition, color = Condition),
-    fun.data = function(x) {
-      return(c(y = mean(x), ymin = mean(x) - sd(x)/sqrt(length(x)), 
-               ymax = mean(x) + sd(x)/sqrt(length(x))))
-    },
-    geom = "errorbar", width = 0.2, linewidth = 1
-  ) +
-  # Add p-value annotations
-  annotate("text", x = 1.5, y = 0.9, 
-           label = paste0("Control: p = ", format(control_head_reinstatement$p.value, digits = 3)), 
-           color = "#159090", fontface = "bold", size = 3.5) +
-  annotate("text", x = 1.5, y = 0.95, 
-           label = paste0("Treatment: p = ", format(treatment_head_reinstatement$p.value, digits = 3)), 
-           color = "#FF8C00", fontface = "bold", size = 3.5) +
-  # Customize aesthetics
-  scale_color_manual(values = c("Treatment" = "#FF8C00", "Control" = "#159090")) +
-  labs(
-    title = "Head Reinstatement vs Original Baseline",
-    subtitle = "Lines connect individual subjects across measurements",
-    y = "Proportion of Active Arm Choices",
-    x = "Body Status",
-    color = "Condition"
-  ) +
-  ylim(0, 1) +
-  consistent_theme() +
-  facet_grid(. ~ Condition)
-
-# 2. Tail Reinstatement Paired Visualization
-tail_reinstatement_viz <- Reinstatement_comparison %>%
-  filter(BodyPart %in% c("Original", "Tail")) %>%
-  ggplot(aes(x = BodyPart, y = ActiveProportion)) +
-  # Add individual subject lines
-  geom_line(aes(group = OrigSubject, color = Condition), alpha = 0.3) +
-  # Add points
-  geom_point(aes(color = Condition), size = 3) +
-  # Add means and error bars
-  stat_summary(
-    aes(group = Condition, color = Condition),
-    fun = mean, geom = "point", size = 5, shape = 18
-  ) +
-  stat_summary(
-    aes(group = Condition, color = Condition),
-    fun.data = function(x) {
-      return(c(y = mean(x), ymin = mean(x) - sd(x)/sqrt(length(x)), 
-               ymax = mean(x) + sd(x)/sqrt(length(x))))
-    },
-    geom = "errorbar", width = 0.2, linewidth = 1
-  ) +
-  # Add p-value annotations
-  annotate("text", x = 1.5, y = 0.9, 
-           label = paste0("Control: p = ", format(control_tail_reinstatement$p.value, digits = 3)), 
-           color = "#159090", fontface = "bold", size = 3.5) +
-  annotate("text", x = 1.5, y = 0.95, 
-           label = paste0("Treatment: p = ", format(treatment_tail_reinstatement$p.value, digits = 3)), 
-           color = "#FF8C00", fontface = "bold", size = 3.5) +
-  # Customize aesthetics
-  scale_color_manual(values = c("Treatment" = "#FF8C00", "Control" = "#159090")) +
-  labs(
-    title = "Tail Reinstatement vs Original Baseline",
-    subtitle = "Lines connect individual subjects across measurements",
-    y = "Proportion of Active Arm Choices",
-    x = "Body Status",
-    color = "Condition"
-  ) +
-  ylim(0, 1) +
-  consistent_theme() +
-  facet_grid(. ~ Condition)
 
 # 3. Combined bar chart for publication
 combined_means <- bind_rows(
@@ -1789,33 +1513,6 @@ combined_means <- bind_rows(
     Measurement = ifelse(Measurement_type == "Original_Mean", Baseline_label, Reinstatement_label),
     SE = ifelse(Measurement_type == "Original_Mean", Original_SE, Regen_SE)
   )
-
-# Create the bar chart
-reinstatement_bar_chart <- combined_means %>%
-  ggplot(aes(x = Measurement, y = Mean, fill = Condition)) +
-  geom_bar(stat = "identity", position = position_dodge(0.9), width = 0.7) +
-  geom_errorbar(
-    aes(ymin = Mean - SE, ymax = Mean + SE),
-    position = position_dodge(0.9), width = 0.2
-  ) +
-  # Add significance stars if applicable (based on p-values)
-  scale_fill_manual(values = c("Treatment" = "#FF8C00", "Control" = "#159090")) +
-  labs(
-    title = "Reinstatement Performance vs Original Baseline",
-    y = "Proportion of Active Arm Choices",
-    x = "",
-    fill = "Condition"
-  ) +
-  ylim(0, 1) +
-  consistent_theme() +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1)
-  )
-
-# Print the visualizations
-print(head_reinstatement_viz)
-print(tail_reinstatement_viz)
-print(reinstatement_bar_chart)
 
 
 #=================================================================
@@ -1876,6 +1573,38 @@ regeneration_plot <- ggplot(
   ) +
   # NO connecting lines in this version
   
+  # Add significance bars
+  # Control head vs original (p < 0.01)
+  geom_signif(
+    data = subset(group_means, Condition == "Control"),
+    annotations = "**",
+    xmin = "Original", xmax = "Head",
+    y_position = 0.8,
+    color = "black",
+    size = 0.6,
+    textsize = 6
+  ) +
+  # Control tail vs original (p < 0.05)
+  geom_signif(
+    data = subset(group_means, Condition == "Control"),
+    annotations = "*",
+    xmin = "Original", xmax = "Tail",
+    y_position = 0.7,
+    color = "black",
+    size = 0.6,
+    textsize = 6
+  ) +
+  # Treatment head vs original (p < 0.001)
+  geom_signif(
+    data = subset(group_means, Condition == "Treatment"),
+    annotations = "***",
+    xmin = "Original", xmax = "Head",
+    y_position = 0.8,
+    color = "black",
+    size = 0.6,
+    textsize = 6
+  ) +
+  
   # Customize aesthetics
   scale_fill_manual(values = c("Treatment" = "#FF8C00", "Control" = "#159090")) +
   scale_color_manual(values = c("Treatment" = "#FF8C00", "Control" = "#159090")) +
@@ -1898,11 +1627,10 @@ regeneration_plot <- ggplot(
   ) +
   # Labels and titles
   labs(
-    title = "Regeneration Active Arm Preference Compared to Baseline",
-    y = "Proportion of Active Arm Choices",
+    title = "Regeneration Compared to Baseline",
+    y = "Proportion of Active Arm Entries",
     x = "Body Status"
   ) +
-  ylim(0, 1) +
   # Use your consistent theme
   consistent_theme() +
   theme(
@@ -1919,8 +1647,9 @@ regeneration_plot <- ggplot(
     color = "none"  # Hide color legend since it's redundant
   )
 
-# Print the final plot
+# Display the plot
 print(regeneration_plot)
+
 
 
 ###### Reinstatement plot
@@ -1976,8 +1705,8 @@ reinstatement_plot <- ggplot(
   ) +
   # Labels and titles
   labs(
-    title = "Reinstatement Active Arm Preference Compared to Baseline",
-    y = "Proportion of Active Arm Choices",
+    title = "Reinstatement Compared to Baseline",
+    y = "Proportion of Active Arm Entries",
     x = "Body Status"
   ) +
   scale_y_continuous(
@@ -2039,6 +1768,30 @@ intact_plot_no_legend <- intact_plot +
 regeneration_plot_no_legend <- regeneration_plot + 
   theme(legend.position = "none")
 
+# Apply theme to each individual plot
+learning_plot_no_legend <- learning_plot_no_legend +
+  theme(
+    axis.text = element_text(size = 20, color = "black"),
+    axis.title = element_text(size = 20),
+    plot.title = element_text(size = 18, face = "bold", family = "Times New Roman") 
+  )
+
+intact_plot_no_legend <- intact_plot_no_legend +
+  theme(
+    axis.text = element_text(size = 20, color = "black"),
+    axis.title = element_text(size = 20),
+    plot.title = element_text(size = 18, face = "bold", family = "Times New Roman", hjust = 0.5) 
+  )
+
+regeneration_plot_no_legend <- regeneration_plot_no_legend +
+  theme(
+    axis.text = element_text(size = 20, color = "black"),
+    axis.title = element_text(size = 20),
+    plot.title = element_text(size = 18, face = "bold", family = "Times New Roman") 
+  )
+
+
+
 ##### Ordering the legend
 
 reinstatement_plot_ordered <- reinstatement_plot +
@@ -2057,6 +1810,14 @@ reinstatement_plot_ordered <- reinstatement_plot +
     ),
     color = "none"  # Hide separate color legend since it's redundant
   )
+
+reinstatement_plot_ordered <- reinstatement_plot_ordered +
+  theme(
+    axis.text = element_text(size = 20, color = "black"),
+    axis.title = element_text(size = 20),
+    plot.title = element_text(size = 18, face = "bold", family = "Times New Roman") 
+  )
+
 
 combined_figure <- (learning_plot_no_legend + intact_plot_no_legend) / 
   (regeneration_plot_no_legend + reinstatement_plot_ordered) +

@@ -218,7 +218,7 @@ learning_plot <- Exp4_full_data_long_days %>%
   geom_errorbar(aes(ymin = mean_prop - se, ymax = mean_prop + se),
                 width = 0.2, linewidth = 0.8, color = "#FF8C00") +
   labs(
-    title = "Active Arm Preference Throughout Conditioning",
+    title = "Active Arm Entries Throughout Conditioning",
     y = "Proportion of Active Arm Entries",
     x = "Day"
   ) +
@@ -926,7 +926,7 @@ improved_regeneration_plot <- ggplot(regen_summary, aes(x = BodyStatus, y = mean
   ) +
   # Labels
   labs(
-    title = "Regeneration Compared to Baseine",
+    title = "Regeneration Compared to Baseline",
     y = "Proportion of Active Arm Entries",
     x = "Body Section"
   ) +
