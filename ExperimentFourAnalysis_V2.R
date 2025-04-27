@@ -24,13 +24,14 @@ Exp4_full_data <- read_csv("Datasets/ExperimentFourFullData.csv")
 consistent_theme <- function() {
   theme_classic() +
     theme(
-      text = element_text(family = "Times New Roman", size = 14),
+      text = element_text(family = "Times New Roman", size = 18),
       axis.title = element_text(size = 16, face = "bold"),
       axis.title.y = element_text(margin = margin(r = 20)),
-      axis.text = element_text(size = 12, color = "black"),
+      axis.title.x = element_text(margin = margin(t = 8)),
+      axis.text = element_text(size = 16, color = "black"),
       legend.position = "top",
-      legend.title = element_text(size = 14, face = "bold"),
-      legend.text = element_text(size = 12),
+      legend.title = element_text(size = 16, face = "bold"),
+      legend.text = element_text(size = 14),
       axis.line = element_line(color = "black", linewidth = 0.8),
       panel.grid = element_blank(),
       panel.background = element_rect(fill = "white"),
@@ -160,9 +161,9 @@ intact_plot <- Exp4_plot_data %>%
     textsize = 6
   ) +
   labs(
-    title = "Active Arm Choices Before and After Conditioning",
-    y = "Proportion of Active Arm Choices",
-    x = "Time"
+    title = "Active Arm Entries Before and After Conditioning",
+    y = "Proportion of Active Arm Entries",
+    x = "Time Point"
   ) +
   scale_y_continuous(
     limits = c(0, 1),
@@ -197,7 +198,8 @@ Exp4_full_data_long_days <- Orig_subjects %>%
                        levels = c("Baseline_day1", "Baseline_day2", 
                                   "Conditioning_day1", "Conditioning_day2", 
                                   "Conditioning_day3", "Conditioning_day4", 
-                                  "Conditioning_day5")),
+                                  "Conditioning_day5"),
+                       labels = c("BL1", "BL2", "CD1", "CD2", "CD3", "CD4", "CD5")),
     Subject = factor(Subject),
     Proportion = ActiveArmChoices / 3 # 3 trials per day
   )
@@ -217,7 +219,7 @@ learning_plot <- Exp4_full_data_long_days %>%
                 width = 0.2, linewidth = 0.8, color = "#FF8C00") +
   labs(
     title = "Active Arm Preference Throughout Conditioning",
-    y = "Proportion of Active Arm Choices",
+    y = "Proportion of Active Arm Entries",
     x = "Day"
   ) +
   scale_y_continuous(
@@ -645,7 +647,7 @@ head_regeneration_viz <- head_regeneration_paired %>%
   labs(
     title = "Head Regeneration vs Original Baseline",
     subtitle = "Lines connect individual subjects across measurements",
-    y = "Proportion of Active Arm Choices",
+    y = "Proportion of Active Arm Entries",
     x = "Measurement"
   ) +
   ylim(0, 1) +
@@ -687,7 +689,7 @@ tail_regeneration_viz <- tail_regeneration_paired %>%
   labs(
     title = "Tail Regeneration vs Original Baseline",
     subtitle = "Lines connect individual subjects across measurements",
-    y = "Proportion of Active Arm Choices",
+    y = "Proportion of Active Arm Entries",
     x = "Measurement"
   ) +
   ylim(0, 1) +
@@ -729,7 +731,7 @@ head_reinstatement_viz <- head_reinstatement_paired %>%
   labs(
     title = "Head Reinstatement vs Original Baseline",
     subtitle = "Lines connect individual subjects across measurements",
-    y = "Proportion of Active Arm Choices",
+    y = "Proportion of Active Arm Entries",
     x = "Measurement"
   ) +
   ylim(0, 1) +
@@ -771,7 +773,7 @@ tail_reinstatement_viz <- tail_reinstatement_paired %>%
   labs(
     title = "Tail Reinstatement vs Original Baseline",
     subtitle = "Lines connect individual subjects across measurements",
-    y = "Proportion of Active Arm Choices",
+    y = "Proportion of Active Arm Entries",
     x = "Measurement"
   ) +
   ylim(0, 1) +
@@ -845,14 +847,14 @@ publication_theme <- function() {
   theme_classic() +
     theme(
       text = element_text(family = "Times New Roman", size = 14),
-      axis.title = element_text(size = 16, face = "bold"),
+      axis.title = element_text(size = 18, face = "bold"),
       axis.title.y = element_text(margin = margin(r = 20)),
-      axis.text = element_text(size = 12, color = "black"),
+      axis.text = element_text(size = 116, color = "black"),
       legend.position = c(0.85, 0.85),
       legend.background = element_rect(fill = "white", color = NA),
       legend.key = element_rect(fill = "white", color = NA),
-      legend.title = element_text(size = 14, face = "bold"),
-      legend.text = element_text(size = 12),
+      legend.title = element_text(size = 16, face = "bold"),
+      legend.text = element_text(size = 14),
       axis.line = element_line(color = "black", linewidth = 0.8),
       panel.grid.major.x = element_blank(),
       panel.grid.major.y = element_line(color = "lightgray", linetype = "dashed"),
@@ -924,9 +926,9 @@ improved_regeneration_plot <- ggplot(regen_summary, aes(x = BodyStatus, y = mean
   ) +
   # Labels
   labs(
-    title = "Regeneration Active Arm Preference",
-    y = "Proportion of Active Arm Choices",
-    x = "Body Status"
+    title = "Regeneration Compared to Baseine",
+    y = "Proportion of Active Arm Entries",
+    x = "Body Section"
   ) +
   # Y-axis limits
   scale_y_continuous(
@@ -936,9 +938,10 @@ improved_regeneration_plot <- ggplot(regen_summary, aes(x = BodyStatus, y = mean
   # Apply publication theme
   theme_classic() +
   theme(
-    text = element_text(family = "Times New Roman", size = 14),
-    axis.title = element_text(size = 16, face = "bold"),
+    text = element_text(family = "Times New Roman", size = 20),
+    axis.title = element_text(size = 20, face = "bold"),
     axis.title.y = element_text(margin = margin(r = 20)),
+    axis.title.x = element_text(margin = margin(t = 20)),
     axis.text = element_text(size = 12, color = "black"),
     legend.position = "right",
     legend.background = element_rect(fill = "white", color = NA),
@@ -954,7 +957,7 @@ improved_regeneration_plot <- ggplot(regen_summary, aes(x = BodyStatus, y = mean
   ) +
   # Combine duplicate legends (color, fill, and shape) into one
   guides(
-    color = guide_legend(title = "Body Status", override.aes = list(size = 5)),
+    color = guide_legend(title = "Body Section", override.aes = list(size = 5)),
     fill = "none",  # Hide duplicate legend
     shape = "none"  # Hide duplicate legend
   )
@@ -976,7 +979,7 @@ improved_reinstatement_plot <- ggplot(reinstate_summary, aes(x = BodyStatus, y =
   ) +
   # Set shapes manually
   scale_shape_manual(
-    name = "Body Status",
+    name = "Body Section",
     values = c(
       "Original" = 21,  # Circle
       "Head" = 24,      # Triangle
@@ -990,7 +993,7 @@ improved_reinstatement_plot <- ggplot(reinstate_summary, aes(x = BodyStatus, y =
   ) +
   # Set colors manually
   scale_color_manual(
-    name = "Body Status",
+    name = "Body Section",
     values = c(
       "Original" = "#FF8C00", 
       "Head" = "#FF8C00",
@@ -1004,7 +1007,7 @@ improved_reinstatement_plot <- ggplot(reinstate_summary, aes(x = BodyStatus, y =
   ) +
   # Add fill scale with the same colors
   scale_fill_manual(
-    name = "Body Status",
+    name = "Body Section",
     values = c(
       "Original" = "#FF8C00", 
       "Head" = "#FF8C00",
@@ -1019,8 +1022,8 @@ improved_reinstatement_plot <- ggplot(reinstate_summary, aes(x = BodyStatus, y =
   # Labels
   labs(
     title = "Reinstatement Active Arm Preference",
-    y = "Proportion of Active Arm Choices",
-    x = "Body Status"
+    y = "Proportion of Active Arm Entries",
+    x = "Body Section"
   ) +
   # Y-axis limits
   scale_y_continuous(
@@ -1030,15 +1033,16 @@ improved_reinstatement_plot <- ggplot(reinstate_summary, aes(x = BodyStatus, y =
   # Apply publication theme
   theme_classic() +
   theme(
-    text = element_text(family = "Times New Roman", size = 14),
-    axis.title = element_text(size = 16, face = "bold"),
+    text = element_text(family = "Times New Roman", size = 20),
+    axis.title = element_text(size = 20, face = "bold"),
     axis.title.y = element_text(margin = margin(r = 20)),
+    axis.title.x = element_text(margin = margin(t = 20)),
     axis.text = element_text(size = 12, color = "black"),
     legend.position = "right",
     legend.background = element_rect(fill = "white", color = NA),
     legend.key = element_rect(fill = "white", color = NA),
-    legend.title = element_text(size = 14, face = "bold"),
-    legend.text = element_text(size = 12),
+    legend.title = element_text(size = 16, face = "bold"),
+    legend.text = element_text(size = 14),
     axis.line = element_line(color = "black", linewidth = 0.8),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
@@ -1059,14 +1063,15 @@ combined_plots <- improved_regeneration_plot + improved_reinstatement_plot +
   plot_annotation(
     title = "Memory Retention in Regenerated Planarians",
     theme = theme(
-      plot.title = element_text(family = "Times New Roman", size = 18, face = "bold", hjust = 0.5)
+      plot.title = element_text(family = "Times New Roman", size = 20, face = "bold", hjust = 0.5),
+      text = element_text(family = "Times New Roman", size = 18),
+      axis.text = element_text(size = 15, color = "black")
     )
   )
 
 # Print the plots
 print(improved_regeneration_plot)
 print(improved_reinstatement_plot)
-print(combined_plots)
 
 
 
@@ -1112,9 +1117,42 @@ intact_plot_no_legend <- intact_plot +
 regeneration_plot_no_legend <- improved_regeneration_plot + 
   theme(legend.position = "none")
 
+# Apply theme to each individual plot
+learning_plot_no_legend <- learning_plot_no_legend +
+  theme(
+    axis.text = element_text(size = 20, color = "black"),
+    axis.title = element_text(size = 20),
+    plot.title = element_text(size = 20, face = "bold", family = "Times New Roman") 
+  )
+
+intact_plot_no_legend <- intact_plot_no_legend +
+  theme(
+    axis.text = element_text(size = 20, color = "black"),
+    axis.title = element_text(size = 20),
+    plot.title = element_text(size = 20, face = "bold", family = "Times New Roman") 
+  )
+
+regeneration_plot_no_legend <- regeneration_plot_no_legend +
+  theme(
+    axis.text = element_text(size = 20, color = "black"),
+    axis.title = element_text(size = 20),
+    plot.title = element_text(size = 20, face = "bold", family = "Times New Roman") 
+  )
+
+reinstatement_plot_ordered <- reinstatement_plot_ordered +
+  theme(
+    axis.text = element_text(size = 20, color = "black"),
+    axis.title = element_text(size = 20),
+    plot.title = element_text(size = 20, face = "bold", family = "Times New Roman") 
+  )
+
 ##### Ordering the legend
 
 reinstatement_plot_ordered <- improved_reinstatement_plot +
+  theme(
+    axis.text = element_text(size = 20, color = "black"),
+    axis.title = element_text(size = 20),
+    plot.title = element_text(size = 20, face = "bold", family = "Times New Roman")) +
   guides(
     # Set up the shape legend
     shape = guide_legend(
@@ -1123,7 +1161,7 @@ reinstatement_plot_ordered <- improved_reinstatement_plot +
       override.aes = list(stroke = 0.7, size = 5, color = "black", fill = "#FF8C00")
     ),
     color = "none"  # Hide separate color legend since it's redundant
-  )
+    )
 
 combined_figure <- (learning_plot_no_legend + intact_plot_no_legend) / 
   (regeneration_plot_no_legend + reinstatement_plot_ordered) +
@@ -1135,7 +1173,7 @@ combined_figure <- (learning_plot_no_legend + intact_plot_no_legend) /
   plot_annotation(
     tag_levels = 'A',
     theme = theme(
-      plot.tag = element_text(face = "bold", size = 16, family = "Times New Roman"),
+      plot.tag = element_text(face = "bold", size = 20, family = "Times New Roman"),
       plot.margin = margin(t = 20, r = 20, b = 20, l = 20)
     )
   )
