@@ -413,6 +413,29 @@ print(Exp8_Baseline_endpoint_comparison)
 # PART 2: LEARNING ACROSS CONDITIONING DAYS
 #=================================================================
 
+Exp8_data_long_days <- Exp8_full_data %>%
+  select(Subject, Condition,
+         Baseline_day1,
+         Baseline_day2,
+         Conditioning_day1,
+         Conditioning_day2,
+         Conditioning_day3, 
+         Conditioning_day4) %>%
+  pivot_longer(
+    cols = c(Baseline_day1:Conditioning_day4),
+    names_to = "TimePoint",
+    values_to = "ActiveArmChoices"
+  ) %>%
+  mutate(
+    TImePoint = factor(TimePoint,
+                       levels = c("Baseline_day1", "Baseline_day2", 
+                                  "Conditioning_day1", "Conditioning_day2", 
+                                  "Conditioning_day3", "Conditioning_day4")),
+    Subject = factor(Subject),
+    Condition = factor(Condition),
+    Proportion = ActiveArmChoices / 3
+  )
+
 #reshaping data for plotting
 
 Exp8_conditioning_plot <- Exp8_data_long_days %>%
