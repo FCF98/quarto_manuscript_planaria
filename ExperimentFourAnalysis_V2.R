@@ -1041,8 +1041,8 @@ improved_reinstatement_plot <- ggplot(reinstate_summary, aes(x = BodyStatus, y =
     legend.position = "right",
     legend.background = element_rect(fill = "white", color = NA),
     legend.key = element_rect(fill = "white", color = NA),
-    legend.title = element_text(size = 16, face = "bold"),
-    legend.text = element_text(size = 14),
+    legend.title = element_text(size = 18, face = "bold"),
+    legend.text = element_text(size = 18),
     axis.line = element_line(color = "black", linewidth = 0.8),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
@@ -1139,7 +1139,7 @@ regeneration_plot_no_legend <- regeneration_plot_no_legend +
     plot.title = element_text(size = 20, face = "bold", family = "Times New Roman") 
   )
 
-reinstatement_plot_ordered <- reinstatement_plot_ordered +
+improved_reinstatement_plot <- improved_reinstatement_plot +
   theme(
     axis.text = element_text(size = 20, color = "black"),
     axis.title = element_text(size = 20),
