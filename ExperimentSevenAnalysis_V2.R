@@ -411,7 +411,7 @@ intact_plot <- Exp7_data_long %>%
   labs(
     title = "Active Arm Entries Before and After Conditioning",
     y = "Proportion of Active Arm Entries",
-    x = "Time",
+    x = "Time Point",
     fill = "Condition"
   ) +
   scale_y_continuous(
@@ -1579,7 +1579,7 @@ regeneration_plot <- ggplot(
     data = subset(group_means, Condition == "Control"),
     annotations = "**",
     xmin = "Original", xmax = "Head",
-    y_position = 0.8,
+    y_position = 0.7,
     color = "black",
     size = 0.6,
     textsize = 6
@@ -1589,7 +1589,7 @@ regeneration_plot <- ggplot(
     data = subset(group_means, Condition == "Control"),
     annotations = "*",
     xmin = "Original", xmax = "Tail",
-    y_position = 0.7,
+    y_position = 0.8,
     color = "black",
     size = 0.6,
     textsize = 6
@@ -1635,6 +1635,7 @@ regeneration_plot <- ggplot(
   consistent_theme() +
   theme(
     legend.position = "right",
+    axis.title.x = element_text(margin = margin(t = 20)),
   ) +
   scale_y_continuous(
     limits = c(0, 1),
@@ -1717,6 +1718,7 @@ reinstatement_plot <- ggplot(
   consistent_theme() +
   theme(
     legend.position = "right",
+    axis.title.x = element_text(margin = margin(t = 20)),
   ) +
   facet_grid(. ~ Condition) +
   guides(
