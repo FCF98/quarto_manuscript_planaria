@@ -468,7 +468,7 @@ learning_plot <- Exp7_data_long_days %>%
                 width = 0.2, linewidth = 0.8) +
   scale_color_manual(values = c("Treatment" = "#FF8C00", "Control" = "#159090")) +
   labs(
-    title = "Active Arm Entries Throughout Conditionings",
+    title = "Active Arm Entries Throughout Conditioning",
     y = "Proportion of Active Arm Entries",
     x = "Day"
   ) +
