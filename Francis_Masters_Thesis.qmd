@@ -650,7 +650,6 @@ print(rainplot)
 
 ```
 
-
 The results suggest any dose between 1μM and 20μM could be used for conditioning without systematically affecting planaria motility. It was also necessary to select a dose that was sufficiently rewarding for planaria. A range of doses have been used to successfully condition planaria in CPP paradigms. These procedures typically involve low doses such as 1μM [@hutchinson_persistent_2015], 5μM [@amaning-kwarteng_relapse_2017] or 10μM [@hutchinson_persistent_2015]. It is worth noting that in the case of CPP, drug exposure time is relatively long. On the order of 15-20 minutes per trial. Whereas in the operant conditioning paradigm proposed in Experiment 2 of this project, exposure time would be just 3 minutes. To adjust for the smaller absorption window compared to CPP experiments, the larger 20μM concentration was chosen for experiment 2.
 
 Alongside total motility, we were able to inspect how planaria motility changed over the recording interval. We observed that planaria moved more at the start of the session compared to the end, with a gradual decrease in the distance moved with each passing minute (see @fig-ridgeplot). An exploratory Welch's two sample t-test found a significant difference between the time traveled in the first minute (M = `r format(minute1_descriptives$mean, digits = 3)`, SD = `r format(minute1_descriptives$sd, digits = 3)`) compared to the 15th minute (M = `r format(minute15_descriptives$mean, digits = 3)`, SD = `r format(minute15_descriptives$sd, digits = 3)`), with subjects travelling significantly further during minute 15 (t(`r (time_binned_t_test_result$parameter)`) = `r format(time_binned_t_test_result$statistic, digits = 3)`, `r format_pvalue(time_binned_t_test_result$p.value)`). In future dose-response assessments, shorter recording sessions may suffice to assess dose-response curves.
@@ -1055,7 +1054,7 @@ Over a series of experiments we then tested whether an operantly conditioned res
 
 Although Experiment 3 and 4 implied successful conditioning of drug treated subjects, Experiment 5 failed to demonstrate adequate evidence of learning in the treatment group. Furthermore, the control group in Experiment 5 showed a significant shift in their behaviour. This shift was comparable in size to that observed among methamphetamine treated subjects from Experiments 3 and 4. It is apparent that each of the experiments described here, if inspected in isolation, would tell a different story.
 
-## Operant Conditioning in Planaria 
+## Operant Conditioning in Planaria
 
 Having briefly summarised the findings at the level of each experiment, we will now move to a general discussion of whether planaria can learn an operantly conditioned response in a Y-maze. It is tempting to take the observed shift in active arm preference for treatment subjects across several experiments as evidence that we can successfully shape planarian behaviour. However, in Experiment 2 and 5 we also found a significant shift in the active arm preference of control subjects. A change in the behaviour of drug exposed subjects can be interpreted as successful reinforcement learning. But a change in the behaviour of control subjects is more difficult to understand, especially when it resembles a smooth learning curve.
 
@@ -1165,6 +1164,8 @@ As an alternative approach, one could search for another viable operant conditio
 
 Once a method for establishing effective operant conditioning has been reached, future experiments should consider whether it is viable to use a small fragment of trained planaria to test for memory retention. This will allow for a stronger test of the hypothesis that memories can be stored non-synaptically, as the neural tissue in the fragment can be minimised. Small fragments can be compared to tail fragments and or head fragments. If learning can persist in head and tail fragments but not the smaller fragments, then one may conclude that memory is stored outside of the centralised brain, but still maintained among synaptic connections in the ventral nerve cords.
 
+\newpage
+
 # Conclusion
 
 Planaria are gaining attraction as a model organisms across several domains, from regenerative medicine to early-stage addiction and memory research. Their incredible capacity for regeneration led to demonstrations that simple form of learning can be retained in the brainless tail fragments. This is an interesting phenomenon, but the simplicity of the behaviours involved limit the kinds of inferences we can make about memory in humans.
@@ -1177,7 +1178,7 @@ Although planaria are touted as a suitable organism for studying addiction and o
 
 # Data Availability
 
-This manuscript was developed using Quarto – a publishing software that allows for the creation of reproducible research papers. The datasets used to perform the analyses reported here, as well as the R scripts required to generate the statistics and graphs, are avaliable in the following GitHub repository (). Because it was our first time using this software to generate a reproducible manuscript, the organisation of files is far from optimal. Despite this, all the files necessary to regenerate this manuscript are available for download.
+This manuscript was developed using Quarto – a publishing software that allows for the creation of reproducible research papers. The datasets used to perform the analyses reported here, as well as the R scripts required to generate the statistics and graphs, are available in the following [GitHub Repository](https://github.com/FCF98/quarto_manuscript_planaria). Because it was our first time using this software to generate a reproducible manuscript, the organisation of files is far from optimal. Despite this, all the files necessary to regenerate this manuscript are available for download.
 
 \newpage
 
