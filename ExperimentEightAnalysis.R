@@ -21,13 +21,13 @@ Exp8_full_data <- read_excel("Datasets/Experiment_8_Full_Data.xlsx")
 consistant_theme <- function() {
   theme_classic() +
     theme(
-      text = element_text(family = "Times New Roman", size = 14),
+      text = element_text(family = "Times New Roman", size = 18),
       axis.title = element_text(size = 16, face = "bold"),
       axis.title.y = element_text(margin = margin(r = 20)),
-      axis.text = element_text(size = 12, color = "black"),
+      axis.text = element_text(size = 16, color = "black"),
       legend.position = "right", # Updated to place legend on right side
-      legend.title = element_text(size = 14, face = "bold"),
-      legend.text = element_text(size = 12),
+      legend.title = element_text(size = 16, face = "bold"),
+      legend.text = element_text(size = 14),
       axis.line = element_line(color = "black", linewidth = 0.8),
       panel.grid = element_blank(),
       panel.background = element_rect(fill = "white"),
@@ -366,7 +366,6 @@ glmm_results <- format_all_glmm_results(
 ####################################################################
 #Plotting baseline to endpoint comparison
 ####################################################################
-
 Exp8_Baseline_endpoint_comparison <- Exp8_data_long %>%
   group_by(Condition, Time) %>%
   summarise(
@@ -374,22 +373,37 @@ Exp8_Baseline_endpoint_comparison <- Exp8_data_long %>%
     se = sd(ActiveArmProportion, na.rm = TRUE) / sqrt(n()),
     .groups = "drop"
   ) %>% 
-  
   ggplot(aes(x = Time, y = mean_proportion, fill = Condition))+
   geom_bar(stat = "identity", position = position_dodge(0.7), width = 0.6) +
   geom_errorbar(aes(ymin = mean_proportion - se, ymax = mean_proportion + se),
                 position = position_dodge(0.7), width = 0.2, linewidth = 0.7) +
+  geom_signif( #for treatment group
+    annotations = "*",
+    xmin = 1.2, xmax = 2.2,
+    y_position = 0.85,
+    color = "black",
+    size = 0.6,
+    textsize = 6 ) +
+  geom_signif( #  for control group
+    annotations = "***",
+    xmin = 0.8, xmax = 1.8,
+    y_position = 0.7,
+    color = "black",
+    size = 0.6,
+    textsize = 6 ) +
   scale_fill_manual(values = c("Treatment" = "#FF8C00", "Control" = "#159090")) +
   labs( 
-    title = "Active Arm Choices Before and After Conditioning",
+    title = "Active Arm Entries Before and After Conditioning",
     y = "Proportion of Active Arm Entries",
     x = "Time point",
     fill = "Condition") +
   scale_y_continuous(
     limits = c(0, 1),
     breaks = (seq(0, 1, 0.1)
-  )) +
+    )) +
   consistant_theme()
+
+
 
 
 print(Exp8_Baseline_endpoint_comparison)
@@ -400,29 +414,6 @@ print(Exp8_Baseline_endpoint_comparison)
 #=================================================================
 
 #reshaping data for plotting
-
-Exp8_data_long_days <- Exp8_full_data %>%
-  select(Subject, Condition,
-         Baseline_day1,
-         Baseline_day2,
-         Conditioning_day1,
-         Conditioning_day2,
-         Conditioning_day3, 
-         Conditioning_day4) %>%
-  pivot_longer(
-    cols = c(Baseline_day1:Conditioning_day4),
-    names_to = "TimePoint",
-    values_to = "ActiveArmChoices"
-  ) %>%
-  mutate(
-    TImePoint = factor(TimePoint,
-                       levels = c("Baseline_day1", "Baseline_day2", 
-                                  "Conditioning_day1", "Conditioning_day2", 
-                                  "Conditioning_day3", "Conditioning_day4")),
-    Subject = factor(Subject),
-    Condition = factor(Condition),
-    Proportion = ActiveArmChoices / 3
-  )
 
 Exp8_conditioning_plot <- Exp8_data_long_days %>%
   group_by(Condition, TimePoint) %>%
@@ -437,18 +428,29 @@ Exp8_conditioning_plot <- Exp8_data_long_days %>%
   geom_errorbar(aes(ymin = mean_proportion - se, ymax = mean_proportion + se),
                 width = 0.2, linewidth = 0.8) +
   scale_color_manual(values = c("Treatment" = "#FF8C00", "Control" = "#159090")) +
+  # Add this scale_x_discrete function to rename the x-axis labels
+  scale_x_discrete(
+    labels = c(
+      "Baseline_day1" = "BL1", 
+      "Baseline_day2" = "BL2", 
+      "Conditioning_day1" = "CD1", 
+      "Conditioning_day2" = "CD2", 
+      "Conditioning_day3" = "CD3", 
+      "Conditioning_day4" = "CD4"
+    )
+  ) +
   labs(
-    title = "Active Arm Choices Across Days",
+    title = "Active Arm Entries Throughout Conditioning",
     y = "Proportion of Active Arm Choices",
     x = "Day"
   ) +
   scale_y_continuous(
     limits = c(0, 1),
     breaks = seq(0, 1, 0.1)
-    ) +
-  consistant_theme()+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)
-  )
+  ) +
+  consistant_theme() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1))
 
 print(Exp8_conditioning_plot)
 
@@ -464,7 +466,7 @@ Exp8_combined_figure <- Exp8_conditioning_plot / Exp8_Baseline_endpoint_comparis
   plot_annotation(tag_levels = "A") &
   theme(
     plot.tag = element_text(face = "bold", size = 16, family = "Times New Roman"),
-    plot.margin = margin(t = 20, r = 20, b = 20, l = 20)
+    plot.margin = margin(t = 20, r = 20, b = 20, l = 20),
   ) 
 
 print(Exp8_combined_figure)
