@@ -625,9 +625,9 @@ library(afex)
 
 
 # Source the script
-source("Exp1_Descriptives.R")
-source("Graphs.R")
-source("PvalueFormattingFunction.R")
+source("R_Scripts/Exp1_Descriptives.R")
+source("R_Scripts/Graphs.R")
+source("R_Scripts/PvalueFormattingFunction.R")
 
 ```
 
@@ -645,7 +645,7 @@ The results in @fig-boxplot convey the variability of planarian behaviour. All c
 #| warning: false
 #| message: false
 
-source("Plots/rainplot.R")
+source("R_Scripts/rainplot.R")
 print(rainplot)
 
 ```
@@ -663,7 +663,7 @@ Alongside total motility, we were able to inspect how planaria motility changed 
 #| fig-height: 7
 #| fig-align: "center"
 
-source("Plots/ridgeplot.R")
+source("R_Scripts/ridgeplot.R")
 
 print(ridgeplot)
 
@@ -737,8 +737,8 @@ grid.raster(Exp2_Ymaze_V1_dimensions)
 
 
 # Source the scripts
-source("ExperimentTwoAnalysis.R")
-source("ExperimentTwoTimeAnalysis.R")
+source("R_Scripts/ExperimentTwoAnalysis.R")
+source("R_Scripts/ExperimentTwoTimeAnalysis.R")
 
 
 ```
@@ -767,7 +767,7 @@ Post-hoc pairwise comparisons were carried out using estimated marginal means wi
 #| fig-align: "center" 
 #| dpi: 300
 
-source("ExperimentTwoAnalysis.R")
+source("R_Scripts/ExperimentTwoAnalysis.R")
 
 print(combined_panel)
 
@@ -791,7 +791,7 @@ This experiment also considered planaria response times for each trial. We hypot
 #| fig-align: "center" 
 #| dpi: 600
 
-source("ExperimentTwoTimeAnalysis.R")
+source("R_Scripts/ExperimentTwoTimeAnalysis.R")
 
 print(grouped_time_horizontal_boxplot)
 ```
@@ -875,7 +875,7 @@ grid.raster(exp3_maze_dimensions)
 
 # Source the scripts
 #Note experiment 4 below is the third experiment in this series of experiments
-source("ExperimentFourAnalysis_V2.R")
+source("R_Scripts/ExperimentFourAnalysis_V2.R")
 
 ```
 
@@ -935,7 +935,7 @@ grid.raster(Exp4_combined_figure)
 
 # Source the scripts
 #Note experiment 7 below is the fourth experiment in this series of experiments
-source("ExperimentSevenAnalysis_V2.R")
+source("R_Scripts/ExperimentSevenAnalysis_V2.R")
 
 ```
 
@@ -965,7 +965,7 @@ The data presented in @fig-Exp7_conditioning_results_panel support the claim tha
 #| label: fig-Exp7_conditioning_results_panel
 #| include: True
 #| fig-cap: "Learning and Memory Retention Through Decapitation in Planaria"
-#| apa-note: "Changes in Y-maze active arm preference across experimental phases. The baseline phase included 6 trials, conditioning endpoint included the final 6 trials of conditioning, and both test and reinstatement phases included 3 trials each. A) shows the mean proportion of active arm entries for baseline and conditioning for both treatment and control subjects. B) Methamphetamine treated subjects showed a significant difference in their active arm entries between baseline and endpoint. No difference was found for control subjects. C) The day 14 retention test found that control head and tail regenerates, and treatment head regenerates differed significantly from baseline. D) No significant differences were observed between regenerates of either group and their respective baseline values during reinstatement. Error bars represent standard error of the mean. * = p <.05; ** = p <.01; *** = p <.001"
+#| apa-note: "Changes in Y-maze active arm preference across experimental phases. The baseline phase included 6 trials, conditioning endpoint included the final 6 trials of conditioning, and both test and reinstatement phases included 3 trials each. A) shows the mean proportion of active arm entries for baseline and conditioning for both treatment and control subjects. B) Methamphetamine treated subjects showed a significant difference in their active arm entries between baseline and endpoint. No difference was found for control subjects. C) The day 14 retention test found that control head and tail regenerates, and treatment head regenerates differed significantly from baseline. D) No significant differences were observed between regenerates of either group and their respective baseline values during reinstatement. Error bars represent standard error of the mean. BL = Baseline; CD = Conditioning; * = p <.05; ** = p <.01; *** = p <.001"
 #| fig-width: 18
 #| fig-height: 16
 #| fig-align: "center"
@@ -1006,7 +1006,7 @@ The mean proportion of active arm entries for treatment and control subjects wer
 
 # Source the scripts
 #Note experiment 8 below is the fifth experiment in this series of experiments
-source("ExperimentEightAnalysis.R")
+source("R_Scripts/ExperimentEightAnalysis.R")
 
 ```
 
@@ -1021,8 +1021,8 @@ The results presented here conflict with those presented in Experiment 4. As can
 ```{r}
 #| label: fig-Exp8_conditioning_results_panel
 #| include: True
-#| fig-cap: "Failure to Find Evidence of Learning Among Meth Exposed Planaria "
-#| apa-note: "Changes in Y-maze active arm preference across experimental phases. The baseline phase included 6 trials, conditioning endpoint included the final 6 trials of conditioning. A) shows the mean proportion of active arm entries for baseline and conditioning. B) Both methamphetamine treated subjects and control subjects treated with vehicle only showed a significant difference in their active arm entries between baseline and endpoint. Error bars represent standard error of the mean. * = p <.05; *** = p <.001"
+#| fig-cap: "Failure to Find Adequate Evidence of Learning in Planaria "
+#| apa-note: "Changes in Y-maze active arm preference across experimental phases. The baseline phase included 6 trials, conditioning endpoint included the final 6 trials of conditioning. A) shows the mean proportion of active arm entries for baseline and conditioning. B) Both methamphetamine treated subjects and control subjects treated with vehicle only showed a significant difference in their active arm entries between baseline and endpoint. Error bars represent standard error of the mean. BL = Baseline; CD = Conditioning; * = p <.05; *** = p <.001"
 #| fig-width: 14
 #| fig-height: 10
 #| fig-align: "center"
