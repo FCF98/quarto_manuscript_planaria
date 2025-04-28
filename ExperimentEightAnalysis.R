@@ -21,18 +21,18 @@ Exp8_full_data <- read_excel("Datasets/Experiment_8_Full_Data.xlsx")
 consistant_theme <- function() {
   theme_classic() +
     theme(
-      text = element_text(family = "Times New Roman", size = 18),
-      axis.title = element_text(size = 16, face = "bold"),
+      text = element_text(family = "Times New Roman", size = 20),
+      axis.title = element_text(size = 18, face = "bold"),
       axis.title.y = element_text(margin = margin(r = 20)),
-      axis.text = element_text(size = 16, color = "black"),
+      axis.text = element_text(size = 18, color = "black"),
       legend.position = "right", # Updated to place legend on right side
-      legend.title = element_text(size = 16, face = "bold"),
-      legend.text = element_text(size = 14),
+      legend.title = element_text(size = 17, face = "bold"),
+      legend.text = element_text(size = 16),
       axis.line = element_line(color = "black", linewidth = 0.8),
       panel.grid = element_blank(),
       panel.background = element_rect(fill = "white"),
       panel.border = element_blank(),
-      plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+      plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
       # Add facet theming to match the figure
       strip.background = element_rect(fill = "white"),
       strip.text = element_text(size = 14, face = "bold", color = "black")
@@ -464,7 +464,7 @@ Exp8_conditioning_plot <- Exp8_data_long_days %>%
   ) +
   labs(
     title = "Active Arm Entries Throughout Conditioning",
-    y = "Proportion of Active Arm Choices",
+    y = "Proportion of Active Arm Entries",
     x = "Day"
   ) +
   scale_y_continuous(
@@ -473,7 +473,8 @@ Exp8_conditioning_plot <- Exp8_data_long_days %>%
   ) +
   consistant_theme() +
   theme(
-    axis.text.x = element_text(angle = 45, hjust = 1))
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "none")
 
 print(Exp8_conditioning_plot)
 
