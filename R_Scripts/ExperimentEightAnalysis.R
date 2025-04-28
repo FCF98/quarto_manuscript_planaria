@@ -495,7 +495,7 @@ Exp8_combined_figure <- Exp8_conditioning_plot / Exp8_Baseline_endpoint_comparis
 
 print(Exp8_combined_figure)
 
-ggsave("Exp8_combined_figure.png", Exp8_combined_figure, 
+ggsave("Figures/Exp8_combined_figure.png", Exp8_combined_figure, 
        width = 14, 
        height = 7, 
        dpi = 300)

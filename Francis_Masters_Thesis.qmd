@@ -918,7 +918,7 @@ Although neither the head or tail regenerates differed significantly in their ac
 #| fig-height: 16
 #| fig-align: "center"
 
-Exp4_combined_figure <- readPNG("Exp4_combined_figure.png") 
+Exp4_combined_figure <- readPNG("Figures/Exp4_combined_figure.png") 
 grid.raster(Exp4_combined_figure)
 
 
@@ -971,7 +971,7 @@ The data presented in @fig-Exp7_conditioning_results_panel support the claim tha
 #| fig-align: "center"
 
 #Note, this refers to experiment 7, which is the fourth in this particular sequence of Y maze experiments 
-Exp7_combined_figure <- readPNG("Exp7_combined_figure.png") 
+Exp7_combined_figure <- readPNG("Figures/Exp7_combined_figure.png") 
 grid.raster(Exp7_combined_figure)
 
 
@@ -1027,7 +1027,7 @@ The results presented here conflict with those presented in Experiment 4. As can
 #| fig-height: 10
 #| fig-align: "center"
 
-Exp8_results_panel <- readPNG("Exp8_combined_figure.png")
+Exp8_results_panel <- readPNG("Figures/Exp8_combined_figure.png")
 grid.raster(Exp8_results_panel)
 
 ```

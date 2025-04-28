@@ -1841,7 +1841,7 @@ print(combined_figure)
 
 
 # Save the panel
-ggsave("Exp7_combined_figure.png", combined_figure, 
+ggsave("Figures/Exp7_combined_figure.png", combined_figure, 
        width = 16, height = 14, dpi = 300) 
 
 
