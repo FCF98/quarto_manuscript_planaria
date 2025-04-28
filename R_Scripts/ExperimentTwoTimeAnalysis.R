@@ -338,9 +338,5 @@ grouped_time_horizontal_boxplot <- ggplot(Exp2_Time_Long_Four_Points, aes(x = fc
 
 grouped_time_horizontal_boxplot
 
-# save the plot
-ggsave("grouped_time_horizontal_boxplot.png", grouped_time_horizontal_boxplot, 
-       width = 15, height = 12, dpi = 300, units = "in",
-       bg = "white")
 
 # boxplot Visualization adapted from Cédric Scherer's penguin visualization"

@@ -408,9 +408,6 @@ combined_panel <- (control_plot + treatment_plot) / (combined_plot) +
 # Display the panel
 combined_panel
 
-# Save the panel
-ggsave("panel_plot.png", combined_panel, 
-       width = 12, height = 12, dpi = 300) 
 
 
 
