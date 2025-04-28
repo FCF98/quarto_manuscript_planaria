@@ -231,54 +231,9 @@ learning_plot <- Exp4_full_data_long_days %>%
 
 print(learning_plot)
 
-#=================================================================
-# PART 3: REGENERATION ANALYSIS - UPDATED WITH NEW COLUMN NAMES
-#=================================================================
-
-# Filter for regenerated subjects (subjects with H or T suffix)
-Regen_subjects <- Exp4_full_data %>%
-  filter(grepl("[HT]$", Subject)) %>%
-  mutate(
-    # Extract original subject number and body part
-    OrigSubject = as.numeric(str_remove(Subject, "[HT]$")),
-    BodyPart = str_extract(Subject, "[HT]$"),
-    BodyPart = factor(BodyPart, levels = c("H", "T"), labels = c("Head", "Tail")),
-    Subject = factor(Subject)
-  )
-
-# Create a dataset for the regeneration memory test phase - UPDATED
-Memory_test_data <- Regen_subjects %>%
-  select(Subject, OrigSubject, BodyPart, T1, T2, T3, Regeneration_test_total) %>%
-  filter(!is.na(Regeneration_test_total)) %>%
-  mutate(
-    TotalTrials = 3,
-    InactiveCount = TotalTrials - Regeneration_test_total,
-    ActiveProportion = Regeneration_test_total / TotalTrials
-  )
-
-# Since we only have one condition, we'll compare Head vs Tail directly
-memory_test_ttest <- t.test(
-  ActiveProportion ~ BodyPart, 
-  data = Memory_test_data, 
-  var.equal = TRUE
-)
-
-# Print test result
-print("Memory Test: Head vs Tail comparison")
-print(memory_test_ttest)
-
-# Calculate effect size (Cohen's d)
-head_mean <- mean(Memory_test_data$ActiveProportion[Memory_test_data$BodyPart == "Head"])
-tail_mean <- mean(Memory_test_data$ActiveProportion[Memory_test_data$BodyPart == "Tail"])
-pooled_sd <- sqrt(((sum((Memory_test_data$ActiveProportion[Memory_test_data$BodyPart == "Head"] - head_mean)^2) + 
-                      sum((Memory_test_data$ActiveProportion[Memory_test_data$BodyPart == "Tail"] - tail_mean)^2)) / 
-                     (nrow(Memory_test_data) - 2)))
-memory_cohens_d <- (head_mean - tail_mean) / pooled_sd
-print(paste("Memory Test Cohen's d:", memory_cohens_d))
-
 
 #=================================================================
-# PART 6: COMPARING REGENERATED PARTS TO ORIGINAL BASELINE SCORES
+# PART 3: COMPARING REGENERATED PARTS TO ORIGINAL BASELINE SCORES
 #=================================================================
 
 # First, identify only the subjects that were cut
@@ -608,181 +563,7 @@ tail_reinstate_details <- tail_reinstate_apa
 
 
 #=================================================================
-# PART 8: VISUALIZATIONS FOR PAIRED COMPARISONS
-#=================================================================
-
-# Create visualization for head regeneration
-head_regeneration_viz <- head_regeneration_paired %>%
-  pivot_longer(
-    cols = c(ActiveProportion, BaselineProportion),
-    names_to = "Measurement",
-    values_to = "Proportion"
-  ) %>%
-  mutate(
-    Measurement = factor(Measurement, 
-                         levels = c("BaselineProportion", "ActiveProportion"),
-                         labels = c("Original", "Regenerated Head"))
-  ) %>%
-  ggplot(aes(x = Measurement, y = Proportion)) +
-  # Add individual subject lines
-  geom_line(aes(group = OrigSubject), alpha = 0.3, color = "#FF8C00") +
-  # Add points
-  geom_point(size = 3, color = "#FF8C00") +
-  # Add means and error bars
-  stat_summary(
-    fun = mean, geom = "point", size = 5, shape = 18, color = "#FF8C00"
-  ) +
-  stat_summary(
-    fun.data = function(x) {
-      return(c(y = mean(x), ymin = mean(x) - sd(x)/sqrt(length(x)), 
-               ymax = mean(x) + sd(x)/sqrt(length(x))))
-    },
-    geom = "errorbar", width = 0.2, linewidth = 1, color = "#FF8C00"
-  ) +
-  # Add p-value annotations
-  annotate("text", x = 1.5, y = 0.95, 
-           label = paste0("p = ", format(head_regeneration_test$p.value, digits = 3)), 
-           color = "#FF8C00", fontface = "bold", size = 3.5) +
-  # Customize aesthetics
-  labs(
-    title = "Head Regeneration vs Original Baseline",
-    subtitle = "Lines connect individual subjects across measurements",
-    y = "Proportion of Active Arm Entries",
-    x = "Measurement"
-  ) +
-  ylim(0, 1) +
-  consistent_theme()
-
-# Create visualization for tail regeneration
-tail_regeneration_viz <- tail_regeneration_paired %>%
-  pivot_longer(
-    cols = c(ActiveProportion, BaselineProportion),
-    names_to = "Measurement",
-    values_to = "Proportion"
-  ) %>%
-  mutate(
-    Measurement = factor(Measurement, 
-                         levels = c("BaselineProportion", "ActiveProportion"),
-                         labels = c("Original", "Regenerated Tail"))
-  ) %>%
-  ggplot(aes(x = Measurement, y = Proportion)) +
-  # Add individual subject lines
-  geom_line(aes(group = OrigSubject), alpha = 0.3, color = "#159090") +
-  # Add points
-  geom_point(size = 3, color = "#159090") +
-  # Add means and error bars
-  stat_summary(
-    fun = mean, geom = "point", size = 5, shape = 18, color = "#159090"
-  ) +
-  stat_summary(
-    fun.data = function(x) {
-      return(c(y = mean(x), ymin = mean(x) - sd(x)/sqrt(length(x)), 
-               ymax = mean(x) + sd(x)/sqrt(length(x))))
-    },
-    geom = "errorbar", width = 0.2, linewidth = 1, color = "#159090"
-  ) +
-  # Add p-value annotations
-  annotate("text", x = 1.5, y = 0.95, 
-           label = paste0("p = ", format(tail_regeneration_test$p.value, digits = 3)), 
-           color = "#159090", fontface = "bold", size = 3.5) +
-  # Customize aesthetics
-  labs(
-    title = "Tail Regeneration vs Original Baseline",
-    subtitle = "Lines connect individual subjects across measurements",
-    y = "Proportion of Active Arm Entries",
-    x = "Measurement"
-  ) +
-  ylim(0, 1) +
-  consistent_theme()
-
-# Create visualization for head reinstatement
-head_reinstatement_viz <- head_reinstatement_paired %>%
-  pivot_longer(
-    cols = c(ActiveProportion, BaselineProportion),
-    names_to = "Measurement",
-    values_to = "Proportion"
-  ) %>%
-  mutate(
-    Measurement = factor(Measurement, 
-                         levels = c("BaselineProportion", "ActiveProportion"),
-                         labels = c("Original", "Reinstated Head"))
-  ) %>%
-  ggplot(aes(x = Measurement, y = Proportion)) +
-  # Add individual subject lines
-  geom_line(aes(group = OrigSubject), alpha = 0.3, color = "#FF8C00") +
-  # Add points
-  geom_point(size = 3, color = "#FF8C00") +
-  # Add means and error bars
-  stat_summary(
-    fun = mean, geom = "point", size = 5, shape = 18, color = "#FF8C00"
-  ) +
-  stat_summary(
-    fun.data = function(x) {
-      return(c(y = mean(x), ymin = mean(x) - sd(x)/sqrt(length(x)), 
-               ymax = mean(x) + sd(x)/sqrt(length(x))))
-    },
-    geom = "errorbar", width = 0.2, linewidth = 1, color = "#FF8C00"
-  ) +
-  # Add p-value annotations
-  annotate("text", x = 1.5, y = 0.95, 
-           label = paste0("p = ", format(head_reinstatement_test$p.value, digits = 3)), 
-           color = "#FF8C00", fontface = "bold", size = 3.5) +
-  # Customize aesthetics
-  labs(
-    title = "Head Reinstatement vs Original Baseline",
-    subtitle = "Lines connect individual subjects across measurements",
-    y = "Proportion of Active Arm Entries",
-    x = "Measurement"
-  ) +
-  ylim(0, 1) +
-  consistent_theme()
-
-# Create visualization for tail reinstatement
-tail_reinstatement_viz <- tail_reinstatement_paired %>%
-  pivot_longer(
-    cols = c(ActiveProportion, BaselineProportion),
-    names_to = "Measurement",
-    values_to = "Proportion"
-  ) %>%
-  mutate(
-    Measurement = factor(Measurement, 
-                         levels = c("BaselineProportion", "ActiveProportion"),
-                         labels = c("Original", "Reinstated Tail"))
-  ) %>%
-  ggplot(aes(x = Measurement, y = Proportion)) +
-  # Add individual subject lines
-  geom_line(aes(group = OrigSubject), alpha = 0.3, color = "#159090") +
-  # Add points
-  geom_point(size = 3, color = "#159090") +
-  # Add means and error bars
-  stat_summary(
-    fun = mean, geom = "point", size = 5, shape = 18, color = "#159090"
-  ) +
-  stat_summary(
-    fun.data = function(x) {
-      return(c(y = mean(x), ymin = mean(x) - sd(x)/sqrt(length(x)), 
-               ymax = mean(x) + sd(x)/sqrt(length(x))))
-    },
-    geom = "errorbar", width = 0.2, linewidth = 1, color = "#159090"
-  ) +
-  # Add p-value annotations
-  annotate("text", x = 1.5, y = 0.95, 
-           label = paste0("p = ", format(tail_reinstatement_test$p.value, digits = 3)), 
-           color = "#159090", fontface = "bold", size = 3.5) +
-  # Customize aesthetics
-  labs(
-    title = "Tail Reinstatement vs Original Baseline",
-    subtitle = "Lines connect individual subjects across measurements",
-    y = "Proportion of Active Arm Entries",
-    x = "Measurement"
-  ) +
-  ylim(0, 1) +
-  consistent_theme()
-
-
-
-#=================================================================
-# PART 9: FINAL COMBINED VISUALIZATION
+# PART 4: Regeneration and Reinstatement Plots
 #=================================================================
 
 # Create a dataset for all four conditions
@@ -867,8 +648,7 @@ publication_theme <- function() {
 
 
 # Create an improved version of the regeneration plot
-# Create an improved version of the regeneration plot
-improved_regeneration_plot <- ggplot(regen_summary, aes(x = BodyStatus, y = mean_prop)) +
+regeneration_plot <- ggplot(regen_summary, aes(x = BodyStatus, y = mean_prop)) +
   # Add error bars
   geom_errorbar(
     aes(ymin = mean_prop - se, ymax = mean_prop + se, color = BodyStatus),
@@ -963,7 +743,7 @@ improved_regeneration_plot <- ggplot(regen_summary, aes(x = BodyStatus, y = mean
   )
 
 # Create an improved version of the reinstatement plot
-improved_reinstatement_plot <- ggplot(reinstate_summary, aes(x = BodyStatus, y = mean_prop)) +
+reinstatement_plot <- ggplot(reinstate_summary, aes(x = BodyStatus, y = mean_prop)) +
   # Add error bars
   geom_errorbar(
     aes(ymin = mean_prop - se, ymax = mean_prop + se, color = BodyStatus),
@@ -1021,7 +801,7 @@ improved_reinstatement_plot <- ggplot(reinstate_summary, aes(x = BodyStatus, y =
   ) +
   # Labels
   labs(
-    title = "Reinstatement Active Arm Preference",
+    title = "Reinstatement Compared to Baseline",
     y = "Proportion of Active Arm Entries",
     x = "Body Section"
   ) +
@@ -1057,64 +837,26 @@ improved_reinstatement_plot <- ggplot(reinstate_summary, aes(x = BodyStatus, y =
     shape = "none"  # Hide duplicate legend
   )
 
-# Combine the plots using patchwork
-combined_plots <- improved_regeneration_plot + improved_reinstatement_plot +
-  plot_layout(ncol = 2) +
-  plot_annotation(
-    title = "Memory Retention in Regenerated Planarians",
-    theme = theme(
-      plot.title = element_text(family = "Times New Roman", size = 20, face = "bold", hjust = 0.5),
-      text = element_text(family = "Times New Roman", size = 18),
-      axis.text = element_text(size = 15, color = "black")
-    )
-  )
-
-# Print the plots
-print(improved_regeneration_plot)
-print(improved_reinstatement_plot)
 
 
-
-
-
-
-
-###### the retention and reinstatement plots for regenerates
-
-# Combine the regeneration and reinstatement plots
-
-# Remvoe legend from one of the grapghs
-reinstatement_plot_no_legend <- improved_reinstatement_plot +
-  theme(legend.position = "none")
-
-# Combine the plots, keeping only the regeneration_plot legend
-Regen_combined_figure <- (improved_regeneration_plot + reinstatement_plot_no_legend) +
-  plot_layout(
-    guides = "collect",
-    widths = c(1, 1)
-  ) +
-  plot_annotation(
-    tag_levels = 'A',
-    theme = theme(
-      plot.tag = element_text(face = "bold", size = 16, family = "Times New Roman"),
-      plot.margin = margin(t = 20, r = 20, b = 20, l = 20)
-    )
-  )
-
-print(Regen_combined_figure)
 
 #=======================================================================
-# PART 10: Combined visualisation of both conditioning and regeneration
+# PART 5: Combined visualisation of both conditioning and regeneration
 #=======================================================================
 
 #### removing the uneeded legends
+
+# Remvoe legend from one of the grapghs
+reinstatement_plot_no_legend <- reinstatement_plot +
+  theme(legend.position = "none")
+
 learning_plot_no_legend <- learning_plot + 
   theme(legend.position = "none")
 
 intact_plot_no_legend <- intact_plot + 
   theme(legend.position = "none")
 
-regeneration_plot_no_legend <- improved_regeneration_plot + 
+regeneration_plot_no_legend <- regeneration_plot + 
   theme(legend.position = "none")
 
 # Apply theme to each individual plot
@@ -1139,7 +881,7 @@ regeneration_plot_no_legend <- regeneration_plot_no_legend +
     plot.title = element_text(size = 20, face = "bold", family = "Times New Roman") 
   )
 
-improved_reinstatement_plot <- improved_reinstatement_plot +
+reinstatement_plot <- reinstatement_plot +
   theme(
     axis.text = element_text(size = 20, color = "black"),
     axis.title = element_text(size = 20),
@@ -1148,7 +890,7 @@ improved_reinstatement_plot <- improved_reinstatement_plot +
 
 ##### Ordering the legend
 
-reinstatement_plot_ordered <- improved_reinstatement_plot +
+reinstatement_plot_ordered <- reinstatement_plot +
   theme(
     axis.text = element_text(size = 20, color = "black"),
     axis.title = element_text(size = 20),
@@ -1188,7 +930,7 @@ ggsave("Exp4_combined_figure.png", combined_figure,
 
 
 #=======================================================================
-# PART 10: Extra descriptive information
+# PART 6: Extra descriptive information
 #=======================================================================
 
 
