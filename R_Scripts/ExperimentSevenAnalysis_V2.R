@@ -186,12 +186,11 @@ format_within_group_comparisons <- function(emmeans_object) {
     odds_ratio = contrasts_df$odds.ratio,
     p.value = contrasts_df$p.value,
     apa_result = paste0(
-      "OR = ", round(contrasts_df$odds.ratio, 2),
+      "*OR* = ", round(contrasts_df$odds.ratio, 2),
       ", *z* = ", round(contrasts_df$z.ratio, 2),
       ", *p* ", sapply(contrasts_df$p.value, format_p_value)
     )
   )
-  
   # Apply the condition mapping to transform numeric codes to names
   formatted_results$condition <- condition_names[formatted_results$condition]
   
@@ -210,7 +209,7 @@ format_between_group_comparisons <- function(emmeans_object) {
     odds_ratio = contrasts_df$odds.ratio,
     p.value = contrasts_df$p.value,
     apa_result = paste0(
-      "OR = ", round(contrasts_df$odds.ratio, 2),
+      "*OR* = ", round(contrasts_df$odds.ratio, 2),
       ", *z* = ", round(contrasts_df$z.ratio, 2),
       ", *p* ", sapply(contrasts_df$p.value, format_p_value)
     )

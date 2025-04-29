@@ -160,7 +160,7 @@ format_within_group_comparisons <- function(emmeans_object) {
     odds_ratio = 1/contrasts_df$odds.ratio,  # This inverts baseline→endpoint to endpoint→baseline
     p.value = contrasts_df$p.value,
     apa_result = paste0(
-      "*OR* = ", round(1/contrasts_df$odds.ratio, 2),  # Invert odds ratio
+      "*OR* = ", round(contrasts_df$odds.ratio, 2),  # Invert odds ratio
       ", *z* = ", round(-contrasts_df$z.ratio, 2),   # Flip sign of z-ratio
       ", *p* ", sapply(contrasts_df$p.value, format_p_value)
     )

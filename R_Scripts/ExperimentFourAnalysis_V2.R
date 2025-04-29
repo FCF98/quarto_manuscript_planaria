@@ -346,6 +346,7 @@ regen_summary <- regen_plot_data %>%
   group_by(BodyStatus) %>%
   summarise(
     mean_prop = mean(Proportion, na.rm = TRUE),
+    sd = sd(Proportion, na.rm = TRUE),
     se = sd(Proportion, na.rm = TRUE) / sqrt(sum(!is.na(Proportion))),
     .groups = 'drop'
   )
@@ -948,3 +949,4 @@ Right_active_arm_count <- Active_arm_count %>% filter(`Active arm` == "R") %>% p
 
 exp4_endpoint_mean <- Exp4_full_data_long %>% filter(Time %in% "Endpoint") %>% summarize(mean_entries = mean(ActiveArmProportion))
 
+exp4_endpoint_SD <-  Exp4_full_data_long %>% filter(Time %in% "Endpoint") %>% summarize(sd = sd(ActiveArmProportion))
