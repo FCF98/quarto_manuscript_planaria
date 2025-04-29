@@ -160,7 +160,7 @@ format_within_group_comparisons <- function(emmeans_object) {
     odds_ratio = 1/contrasts_df$odds.ratio,  # This inverts baseline→endpoint to endpoint→baseline
     p.value = contrasts_df$p.value,
     apa_result = paste0(
-      "OR = ", round(1/contrasts_df$odds.ratio, 2),  # Invert odds ratio
+      "*OR* = ", round(1/contrasts_df$odds.ratio, 2),  # Invert odds ratio
       ", *z* = ", round(-contrasts_df$z.ratio, 2),   # Flip sign of z-ratio
       ", *p* ", sapply(contrasts_df$p.value, format_p_value)
     )
@@ -209,7 +209,7 @@ format_between_group_comparisons <- function(emmeans_object) {
     odds_ratio = contrasts_df$odds.ratio,
     p.value = contrasts_df$p.value,
     apa_result = paste0(
-      "OR = ", round(contrasts_df$odds.ratio, 2),
+      "*OR* = ", round(contrasts_df$odds.ratio, 2),
       ", *z* = ", round(contrasts_df$z.ratio, 2),
       ", *p* ", sapply(contrasts_df$p.value, format_p_value)
     )
@@ -231,7 +231,7 @@ format_model_coefficients <- function(model) {
     p.value = coef_table$`Pr(>|z|)`,
     apa_result = paste0(
       "β = ", round(coef_table$Estimate, 2),
-      ", SE = ", round(coef_table$`Std. Error`, 2),
+      ", *SE* = ", round(coef_table$`Std. Error`, 2),
       ", *z* = ", round(coef_table$`z value`, 2),
       ", *p* = ", sapply(coef_table$`Pr(>|z|)`, format_p_value)
     )
