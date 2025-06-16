@@ -2,10 +2,10 @@
 .Rhistory
 .RData
 .Ruserdata
-dose_response_time_binned_xlsx
-DoseResponseStatistics_xlsx
-ExperimentFourSummaryData
-ExperimentSixFullData
-PipelineAnalysisTestData
-PipelineAnalysisTestData2
-PipelineAnalysisTestData3
+Datasets/dose_response_time_binned_xlsx
+Datasets/DoseResponseStatistics_xlsx
+Datasets/ExperimentFourSummaryData
+Datasets/ExperimentSixFullData
+Datasets/PipelineAnalysisTestData
+Datasets/PipelineAnalysisTestData2
+Datasets/PipelineAnalysisTestData3
